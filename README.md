@@ -4,13 +4,14 @@
 
 ![Growth & Fees calculator comparing a 2.20% MER mutual fund with a 0.20% index ETF over 30 years](docs/growth.png)
 
-Three connected personal-finance calculators, built as a static site for GitHub Pages:
+Four connected personal-finance calculators, built as a static site for GitHub Pages:
 
 - **Growth & Fees**: compare any number of funds by MER / expense ratio, with contributions, frequency, timing and yearly raises. Shows the full cost of fees, including the growth those fees would have earned.
 - **CAGR**: solve for growth rate, end value, start value or time, and compare several investments. Any result can be saved as a fund.
 - **Rent vs. Buy**: a monthly simulation of buying vs. renting and investing the difference in a fund from your library. Includes break-even year, cost breakdown and sensitivity grid.
+- **Retirement**: years until your portfolio covers your spending (savings rate, withdrawal rate, today's dollars), comparing funds from your library to show how fees move your retirement date.
 
-A shared **fund library** (stored in localStorage) connects the three tools. A **🇨🇦 Canada / 🇺🇸 US toggle** switches currency, terminology and mortgage rules (semi-annual compounding + CMHC vs. monthly compounding + PMI). Every scenario can be shared as a link, and results can be shown in today's dollars. Dark mode is supported.
+A shared **fund library** (stored in localStorage) connects the tools. A **🇨🇦 Canada / 🇺🇸 US toggle** switches currency, terminology and mortgage rules (semi-annual compounding + CMHC vs. monthly compounding + PMI). Every scenario can be shared as a link, and results can be shown in today's dollars. Dark mode is supported.
 
 ![Rent vs. Buy calculator showing net worth over time, cost breakdown and sensitivity grid](docs/rent-vs-buy.png)
 

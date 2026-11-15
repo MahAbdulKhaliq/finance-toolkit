@@ -29,6 +29,14 @@ export default function Home() {
         <path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z" stroke="currentColor" strokeWidth="2" fill="none" strokeLinejoin="round" />
       ),
     },
+    {
+      to: '/retirement',
+      title: 'Retirement',
+      body: 'See how many years until your investments cover your spending, and how much your savings rate and fund fees change the answer.',
+      icon: (
+        <path d="M12 3v3m0 12v3M3 12h3m12 0h3M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+      ),
+    },
   ];
 
   return (
@@ -39,13 +47,13 @@ export default function Home() {
           Small numbers, big decisions.
         </h1>
         <p className="mt-4 text-lg text-muted">
-          Three connected calculators for the money questions that compound: what your fund
-          fees really cost, how fast an investment actually grew, and whether buying a home beats
-          renting and investing.
+          Four connected calculators for the money questions that compound: what your fund
+          fees really cost, how fast an investment actually grew, whether buying a home beats
+          renting and investing, and when you could retire.
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {tools.map((t) => (
           <Link
             key={t.to}
@@ -74,7 +82,8 @@ export default function Home() {
             Pick any number of them in Growth &amp; Fees to see how fees change the outcome.
           </Step>
           <Step n={3} title="Put them to work">
-            Choose the fund a renter would invest in, and see how it changes the rent vs. buy answer.
+            Choose the fund a renter would invest in, or the funds you'd save for retirement in, and
+            see how the answer changes.
           </Step>
         </div>
         <p className="mt-5 text-xs text-muted">

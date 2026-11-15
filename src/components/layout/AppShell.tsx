@@ -8,6 +8,7 @@ const NAV = [
   { to: '/growth', label: 'Growth & Fees' },
   { to: '/cagr', label: 'CAGR' },
   { to: '/rent-vs-buy', label: 'Rent vs. Buy' },
+  { to: '/retirement', label: 'Retirement' },
   { to: '/funds', label: 'My Funds' },
   { to: '/methodology', label: 'Methodology' },
   { to: '/about', label: 'About' },

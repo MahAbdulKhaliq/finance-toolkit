@@ -76,6 +76,21 @@ export default function Methodology() {
           </p>
         </Section>
 
+        <Section title="Retirement">
+          <p>
+            Each year you invest <F>income − expenses</F>. The portfolio earns its real return on the
+            balance at the start of the year, and the year's savings are added at the end. You can
+            retire once it reaches <F>goal = expenses / withdrawal rate</F> (e.g. 25× spending at 4%).
+            The answer is interpolated within the year, so it can be fractional (e.g. 12.4 years).
+          </p>
+          <p>
+            Everything is in today's dollars: each fund grows at its real return,{' '}
+            <F>(1 + return − fee) / (1 + inflation) − 1</F>, and income and expenses are assumed to
+            rise with inflation. Taxes on withdrawals and government benefits (CPP/OAS, Social
+            Security) aren't included.
+          </p>
+        </Section>
+
         <Section title="Canada vs. US rules">
           <p>
             <strong>🇨🇦 Canada:</strong> fixed mortgage rates compound semi-annually,{' '}

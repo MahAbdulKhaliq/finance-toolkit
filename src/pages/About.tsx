@@ -76,8 +76,9 @@ export default function About() {
           <h2 className="text-lg font-semibold">About this project</h2>
           <p className="mt-2 leading-relaxed text-muted">
             Many financial calculators only answer one question at a time. This toolkit connects
-            three of them through a shared fund library: you can turn a historical CAGR into a fund,
-            compare its fees against others, then use it as the investment a renter would hold. It
+            four of them through a shared fund library: you can turn a historical CAGR into a fund,
+            compare its fees against others, then use it as the investment a renter would hold or
+            the one you'd save for retirement in. It
             supports both Canadian and US rules (semi-annual mortgage compounding and CMHC insurance
             vs. monthly compounding and PMI).
           </p>

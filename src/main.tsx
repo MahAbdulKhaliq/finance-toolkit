@@ -8,6 +8,7 @@ import './index.css';
 const GrowthCalculator = lazy(() => import('./pages/GrowthCalculator'));
 const CagrCalculator = lazy(() => import('./pages/CagrCalculator'));
 const RentVsBuy = lazy(() => import('./pages/RentVsBuy'));
+const RetirementCalculator = lazy(() => import('./pages/RetirementCalculator'));
 const Funds = lazy(() => import('./pages/Funds'));
 const Methodology = lazy(() => import('./pages/Methodology'));
 const About = lazy(() => import('./pages/About'));
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="growth" element={page(<GrowthCalculator />)} />
           <Route path="cagr" element={page(<CagrCalculator />)} />
           <Route path="rent-vs-buy" element={page(<RentVsBuy />)} />
+          <Route path="retirement" element={page(<RetirementCalculator />)} />
           <Route path="funds" element={page(<Funds />)} />
           <Route path="methodology" element={page(<Methodology />)} />
           <Route path="about" element={page(<About />)} />

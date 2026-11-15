@@ -116,7 +116,7 @@ export function NumberField({
   useEffect(() => {
     if (!focused) setText(display(value));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, focused]);
+  }, [value, focused, scale]);
 
   return (
     <Field label={label} hint={hint} htmlFor={id}>
