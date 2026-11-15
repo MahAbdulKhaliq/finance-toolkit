@@ -80,15 +80,17 @@ export default function About() {
           <p>
             <strong>🇨🇦 Canada:</strong> fixed mortgage rates compound semi-annually,{' '}
             <F>i = (1 + r/2)^(1/6) − 1</F>. Below 20% down, a CMHC premium is added to the mortgage:
-            4.00% (5–9.99% down), 3.10% (10–14.99%), 2.80% (15–19.99%). The minimum down payment is
+            4.00% (5–9.99% down), 3.10% (10–14.99%), 2.80% (15–19.99%), plus 0.20% for amortizations
+            over 25 years (insured mortgages max out at 30). It's a one-time cost: it doesn't end once you
+            reach 20% equity, and it's counted under "money you don't get back". The minimum down payment is
             5% of the first $500k and 10% of the rest. Homes at $1.5M or more need 20%. A principal
             residence is exempt from capital gains tax.
           </p>
           <p>
             <strong>🇺🇸 US:</strong> monthly compounding, <F>i = r / 12</F>. Below 20% down, PMI is
             charged as an annual percentage of the original loan and drops off automatically once the
-            balance reaches 78% of the purchase price. The home-sale capital gains exclusion is not
-            modeled.
+            balance reaches 78% of the purchase price. The net worth chart marks that point. The
+            home-sale capital gains exclusion is not modeled.
           </p>
           <p>
             The region toggle changes rules, labels and currency. It never converts your numbers.

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-  Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import { rentVsBuy, type RentVsBuyInput } from '../lib/finance/rentVsBuy';
 import { canadaMinimumDown } from '../lib/finance/mortgage';
@@ -103,13 +103,15 @@ export default function RentVsBuy() {
       Interest: sum('interest'),
       'Property tax': sum('propertyTax'),
       Maintenance: sum('maintenance'),
-      'Insurance & fees': sum('insurance') + sum('hoa') + sum('mortgageInsurance'),
+      'Home insurance & fees': sum('insurance') + sum('hoa'),
+      // CMHC is a one-time premium financed into the loan; PMI is paid monthly until it drops off.
+      'Mortgage insurance': result.cmhcPremium + sum('mortgageInsurance'),
       'Closing & selling': result.closingCosts + deflate(last.homeValue * inputs.sellingCostRate, last.year),
     },
     { name: 'Rent', Rent: sum('rent') },
   ];
   const COST_COLORS: Record<string, string> = {
-    Interest: '#e11d48', 'Property tax': '#d97706', Maintenance: '#7c3aed', 'Insurance & fees': '#0284c7', 'Closing & selling': '#64748b', Rent: '#0d9488',
+    Interest: '#e11d48', 'Property tax': '#d97706', Maintenance: '#7c3aed', 'Home insurance & fees': '#0284c7', 'Mortgage insurance': '#db2777', 'Closing & selling': '#64748b', Rent: '#0d9488',
   };
 
   // Sensitivity: appreciation and investment return ±1%
@@ -123,6 +125,9 @@ export default function RentVsBuy() {
   );
 
   const downAmt = inputs.price * inputs.downPct;
+  // CA: insured only when a premium applies (homes $1.5M+ can't be insured). US: PMI below 20% down.
+  const insured = regionCode === 'CA' ? result.cmhcPremium > 0 : inputs.downPct < 0.2;
+  const pmiEndYear = result.pmiEndMonth ? result.pmiEndMonth / 12 : null;
   const minDown = regionCode === 'CA' ? canadaMinimumDown(inputs.price) : inputs.price * 0.03;
   const unrecoverable = (y: (typeof result.years)[number]) => y.interest + y.propertyTax + y.maintenance + y.insurance + y.hoa + y.mortgageInsurance;
 
@@ -159,17 +164,44 @@ export default function RentVsBuy() {
               />
               <PercentField label="Mortgage rate" value={inputs.mortgageRate} min={0} max={0.3} onChange={(mortgageRate) => update({ mortgageRate })} />
               <NumberField label="Amortization" suffix="yrs" decimals={0} value={inputs.amortizationYears} min={1} max={40} onChange={(v) => update({ amortizationYears: Math.round(v) })} />
+              {regionCode === 'CA' ? (
+                <PercentField
+                  label="CMHC premium"
+                  disabled
+                  value={result.cmhcPremiumRate}
+                  onChange={() => {}}
+                  hint={
+                    insured
+                      ? `${money(result.cmhcPremium, region)} added to the mortgage${inputs.amortizationYears > 25 ? ' (incl. 0.20% for 25+ yrs)' : ''}. ON, QC & SK add sales tax at closing.`
+                      : inputs.downPct < 0.2
+                        ? 'Not available on homes $1.5M+; 20% down needed'
+                        : 'Not required with 20%+ down'
+                  }
+                />
+              ) : (
+                <PercentField
+                  label="PMI rate"
+                  disabled={!insured}
+                  value={insured ? inputs.pmiRate : 0}
+                  min={0}
+                  max={0.03}
+                  onChange={(pmiRate) => update({ pmiRate })}
+                  hint={
+                    !insured
+                      ? 'Not required with 20%+ down'
+                      : result.pmiEndMonth
+                        ? `per year · stops in year ${Math.ceil(result.pmiEndMonth / 12)}`
+                        : 'per year · until the loan is 78% of the price'
+                  }
+                />
+              )}
               <PercentField label="Home appreciation" hint="per year" value={inputs.appreciation} min={-0.2} max={0.3} onChange={(appreciation) => update({ appreciation })} />
               <PercentField label="Property tax" hint="of value / yr" value={inputs.propertyTaxRate} min={0} max={0.1} onChange={(propertyTaxRate) => update({ propertyTaxRate })} />
               <PercentField label="Maintenance" hint="of value / yr" value={inputs.maintenanceRate} min={0} max={0.1} onChange={(maintenanceRate) => update({ maintenanceRate })} />
               <MoneyField label="Home insurance" hint="per year" value={inputs.homeInsurance} onChange={(homeInsurance) => update({ homeInsurance })} />
               <MoneyField label={regionCode === 'CA' ? 'Condo fees' : 'HOA fees'} hint="per month" value={inputs.hoaMonthly} onChange={(hoaMonthly) => update({ hoaMonthly })} />
               <PercentField label="Closing costs" hint={region.closingCostsHint} value={inputs.buyClosingRate} min={0} max={0.2} onChange={(buyClosingRate) => update({ buyClosingRate })} />
-              <PercentField label="Selling costs" hint="Agent commissions + legal" value={inputs.sellingCostRate} min={0} max={0.2} onChange={(sellingCostRate) => update({ sellingCostRate })} />
-              {regionCode === 'US' && (
-                <PercentField label="PMI rate" hint="per year, if under 20% down" value={inputs.pmiRate} min={0} max={0.03} onChange={(pmiRate) => update({ pmiRate })} />
-              )}
-            </div>
+              <PercentField label="Selling costs" hint="Agent commissions + legal" value={inputs.sellingCostRate} min={0} max={0.2} onChange={(sellingCostRate) => update({ sellingCostRate })} />            </div>
           </Card>
           <Card>
             <CardTitle>Renting</CardTitle>
@@ -213,7 +245,7 @@ export default function RentVsBuy() {
             {regionCode === 'CA' ? (
               <Stat label={region.mortgageInsuranceLabel} value={money(result.cmhcPremium, region)} sub={result.cmhcPremium ? 'Added to the mortgage' : '20%+ down, none needed'} />
             ) : (
-              <Stat label={region.mortgageInsuranceLabel} value={money(result.years[0].mortgageInsurance / 12, region)} sub="per month until 78% LTV" />
+              <Stat label={region.mortgageInsuranceLabel} value={money(result.years[0].mortgageInsurance / 12, region)} sub={!insured ? '20%+ down, none needed' : pmiEndYear !== null ? `per month, until year ${Math.ceil(pmiEndYear)}` : 'per month, for the whole stay'} />
             )}
             <Stat label="Year-1 costs you don't get back" value={money(unrecoverable(result.years[0]) / 12, region)} sub={`/mo vs ${money(inputs.rent, region)} rent`} />
           </div>
@@ -225,12 +257,29 @@ export default function RentVsBuy() {
               <ResponsiveContainer>
                 <LineChart data={nwData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <CartesianGrid stroke={chart.grid} vertical={false} />
-                  <XAxis dataKey="year" stroke={chart.axis} fontSize={12} tickLine={false} />
+                  <XAxis
+                    dataKey="year"
+                    type="number"
+                    domain={[0, last.year]}
+                    allowDecimals={false}
+                    tickCount={Math.min(last.year + 1, 11)}
+                    stroke={chart.axis}
+                    fontSize={12}
+                    tickLine={false}
+                  />
                   <YAxis stroke={chart.axis} tickFormatter={(v) => moneyShort(v, region)} fontSize={12} width={64} axisLine={false} tickLine={false} />
                   <Tooltip {...tip} formatter={(v: number) => money(v, region)} labelFormatter={(y) => `Year ${y}`} />
                   <Legend wrapperStyle={{ fontSize: 13 }} />
                   <Line dataKey="buy" name="Buy" stroke="#0d9488" strokeWidth={2.5} dot={false} />
                   <Line dataKey="rent" name={`Rent + invest (${fund?.name ?? 'fund'})`} stroke="#6366f1" strokeWidth={2.5} dot={false} />
+                  {pmiEndYear !== null && (
+                    <ReferenceLine
+                      x={pmiEndYear}
+                      stroke="#db2777"
+                      strokeDasharray="4 3"
+                      label={{ value: 'PMI ends', position: 'insideTopLeft', fill: '#db2777', fontSize: 12 }}
+                    />
+                  )}
                   {be && <ReferenceDot x={be.year} y={be.buy} r={6} fill="#0d9488" stroke={chart.tooltipBg} strokeWidth={2} label={{ value: 'Break-even', position: 'top', fill: chart.text, fontSize: 12 }} />}
                 </LineChart>
               </ResponsiveContainer>

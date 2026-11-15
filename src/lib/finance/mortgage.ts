@@ -45,13 +45,19 @@ export function amortizationByYear(
   return rows;
 }
 
-/** CMHC premium rate (as a share of the loan) for a given down-payment ratio. */
-export function cmhcPremiumRate(downRatio: number): number {
+/**
+ * CMHC premium rate (as a share of the loan) for a given down-payment ratio. Insured
+ * mortgages amortized over 25 years (30-year terms for first-time buyers / new builds)
+ * carry a 0.20% surcharge.
+ */
+export function cmhcPremiumRate(downRatio: number, amortizationYears = 25): number {
   if (downRatio >= 0.2) return 0;
-  if (downRatio >= 0.15) return 0.028;
-  if (downRatio >= 0.1) return 0.031;
-  return 0.04;
+  const base = downRatio >= 0.15 ? 0.028 : downRatio >= 0.1 ? 0.031 : 0.04;
+  return base + (amortizationYears > 25 ? 0.002 : 0);
 }
+
+/** Longest amortization allowed on an insured (under 20% down) Canadian mortgage. */
+export const CA_INSURED_MAX_AMORTIZATION = 30;
 
 /** Minimum down payment in Canada (rules effective Dec 15, 2024). */
 export function canadaMinimumDown(price: number): number {

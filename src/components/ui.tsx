@@ -92,6 +92,7 @@ export function NumberField({
   max,
   step,
   decimals = 2,
+  disabled = false,
 }: {
   label: string;
   hint?: ReactNode;
@@ -104,6 +105,8 @@ export function NumberField({
   max?: number;
   step?: number;
   decimals?: number;
+  /** Shows a computed value the user can't edit. */
+  disabled?: boolean;
 }) {
   const id = useId();
   const display = (v: number) => (Number.isFinite(v) ? String(+(v * scale).toFixed(decimals)) : '');
@@ -117,10 +120,11 @@ export function NumberField({
 
   return (
     <Field label={label} hint={hint} htmlFor={id}>
-      <div className={inputBox}>
+      <div className={`${inputBox} ${disabled ? 'bg-surface-2 text-muted' : ''}`}>
         {prefix && <span className="pl-3 text-sm text-muted">{prefix}</span>}
         <input
           id={id}
+          disabled={disabled}
           type="number"
           inputMode="decimal"
           className={inputEl}

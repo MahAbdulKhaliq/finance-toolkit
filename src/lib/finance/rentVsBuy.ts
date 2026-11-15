@@ -1,4 +1,5 @@
 import {
+  CA_INSURED_MAX_AMORTIZATION,
   canadaMinimumDown,
   cmhcPremiumRate,
   monthlyPayment,
@@ -56,6 +57,10 @@ export interface RentVsBuyResult {
   years: RentVsBuyYear[];
   loanAmount: number;
   cmhcPremium: number;
+  /** CMHC premium rate applied to the loan (CA), 0 if not insured. */
+  cmhcPremiumRate: number;
+  /** Month (1-based) of the last PMI charge before it drops off (US), or null if none/never. */
+  pmiEndMonth: number | null;
   monthlyMortgage: number;
   closingCosts: number;
   /** First year in which buying's net worth catches up with renting's, or null. */
@@ -74,7 +79,9 @@ export function rentVsBuy(inp: RentVsBuyInput): RentVsBuyResult {
   const downRatio = inp.price > 0 ? down / inp.price : 0;
   const baseLoan = inp.price - down;
   let cmhcPremium = 0;
+  let premiumRate = 0;
   let pmiMonthly = 0;
+  let pmiEndMonth: number | null = null;
 
   if (inp.region === 'CA') {
     const minDown = canadaMinimumDown(inp.price);
@@ -87,7 +94,13 @@ export function rentVsBuy(inp: RentVsBuyInput): RentVsBuyResult {
       if (inp.price >= 1_500_000) {
         warnings.push('Homes priced at $1.5M or more cannot be insured; at least 20% down is required.');
       } else {
-        cmhcPremium = baseLoan * cmhcPremiumRate(downRatio);
+        premiumRate = cmhcPremiumRate(downRatio, inp.amortizationYears);
+        cmhcPremium = baseLoan * premiumRate;
+        if (inp.amortizationYears > CA_INSURED_MAX_AMORTIZATION) {
+          warnings.push(
+            `Insured mortgages (under 20% down) can be amortized over at most ${CA_INSURED_MAX_AMORTIZATION} years.`,
+          );
+        }
       }
     }
   } else if (downRatio < 0.2) {
@@ -128,7 +141,9 @@ export function rentVsBuy(inp: RentVsBuyInput): RentVsBuyResult {
       const maint = (home * inp.maintenanceRate) / 12;
       const ins = (inp.homeInsurance / 12) * infl;
       const hoa = inp.hoaMonthly * infl;
-      const mi = pmiMonthly > 0 && bal / inp.price > 0.78 ? pmiMonthly : 0;
+      // PMI is charged on this month's starting balance; it stops once the loan reaches 78% of price.
+      const mi = pmiMonthly > 0 && (bal + principal) / inp.price > 0.78 ? pmiMonthly : 0;
+      if (mi > 0) pmiEndMonth = y * 12 + m + 1;
       const buyCost = interest + principal + tax + maint + ins + hoa + mi;
       const rentCost = rentM + (inp.rentersInsurance / 12) * infl;
 
@@ -177,6 +192,9 @@ export function rentVsBuy(inp: RentVsBuyInput): RentVsBuyResult {
     years: rows,
     loanAmount: loan,
     cmhcPremium,
+    cmhcPremiumRate: premiumRate,
+    // Only report an end if PMI actually stopped within the horizon.
+    pmiEndMonth: pmiEndMonth !== null && pmiEndMonth < years * 12 ? pmiEndMonth : null,
     monthlyMortgage: pmt,
     closingCosts,
     breakEvenYear: be ? be.year : null,

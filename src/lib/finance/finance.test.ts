@@ -149,6 +149,32 @@ describe('rent vs buy', () => {
     expect(us.years[29].mortgageInsurance).toBe(0);
   });
 
+  it('adds the 0.20% CMHC surcharge past 25 years and warns past 30', () => {
+    expect(cmhcPremiumRate(0.1, 25)).toBe(0.031);
+    expect(cmhcPremiumRate(0.1, 30)).toBeCloseTo(0.033, 10);
+    expect(cmhcPremiumRate(0.2, 30)).toBe(0);
+    const r30 = rentVsBuy({ ...base, region: 'CA', downPayment: 40_000, mortgageRate: 0.05, amortizationYears: 30 });
+    expect(r30.cmhcPremiumRate).toBeCloseTo(0.033, 10);
+    expect(r30.warnings).toHaveLength(0);
+    const r35 = rentVsBuy({ ...base, region: 'CA', downPayment: 40_000, mortgageRate: 0.05, amortizationYears: 35 });
+    expect(r35.warnings.some((w) => w.includes('30 years'))).toBe(true);
+    // 20% down: no premium, and long amortizations are allowed
+    const r20 = rentVsBuy({ ...base, region: 'CA', downPayment: 80_000, mortgageRate: 0.05, amortizationYears: 35 });
+    expect(r20.cmhcPremium).toBe(0);
+    expect(r20.warnings).toHaveLength(0);
+  });
+
+  it('reports when US PMI ends, and charges it exactly until then', () => {
+    const us = rentVsBuy({ ...base, downPayment: 40_000, mortgageRate: 0.06, years: 30 });
+    expect(us.pmiEndMonth).not.toBeNull();
+    const totalPmi = us.years.reduce((s, y) => s + y.mortgageInsurance, 0);
+    expect(totalPmi).toBeCloseTo(us.pmiEndMonth! * ((360_000 * 0.005) / 12), 6);
+    // horizon shorter than the PMI period → no end reported
+    expect(rentVsBuy({ ...base, downPayment: 40_000, mortgageRate: 0.06, years: 3 }).pmiEndMonth).toBeNull();
+    // 20% down → never charged
+    expect(rentVsBuy({ ...base, mortgageRate: 0.06, years: 30 }).pmiEndMonth).toBeNull();
+  });
+
   it('warns when the Canadian minimum down payment is not met', () => {
     const r = rentVsBuy({ ...base, region: 'CA', price: 800_000, downPayment: 40_000 });
     expect(r.warnings.length).toBeGreaterThan(0);
