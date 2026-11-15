@@ -25,6 +25,36 @@ export const STARTER_FUNDS: Fund[] = [
 
 export const newId = () => Math.random().toString(36).slice(2, 10);
 
+export const FUND_LIMITS = {
+  nameMax: 40,
+  notesMax: 120,
+  /** Hard cap on the fee. Real MERs top out around 3%; 10% leaves room for odd cases. */
+  feeMax: 0.1,
+  /** Above this the editor asks "are you sure?". */
+  feeWarn: 0.03,
+  returnMin: -0.5,
+  /** Hard cap on expected gross return (999%). */
+  returnMax: 9.99,
+  /** Above this the editor asks "are you sure?". */
+  returnWarn: 0.5,
+};
+
+export const feeIsHigh = (fee: number) => fee > FUND_LIMITS.feeWarn;
+export const returnIsHigh = (r: number) => r > FUND_LIMITS.returnWarn;
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+/** Applies the limits to any incoming fund data, including funds from shared links. */
+function sanitize<T extends Partial<Fund>>(f: T): T {
+  const out = { ...f };
+  if (out.name !== undefined) out.name = String(out.name).slice(0, FUND_LIMITS.nameMax);
+  if (out.notes !== undefined) out.notes = String(out.notes).slice(0, FUND_LIMITS.notesMax);
+  if (out.fee !== undefined) out.fee = clamp(Number(out.fee) || 0, 0, FUND_LIMITS.feeMax);
+  if (out.annualReturn !== undefined)
+    out.annualReturn = clamp(Number(out.annualReturn) || 0, FUND_LIMITS.returnMin, FUND_LIMITS.returnMax);
+  return out;
+}
+
 const STARTER_IDS = new Set(STARTER_FUNDS.map((f) => f.id));
 
 /**
@@ -49,15 +79,17 @@ export const useFunds = create<FundsState>()(
     (set, get) => ({
       funds: STARTER_FUNDS,
       add: (f) => {
-        const fund: Fund = { ...f, id: f.id ?? newId() };
+        const fund: Fund = sanitize({ ...f, id: f.id ?? newId() });
         if (get().funds.some((x) => x.id === fund.id)) return fund; // e.g. re-importing a shared starter
         set({ funds: [...get().funds, fund] });
         return fund;
       },
       update: (id, patch) => {
-        const allowed = STARTER_IDS.has(id)
-          ? Object.fromEntries(Object.entries(patch).filter(([k]) => STARTER_EDITABLE.includes(k as keyof Fund)))
-          : patch;
+        const allowed = sanitize(
+          STARTER_IDS.has(id)
+            ? Object.fromEntries(Object.entries(patch).filter(([k]) => STARTER_EDITABLE.includes(k as keyof Fund)))
+            : patch,
+        );
         set({ funds: get().funds.map((f) => (f.id === id ? { ...f, ...allowed, id } : f)) });
       },
       remove: (id) => {
@@ -82,7 +114,8 @@ export const useFunds = create<FundsState>()(
           const mine = saved.find((f) => f.id === s.id);
           return mine ? { ...mine, name: s.name, notes: s.notes } : s;
         });
-        return { ...current, funds: [...restored, ...saved.filter((f) => !STARTER_IDS.has(f.id))] };
+        const custom = saved.filter((f) => !STARTER_IDS.has(f.id)).map(sanitize); // apply current limits
+        return { ...current, funds: [...restored, ...custom] };
       },
     },
   ),

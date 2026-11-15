@@ -7,7 +7,7 @@ import { money, moneyShort, pct } from '../lib/format';
 import { useRegion, useSettings } from '../state/settingsStore';
 import { useShareFunds, useUrlState } from '../state/useUrlState';
 import { tooltipStyle, useChartTheme } from '../state/useTheme';
-import { STARTER_FUNDS } from '../state/fundsStore';
+import { feeIsHigh, FUND_LIMITS, returnIsHigh, STARTER_FUNDS } from '../state/fundsStore';
 import { FundMultiPicker, ImportSharedFunds, useAvailableFunds } from '../components/funds/FundPicker';
 import { DollarsToggle, ShareButton, useDeflator } from '../components/Toolbar';
 import {
@@ -153,8 +153,22 @@ export default function GrowthCalculator() {
                         {f.name}
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <PercentField label={region.feeLabel} value={o.fee ?? f.fee} min={0} max={0.1} onChange={(fee) => set({ fee })} />
-                        <PercentField label="Return" value={o.annualReturn ?? f.annualReturn} min={-0.5} max={0.5} onChange={(annualReturn) => set({ annualReturn })} />
+                        <PercentField
+                          label={region.feeLabel}
+                          value={o.fee ?? f.fee}
+                          min={0}
+                          max={FUND_LIMITS.feeMax}
+                          onChange={(fee) => set({ fee })}
+                          hint={feeIsHigh(o.fee ?? f.fee) ? <span className="text-warn-ink">Unusually high. Are you sure?</span> : undefined}
+                        />
+                        <PercentField
+                          label="Return"
+                          value={o.annualReturn ?? f.annualReturn}
+                          min={FUND_LIMITS.returnMin}
+                          max={FUND_LIMITS.returnMax}
+                          onChange={(annualReturn) => set({ annualReturn })}
+                          hint={returnIsHigh(o.annualReturn ?? f.annualReturn) ? <span className="text-warn-ink">Unusually high. Are you sure?</span> : undefined}
+                        />
                       </div>
                     </div>
                   );

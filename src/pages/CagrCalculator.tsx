@@ -8,7 +8,7 @@ import { money, moneyShort, num, pct } from '../lib/format';
 import { useInflation, useRegion } from '../state/settingsStore';
 import { useUrlState } from '../state/useUrlState';
 import { tooltipStyle, useChartTheme } from '../state/useTheme';
-import { FUND_COLORS, newId } from '../state/fundsStore';
+import { FUND_COLORS, FUND_LIMITS, newId } from '../state/fundsStore';
 import { FundEditor, type FundDraft } from '../components/funds/FundEditor';
 import { ShareButton } from '../components/Toolbar';
 import {
@@ -252,6 +252,7 @@ export default function CagrCalculator() {
                     <input
                       id={`n-${r.id}`}
                       value={r.name}
+                      maxLength={FUND_LIMITS.nameMax}
                       onChange={(e) => setRow(r.id, { name: e.target.value })}
                       className="rounded-lg border border-line bg-surface px-3 py-2 text-sm"
                     />

@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { isStarter, nextColor, useFunds, FUND_COLORS, type Fund } from '../../state/fundsStore';
+import {
+  feeIsHigh, isStarter, nextColor, returnIsHigh, useFunds, FUND_COLORS, FUND_LIMITS, type Fund,
+} from '../../state/fundsStore';
+import { pct } from '../../lib/format';
 import { useRegion } from '../../state/settingsStore';
 import { Button, PercentField } from '../ui';
 
@@ -45,6 +48,9 @@ export function FundEditor({
   const editing = Boolean(initial?.id && funds.some((f) => f.id === initial.id));
   const locked = editing && isStarter({ id: initial!.id! });
   const lockedInput = 'cursor-not-allowed bg-surface-2 text-muted';
+  const feeHigh = feeIsHigh(draft.fee);
+  const returnHigh = returnIsHigh(draft.annualReturn);
+  const needsConfirm = feeHigh || returnHigh;
 
   const save = () => {
     const clean = { ...draft, name: draft.name.trim() || 'Untitled fund' };
@@ -80,12 +86,16 @@ export function FundEditor({
           </p>
         )}
         <div className="flex flex-col gap-1">
-          <label htmlFor="fund-name" className="text-sm font-medium">Name</label>
+          <label htmlFor="fund-name" className="flex justify-between text-sm font-medium">
+            Name
+            {!locked && <CharCount value={draft.name} max={FUND_LIMITS.nameMax} />}
+          </label>
           <input
             id="fund-name"
             autoFocus={!locked}
             readOnly={locked}
             aria-readonly={locked}
+            maxLength={FUND_LIMITS.nameMax}
             className={`rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent ${locked ? lockedInput : ''}`}
             value={draft.name}
             placeholder="e.g. My TFSA index ETF"
@@ -97,18 +107,37 @@ export function FundEditor({
             label={region.feeLabel}
             value={draft.fee}
             min={0}
-            max={0.1}
+            max={FUND_LIMITS.feeMax}
             onChange={(fee) => setDraft({ ...draft, fee })}
           />
           <PercentField
             label="Expected return"
             hint="Gross, before fees"
             value={draft.annualReturn}
-            min={-0.5}
-            max={0.5}
+            min={FUND_LIMITS.returnMin}
+            max={FUND_LIMITS.returnMax}
             onChange={(annualReturn) => setDraft({ ...draft, annualReturn })}
           />
         </div>
+        {needsConfirm && (
+          <div role="alert" className="-mt-1 rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn-ink">
+            <strong>Are you sure this is right?</strong>
+            <ul className="mt-1 list-disc pl-5">
+              {feeHigh && (
+                <li>
+                  A {pct(draft.fee)} {region.feeLabelInline} is unusually high. Most funds charge under{' '}
+                  {pct(FUND_LIMITS.feeWarn, 0)} a year.
+                </li>
+              )}
+              {returnHigh && (
+                <li>
+                  A {pct(draft.annualReturn)} yearly return is far above what broad markets have
+                  delivered over the long run (roughly 6–10%).
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
         <div className="flex flex-col gap-1">
           <span className="text-sm font-medium">Color</span>
           <div className="flex flex-wrap gap-2">
@@ -125,11 +154,15 @@ export function FundEditor({
           </div>
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="fund-notes" className="text-sm font-medium">Notes <span className="font-normal text-muted">(optional)</span></label>
+          <label htmlFor="fund-notes" className="flex justify-between text-sm font-medium">
+            <span>Notes <span className="font-normal text-muted">(optional)</span></span>
+            {!locked && <CharCount value={draft.notes ?? ''} max={FUND_LIMITS.notesMax} />}
+          </label>
           <input
             id="fund-notes"
             readOnly={locked}
             aria-readonly={locked}
+            maxLength={FUND_LIMITS.notesMax}
             className={`rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent ${locked ? lockedInput : ''}`}
             value={draft.notes ?? ''}
             onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
@@ -138,10 +171,20 @@ export function FundEditor({
         <div className="flex justify-end gap-2 pt-1">
           <Button onClick={onClose}>Cancel</Button>
           <Button variant="primary" type="submit">
-            {editing ? 'Save changes' : 'Add to My Funds'}
+            {needsConfirm ? 'Yes, save it' : editing ? 'Save changes' : 'Add to My Funds'}
           </Button>
         </div>
       </form>
     </dialog>
+  );
+}
+
+/** Shows remaining characters once a field is getting close to its limit. */
+function CharCount({ value, max }: { value: string; max: number }) {
+  if (value.length < max * 0.75) return null;
+  return (
+    <span className={`tabular text-xs font-normal ${value.length >= max ? 'text-bad' : 'text-muted'}`} aria-live="polite">
+      {value.length}/{max}
+    </span>
   );
 }
