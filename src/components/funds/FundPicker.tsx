@@ -62,12 +62,12 @@ export function FundMultiPicker({
               type="button"
               aria-pressed={on}
               onClick={() => onChange(on ? selected.filter((id) => id !== f.id) : [...selected, f.id])}
-              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition ${
+              className={`flex max-w-full items-center gap-2 rounded-2xl border px-3 py-1.5 text-left text-sm transition ${
                 on ? 'border-accent bg-accent-soft' : 'border-line text-muted hover:text-ink'
               }`}
             >
               <Swatch color={f.color} />
-              <span className="font-medium">{f.name}</span>
+              <span className="min-w-0 font-medium wrap-anywhere">{f.name}</span>
               <span className="tabular text-xs opacity-75">
                 {pct(f.annualReturn)} return · {pct(f.fee)} {region.feeLabel}
               </span>

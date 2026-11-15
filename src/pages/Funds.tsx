@@ -82,8 +82,9 @@ export default function FundsPage() {
               <div className="flex items-start gap-3">
                 <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full" style={{ background: f.color }} />
                 <div className="min-w-0 flex-1">
-                  <h3 className="flex min-w-0 items-center gap-2 font-semibold">
-                    <span className="truncate">{f.name}</span>
+                  {/* Long unbroken words wrap rather than truncate or overflow (WCAG 1.4.10 Reflow). */}
+                  <h3 className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
+                    <span className="min-w-0 wrap-anywhere">{f.name}</span>
                     {starter && (
                       <span
                         className="shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted ring-1 ring-line"
@@ -93,7 +94,7 @@ export default function FundsPage() {
                       </span>
                     )}
                   </h3>
-                  {f.notes && <p className="mt-0.5 text-sm text-muted">{f.notes}</p>}
+                  {f.notes && <p className="mt-0.5 text-sm text-muted wrap-anywhere">{f.notes}</p>}
                 </div>
               </div>
               <dl className="tabular mt-4 mb-4 grid grid-cols-3 gap-2 text-sm">
