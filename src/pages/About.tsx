@@ -1,121 +1,115 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, PageHeader } from '../components/ui';
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+const PORTFOLIO_URL = 'https://mahabdulkhaliq.github.io';
+const GITHUB_URL = 'https://github.com/MahAbdulKhaliq';
+const REPO_URL = 'https://github.com/MahAbdulKhaliq/finance-toolkit';
+
+const STACK = ['React 18', 'TypeScript', 'Vite', 'Tailwind CSS', 'Recharts', 'Zustand', 'Vitest', 'GitHub Actions'];
+
+function ExternalLink({ href, children, icon }: { href: string; children: ReactNode; icon: ReactNode }) {
   return (
-    <Card>
-      <h2 className="mb-2 text-lg font-semibold">{title}</h2>
-      <div className="flex flex-col gap-2 text-sm leading-relaxed text-muted [&_strong]:text-ink">{children}</div>
-    </Card>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium transition hover:border-accent hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden>
+        {icon}
+      </svg>
+      {children}
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
   );
 }
 
-function F({ children }: { children: ReactNode }) {
-  return <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[0.8rem] text-ink">{children}</code>;
-}
+const globeIcon = (
+  <path
+    d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9m0-18C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9M3.5 9h17M3.5 15h17"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    fill="none"
+    strokeLinecap="round"
+  />
+);
+
+const githubIcon = (
+  <path
+    fill="currentColor"
+    d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.35 1.12 2.92.86.09-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 015 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.04 10.04 0 0022 12.25C22 6.58 17.52 2 12 2z"
+  />
+);
 
 export default function About() {
   return (
     <>
-      <PageHeader
-        title="Methodology"
-        intro="How each calculator works, and the assumptions behind the numbers. The math is plain TypeScript, unit-tested against known reference values."
-      />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Section title="Growth & Fees">
-          <p>
-            The portfolio is simulated in monthly steps, or weekly/bi-weekly when contributions are
-            that frequent. Growth compounds to the stated annual return: <F>g = (1 + R)^(1/n) − 1</F>.
-          </p>
-          <p>
-            The fee (MER / expense ratio) is charged pro rata on the balance each step,{' '}
-            <F>fee = balance × MER / n</F>. That's close to how funds accrue fees daily inside the unit
-            price.
-          </p>
-          <p>
-            A shadow portfolio with a 0% fee runs alongside. <strong>Total cost of fees</strong> = shadow
-            balance − actual balance. It counts the fees themselves plus the growth those dollars would
-            have earned.
-          </p>
-        </Section>
+      <PageHeader title="About" intro="Who built this, and why." />
 
-        <Section title="CAGR">
-          <p>
-            <F>CAGR = (End / Start)^(1 / years) − 1</F>. The other modes rearrange the same formula,
-            for example <F>years = ln(End / Start) / ln(1 + r)</F>. Date ranges use 365.25-day years.
+      <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr]">
+        <Card>
+          <div className="flex items-center gap-4">
+            <div
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent text-xl font-bold text-accent-ink"
+              aria-hidden
+            >
+              MA
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold">Mahmood Abdul-Khaliq</h2>
+              <p className="text-sm text-muted">Developer of Finance Toolkit</p>
+            </div>
+          </div>
+          <p className="mt-4 leading-relaxed text-muted">
+            Hi, I'm Mahmood. I built Finance Toolkit to make the long-term cost of everyday money
+            decisions easy to see, from fund fees that quietly compound to the trade-offs of buying a
+            home instead of renting.
           </p>
-          <p>
-            Real CAGR uses the Fisher equation: <F>(1 + r) / (1 + inflation) − 1</F>.
-          </p>
-          <p>
-            <strong>Saving a CAGR as a fund:</strong> historical fund returns are usually already net of
-            fees. If so, either leave the fee at 0% or add the fee back to the return, so it isn't
-            counted twice.
-          </p>
-        </Section>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <ExternalLink href={PORTFOLIO_URL} icon={globeIcon}>Portfolio website</ExternalLink>
+            <ExternalLink href={GITHUB_URL} icon={githubIcon}>GitHub</ExternalLink>
+          </div>
+        </Card>
 
-        <Section title="Rent vs. Buy">
-          <p>
-            Simulated month by month. Each month the buyer pays the mortgage, property tax, maintenance
-            (both as a share of the current home value), insurance and condo/HOA fees. The renter pays
-            rent and renter's insurance.
+        <Card>
+          <h2 className="text-lg font-semibold">About this project</h2>
+          <p className="mt-2 leading-relaxed text-muted">
+            Many financial calculators only answer one question at a time. This toolkit connects
+            three of them through a shared fund library: you can turn a historical CAGR into a fund,
+            compare its fees against others, then use it as the investment a renter would hold. It
+            supports both Canadian and US rules (semi-annual mortgage compounding and CMHC insurance
+            vs. monthly compounding and PMI).
           </p>
-          <p>
-            <strong>Fair comparison:</strong> both households spend the same cash. The renter invests the
-            down payment and closing costs on day one. After that, whichever side has lower housing
-            costs that month invests the difference in the chosen fund, which grows at its return net
-            of fees.
-          </p>
-          <p>
-            Buyer's net worth = home value × (1 − selling costs) − mortgage balance + invested savings.
-            The break-even year is the first year this is at least the renter's portfolio.
-          </p>
-          <p>
-            Insurance and condo/HOA fees rise with inflation. Rent rises at its own rate. Taxes on
-            investment gains, rental income and mortgage-interest deductions are not modeled.
-          </p>
-        </Section>
-
-        <Section title="Canada vs. US rules">
-          <p>
-            <strong>🇨🇦 Canada:</strong> fixed mortgage rates compound semi-annually,{' '}
-            <F>i = (1 + r/2)^(1/6) − 1</F>. Below 20% down, a CMHC premium is added to the mortgage:
-            4.00% (5–9.99% down), 3.10% (10–14.99%), 2.80% (15–19.99%), plus 0.20% for amortizations
-            over 25 years (insured mortgages max out at 30). It's a one-time cost: it doesn't end once you
-            reach 20% equity, and it's counted under "money you don't get back". The minimum down payment is
-            5% of the first $500k and 10% of the rest. Homes at $1.5M or more need 20%. A principal
-            residence is exempt from capital gains tax.
-          </p>
-          <p>
-            <strong>🇺🇸 US:</strong> monthly compounding, <F>i = r / 12</F>. Below 20% down, PMI is
-            charged as an annual percentage of the original loan and drops off automatically once the
-            balance reaches 78% of the purchase price. The net worth chart marks that point. The
-            home-sale capital gains exclusion is not modeled.
-          </p>
-          <p>
-            The region toggle changes rules, labels and currency. It never converts your numbers.
-          </p>
-        </Section>
-
-        <Section title="Today's dollars">
-          <p>
-            With <strong>Today's $</strong> on, an amount in year <em>t</em> is shown as{' '}
-            <F>value / (1 + inflation)^t</F>, so results from different years can be compared fairly.
-            The inflation rate defaults to 2% (CA) or 2.5% (US) and can be edited.
-          </p>
-        </Section>
-
-        <Section title="Privacy & sharing">
-          <p>
-            There's no backend. Your fund library and settings are stored in your browser's
-            localStorage. A share link encodes the scenario (and the funds it uses) in the URL itself,
-            compressed with lz-string.
-          </p>
-          <p>
-            Nothing here is financial advice. These are simplified models meant to help you build
-            intuition and compare scenarios.
-          </p>
-        </Section>
+          <ul className="mt-4 flex list-disc flex-col gap-1.5 pl-5 text-sm leading-relaxed text-muted">
+            <li>
+              <strong className="text-ink">Tested finance engine:</strong> the calculations are plain
+              TypeScript functions with unit tests checked against known reference values.
+            </li>
+            <li>
+              <strong className="text-ink">No backend:</strong> everything runs in your browser. Your
+              funds are saved locally, and any scenario can be shared as a link.
+            </li>
+            <li>
+              <strong className="text-ink">Accessible and responsive:</strong> works with a keyboard,
+              in light and dark mode, and down to phone width.
+            </li>
+          </ul>
+          <h3 className="mt-5 text-sm font-semibold">Built with</h3>
+          <ul className="mt-2 flex flex-wrap gap-1.5" aria-label="Tech stack">
+            {STACK.map((s) => (
+              <li key={s} className="rounded-full bg-surface-2 px-2.5 py-1 text-xs font-medium ring-1 ring-line">
+                {s}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <ExternalLink href={REPO_URL} icon={githubIcon}>View the source code</ExternalLink>
+            <Link to="/methodology" className="text-sm font-medium text-accent underline-offset-2 hover:underline">
+              Read the methodology →
+            </Link>
+          </div>
+        </Card>
       </div>
     </>
   );

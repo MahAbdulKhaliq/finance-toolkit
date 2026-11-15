@@ -9,7 +9,8 @@ const NAV = [
   { to: '/cagr', label: 'CAGR' },
   { to: '/rent-vs-buy', label: 'Rent vs. Buy' },
   { to: '/funds', label: 'My Funds' },
-  { to: '/about', label: 'Methodology' },
+  { to: '/methodology', label: 'Methodology' },
+  { to: '/about', label: 'About' },
 ];
 
 const THEME_NEXT: Record<Theme, Theme> = { system: 'light', light: 'dark', dark: 'system' };
@@ -21,6 +22,8 @@ export function AppShell() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    // On narrow screens the nav scrolls sideways; keep the current page's link visible.
+    document.querySelector('nav[aria-label="Calculators"] a[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, [pathname]);
 
   return (

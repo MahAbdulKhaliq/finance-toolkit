@@ -9,6 +9,7 @@ const GrowthCalculator = lazy(() => import('./pages/GrowthCalculator'));
 const CagrCalculator = lazy(() => import('./pages/CagrCalculator'));
 const RentVsBuy = lazy(() => import('./pages/RentVsBuy'));
 const Funds = lazy(() => import('./pages/Funds'));
+const Methodology = lazy(() => import('./pages/Methodology'));
 const About = lazy(() => import('./pages/About'));
 
 const page = (el: React.ReactNode) => (
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="cagr" element={page(<CagrCalculator />)} />
           <Route path="rent-vs-buy" element={page(<RentVsBuy />)} />
           <Route path="funds" element={page(<Funds />)} />
+          <Route path="methodology" element={page(<Methodology />)} />
           <Route path="about" element={page(<About />)} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

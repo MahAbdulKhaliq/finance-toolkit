@@ -45,4 +45,4 @@ Deploy: `.github/workflows/deploy.yml` runs tests + build on push to `main` and 
 - Rent vs. Buy uses `FundSelect` for the renter's investment.
 - Both pickers can create a fund inline through `FundEditor` (a native `<dialog>`).
 
-Pages other than Home are lazy-loaded in `src/main.tsx`. The Methodology page (`pages/About.tsx`) documents every formula and assumption, so update it when you change calculation behavior.
+Pages other than Home are lazy-loaded in `src/main.tsx`. The Methodology page (`pages/Methodology.tsx`, route `/methodology`) documents every formula and assumption, so update it when you change calculation behavior.
