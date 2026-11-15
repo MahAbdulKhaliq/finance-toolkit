@@ -68,7 +68,9 @@ export function FundMultiPicker({
             >
               <Swatch color={f.color} />
               <span className="font-medium">{f.name}</span>
-              <span className="tabular text-xs opacity-75">{pct(f.fee)} {region.feeLabel}</span>
+              <span className="tabular text-xs opacity-75">
+                {pct(f.annualReturn)} return · {pct(f.fee)} {region.feeLabel}
+              </span>
             </button>
           );
         })}

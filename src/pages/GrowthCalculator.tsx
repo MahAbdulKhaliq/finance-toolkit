@@ -135,7 +135,10 @@ export default function GrowthCalculator() {
 
           <Card>
             <CardTitle>Funds to compare</CardTitle>
-            <FundMultiPicker funds={all} selected={inputs.fundIds} onChange={(fundIds) => update({ fundIds })} />
+            <FundMultiPicker
+              // Show this page's overrides on the chips so they match the results.
+              funds={all.map((f) => ({ ...f, ...inputs.overrides[f.id] }))}
+              selected={inputs.fundIds} onChange={(fundIds) => update({ fundIds })} />
             {selectedFunds.length > 0 && (
               <div className="mt-4 flex flex-col gap-3 border-t border-line pt-4">
                 <p className="text-xs text-muted">Adjust for this comparison only. Your library isn't changed.</p>
