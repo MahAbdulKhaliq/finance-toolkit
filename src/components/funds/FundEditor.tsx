@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { nextColor, useFunds, FUND_COLORS, type Fund } from '../../state/fundsStore';
+import { isStarter, nextColor, useFunds, FUND_COLORS, type Fund } from '../../state/fundsStore';
 import { useRegion } from '../../state/settingsStore';
 import { Button, PercentField } from '../ui';
 
@@ -43,6 +43,8 @@ export function FundEditor({
   }, [open]);
 
   const editing = Boolean(initial?.id && funds.some((f) => f.id === initial.id));
+  const locked = editing && isStarter({ id: initial!.id! });
+  const lockedInput = 'cursor-not-allowed bg-surface-2 text-muted';
 
   const save = () => {
     const clean = { ...draft, name: draft.name.trim() || 'Untitled fund' };
@@ -72,12 +74,19 @@ export function FundEditor({
         className="flex flex-col gap-4 p-5"
       >
         <h2 className="text-lg font-semibold">{editing ? 'Edit fund' : 'New fund'}</h2>
+        {locked && (
+          <p className="-mt-2 text-sm text-muted">
+            This is a starter fund. You can adjust its {region.feeLabelInline}, return and color, but not its name or notes.
+          </p>
+        )}
         <div className="flex flex-col gap-1">
           <label htmlFor="fund-name" className="text-sm font-medium">Name</label>
           <input
             id="fund-name"
-            autoFocus
-            className="rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
+            autoFocus={!locked}
+            readOnly={locked}
+            aria-readonly={locked}
+            className={`rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent ${locked ? lockedInput : ''}`}
             value={draft.name}
             placeholder="e.g. My TFSA index ETF"
             onChange={(e) => setDraft({ ...draft, name: e.target.value })}
@@ -119,7 +128,9 @@ export function FundEditor({
           <label htmlFor="fund-notes" className="text-sm font-medium">Notes <span className="font-normal text-muted">(optional)</span></label>
           <input
             id="fund-notes"
-            className="rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
+            readOnly={locked}
+            aria-readonly={locked}
+            className={`rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent ${locked ? lockedInput : ''}`}
             value={draft.notes ?? ''}
             onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
           />
