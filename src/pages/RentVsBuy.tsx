@@ -146,7 +146,7 @@ export default function RentVsBuy() {
       <ImportSharedFunds missing={missing} />
       {result.warnings.map((w) => <Notice key={w}>{w}</Notice>)}
 
-      <div className="grid gap-5 lg:grid-cols-[24rem_1fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[24rem_1fr]">
         <div className="flex flex-col gap-5">
           <Card>
             <CardTitle>Buying</CardTitle>
@@ -277,7 +277,7 @@ export default function RentVsBuy() {
                       x={pmiEndYear}
                       stroke="#db2777"
                       strokeDasharray="4 3"
-                      label={{ value: 'PMI ends', position: 'insideTopLeft', fill: '#db2777', fontSize: 12 }}
+                      label={{ value: 'PMI ends', position: 'insideTopLeft', fill: chart.text, fontSize: 12 }}
                     />
                   )}
                   {be && <ReferenceDot x={be.year} y={be.buy} r={6} fill="#0d9488" stroke={chart.tooltipBg} strokeWidth={2} label={{ value: 'Break-even', position: 'top', fill: chart.text, fontSize: 12 }} />}

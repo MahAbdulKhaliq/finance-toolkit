@@ -104,7 +104,7 @@ export default function GrowthCalculator() {
       />
       <ImportSharedFunds missing={missing} />
 
-      <div className="grid gap-5 lg:grid-cols-[22rem_1fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[22rem_1fr]">
         <div className="flex flex-col gap-5">
           <Card>
             <CardTitle action={<Button variant="ghost" onClick={reset}>Reset</Button>}>Your plan</CardTitle>

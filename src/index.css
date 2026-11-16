@@ -84,3 +84,9 @@ input[type='number'] {
 .recharts-tooltip-wrapper {
   outline: none;
 }
+
+/* Recharts colours legend labels with the series colour, which fails text contrast for
+   several data colours. Keep the coloured icon; set the label in ink. */
+.recharts-legend-item-text {
+  color: var(--text) !important;
+}

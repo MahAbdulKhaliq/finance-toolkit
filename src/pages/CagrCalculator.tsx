@@ -143,7 +143,7 @@ export default function CagrCalculator() {
       </div>
 
       {inputs.view === 'single' ? (
-        <div className="grid gap-5 lg:grid-cols-[22rem_1fr]">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[22rem_1fr]">
           <Card>
             <CardTitle>Solve for</CardTitle>
             <Segmented label="Solve for" value={inputs.mode} onChange={(mode) => update({ mode })} options={MODES} />

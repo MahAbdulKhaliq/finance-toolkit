@@ -47,7 +47,7 @@ export default function About() {
     <>
       <PageHeader title="About" intro="Who built this, and why." />
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_1.4fr]">
         <Card>
           <div className="flex items-center gap-4">
             <div
