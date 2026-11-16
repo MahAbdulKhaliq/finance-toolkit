@@ -85,6 +85,24 @@ body {
   }
 }
 
+/* Home: the fund line draws itself once on load. The resting state is fully drawn, so the line
+   is visible whenever animation doesn't run. */
+.fund-line-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: fund-line-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes fund-line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fund-line-draw {
+    animation: none;
+  }
+}
+
 /* Remove number-input spinners; we use our own formatting */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {

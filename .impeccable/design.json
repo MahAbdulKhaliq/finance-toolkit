@@ -1,60 +1,311 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-16T16:30:00-05:00",
+  "generatedAt": "2026-11-16T18:00:00-05:00",
   "title": "Design System: Finance Toolkit",
   "extensions": {
     "colorMeta": {
-      "ledger-teal": { "role": "primary", "displayName": "Ledger Teal", "canonical": "#0f766e", "tonalRamp": ["#042f2e", "#134e4a", "#115e59", "#0f766e", "#0d9488", "#2dd4bf", "#99f6e4", "#ccfbf1"] },
-      "ledger-teal-soft": { "role": "primary", "displayName": "Ledger Teal Soft", "canonical": "#ccfbf1" },
-      "ledger-teal-ink": { "role": "primary", "displayName": "Ledger Teal Ink", "canonical": "#ffffff" },
-      "ledger-teal-dark": { "role": "primary", "displayName": "Ledger Teal (dark mode)", "canonical": "#2dd4bf" },
-      "ledger-teal-soft-dark": { "role": "primary", "displayName": "Ledger Teal Soft (dark mode)", "canonical": "#134e4a" },
-      "ledger-teal-ink-dark": { "role": "primary", "displayName": "Ledger Teal Ink (dark mode)", "canonical": "#04201d" },
-      "rent-indigo": { "role": "secondary", "displayName": "Rent Indigo", "canonical": "#6366f1", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4f46e5", "#6366f1", "#818cf8", "#c7d2fe", "#e0e7ff"] },
-      "rent-indigo-dark": { "role": "secondary", "displayName": "Rent Indigo (dark mode)", "canonical": "#818cf8" },
-      "gain-green": { "role": "tertiary", "displayName": "Gain Green", "canonical": "#15803d", "tonalRamp": ["#052e16", "#14532d", "#166534", "#15803d", "#16a34a", "#4ade80", "#bbf7d0", "#dcfce7"] },
-      "gain-green-dark": { "role": "tertiary", "displayName": "Gain Green (dark mode)", "canonical": "#4ade80" },
-      "cost-rose": { "role": "tertiary", "displayName": "Cost Rose", "canonical": "#be123c", "tonalRamp": ["#4c0519", "#881337", "#9f1239", "#be123c", "#e11d48", "#fb7185", "#fecdd3", "#ffe4e6"] },
-      "cost-rose-dark": { "role": "tertiary", "displayName": "Cost Rose (dark mode)", "canonical": "#fb7185" },
-      "caution-amber-bg": { "role": "tertiary", "displayName": "Caution Amber Wash", "canonical": "#fef3c7", "tonalRamp": ["#451a03", "#78350f", "#92400e", "#b45309", "#d97706", "#fcd34d", "#fde68a", "#fef3c7"] },
-      "caution-amber-ink": { "role": "tertiary", "displayName": "Caution Amber Ink", "canonical": "#92400e" },
-      "caution-amber-bg-dark": { "role": "tertiary", "displayName": "Caution Amber Wash (dark mode)", "canonical": "#422006" },
-      "caution-amber-ink-dark": { "role": "tertiary", "displayName": "Caution Amber Ink (dark mode)", "canonical": "#fcd34d" },
-      "morning-paper": { "role": "neutral", "displayName": "Morning Paper", "canonical": "#f6f7f9", "tonalRamp": ["#14171c", "#2a323c", "#5d6673", "#98a2b0", "#e3e6eb", "#f1f3f6", "#f6f7f9", "#ffffff"] },
-      "surface-white": { "role": "neutral", "displayName": "Surface White", "canonical": "#ffffff" },
-      "surface-mist": { "role": "neutral", "displayName": "Surface Mist", "canonical": "#f1f3f6" },
-      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#e3e6eb" },
-      "chart-grid": { "role": "neutral", "displayName": "Chart Grid", "canonical": "#e5e7eb" },
-      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#14171c" },
-      "slate-muted": { "role": "neutral", "displayName": "Slate Muted", "canonical": "#5d6673" },
-      "night-ground": { "role": "neutral", "displayName": "Night Ground", "canonical": "#0d1014", "tonalRamp": ["#0d1014", "#151a20", "#1c232b", "#262e38", "#2a323c", "#64748b", "#98a2b0", "#e8ecf1"] },
-      "night-surface": { "role": "neutral", "displayName": "Night Surface", "canonical": "#151a20" },
-      "night-surface-2": { "role": "neutral", "displayName": "Night Surface 2", "canonical": "#1c232b" },
-      "night-hairline": { "role": "neutral", "displayName": "Night Hairline", "canonical": "#2a323c" },
-      "night-grid": { "role": "neutral", "displayName": "Night Grid", "canonical": "#262e38" },
-      "night-ink": { "role": "neutral", "displayName": "Night Ink", "canonical": "#e8ecf1" },
-      "night-muted": { "role": "neutral", "displayName": "Night Muted", "canonical": "#98a2b0" }
+      "ledger-teal": {
+        "role": "primary",
+        "displayName": "Ledger Teal",
+        "canonical": "#0f766e",
+        "tonalRamp": [
+          "#042f2e",
+          "#134e4a",
+          "#115e59",
+          "#0f766e",
+          "#0d9488",
+          "#2dd4bf",
+          "#99f6e4",
+          "#ccfbf1"
+        ]
+      },
+      "ledger-teal-soft": {
+        "role": "primary",
+        "displayName": "Ledger Teal Soft",
+        "canonical": "#ccfbf1"
+      },
+      "ledger-teal-ink": {
+        "role": "primary",
+        "displayName": "Ledger Teal Ink",
+        "canonical": "#ffffff"
+      },
+      "ledger-teal-dark": {
+        "role": "primary",
+        "displayName": "Ledger Teal (dark mode)",
+        "canonical": "#2dd4bf"
+      },
+      "ledger-teal-soft-dark": {
+        "role": "primary",
+        "displayName": "Ledger Teal Soft (dark mode)",
+        "canonical": "#134e4a"
+      },
+      "ledger-teal-ink-dark": {
+        "role": "primary",
+        "displayName": "Ledger Teal Ink (dark mode)",
+        "canonical": "#04201d"
+      },
+      "rent-indigo": {
+        "role": "secondary",
+        "displayName": "Rent Indigo",
+        "canonical": "#6366f1",
+        "tonalRamp": [
+          "#1e1b4b",
+          "#312e81",
+          "#3730a3",
+          "#4f46e5",
+          "#6366f1",
+          "#818cf8",
+          "#c7d2fe",
+          "#e0e7ff"
+        ]
+      },
+      "rent-indigo-dark": {
+        "role": "secondary",
+        "displayName": "Rent Indigo (dark mode)",
+        "canonical": "#818cf8"
+      },
+      "gain-green": {
+        "role": "tertiary",
+        "displayName": "Gain Green",
+        "canonical": "#15803d",
+        "tonalRamp": [
+          "#052e16",
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#4ade80",
+          "#bbf7d0",
+          "#dcfce7"
+        ]
+      },
+      "gain-green-dark": {
+        "role": "tertiary",
+        "displayName": "Gain Green (dark mode)",
+        "canonical": "#4ade80"
+      },
+      "cost-rose": {
+        "role": "tertiary",
+        "displayName": "Cost Rose",
+        "canonical": "#be123c",
+        "tonalRamp": [
+          "#4c0519",
+          "#881337",
+          "#9f1239",
+          "#be123c",
+          "#e11d48",
+          "#fb7185",
+          "#fecdd3",
+          "#ffe4e6"
+        ]
+      },
+      "cost-rose-dark": {
+        "role": "tertiary",
+        "displayName": "Cost Rose (dark mode)",
+        "canonical": "#fb7185"
+      },
+      "caution-amber-bg": {
+        "role": "tertiary",
+        "displayName": "Caution Amber Wash",
+        "canonical": "#fef3c7",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#fcd34d",
+          "#fde68a",
+          "#fef3c7"
+        ]
+      },
+      "caution-amber-ink": {
+        "role": "tertiary",
+        "displayName": "Caution Amber Ink",
+        "canonical": "#92400e"
+      },
+      "caution-amber-bg-dark": {
+        "role": "tertiary",
+        "displayName": "Caution Amber Wash (dark mode)",
+        "canonical": "#422006"
+      },
+      "caution-amber-ink-dark": {
+        "role": "tertiary",
+        "displayName": "Caution Amber Ink (dark mode)",
+        "canonical": "#fcd34d"
+      },
+      "morning-paper": {
+        "role": "neutral",
+        "displayName": "Morning Paper",
+        "canonical": "#f6f7f9",
+        "tonalRamp": [
+          "#14171c",
+          "#2a323c",
+          "#5d6673",
+          "#98a2b0",
+          "#e3e6eb",
+          "#f1f3f6",
+          "#f6f7f9",
+          "#ffffff"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "#ffffff"
+      },
+      "surface-mist": {
+        "role": "neutral",
+        "displayName": "Surface Mist",
+        "canonical": "#f1f3f6"
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e3e6eb"
+      },
+      "chart-grid": {
+        "role": "neutral",
+        "displayName": "Chart Grid",
+        "canonical": "#e5e7eb"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#14171c"
+      },
+      "slate-muted": {
+        "role": "neutral",
+        "displayName": "Slate Muted",
+        "canonical": "#5d6673"
+      },
+      "night-ground": {
+        "role": "neutral",
+        "displayName": "Night Ground",
+        "canonical": "#0d1014",
+        "tonalRamp": [
+          "#0d1014",
+          "#151a20",
+          "#1c232b",
+          "#262e38",
+          "#2a323c",
+          "#64748b",
+          "#98a2b0",
+          "#e8ecf1"
+        ]
+      },
+      "night-surface": {
+        "role": "neutral",
+        "displayName": "Night Surface",
+        "canonical": "#151a20"
+      },
+      "night-surface-2": {
+        "role": "neutral",
+        "displayName": "Night Surface 2",
+        "canonical": "#1c232b"
+      },
+      "night-hairline": {
+        "role": "neutral",
+        "displayName": "Night Hairline",
+        "canonical": "#2a323c"
+      },
+      "night-grid": {
+        "role": "neutral",
+        "displayName": "Night Grid",
+        "canonical": "#262e38"
+      },
+      "night-ink": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "canonical": "#e8ecf1"
+      },
+      "night-muted": {
+        "role": "neutral",
+        "displayName": "Night Muted",
+        "canonical": "#98a2b0"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Home hero line only; 1.875rem below 640px." },
-      "headline": { "displayName": "Headline", "purpose": "One page title per calculator; 1.5rem below 640px." },
-      "title": { "displayName": "Title", "purpose": "Card titles; Home cards and section headings step up to 1.125rem." },
-      "figure": { "displayName": "Figure", "purpose": "Stat-tile values, tabular numerals, coloured only by meaning." },
-      "body": { "displayName": "Body", "purpose": "Inputs, buttons, nav, tables and explanatory text." },
-      "label": { "displayName": "Label", "purpose": "Stat labels, hints, chip metadata, footer disclaimer." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Display step for a non-Home hero line; calculators never use it. 1.875rem below 640px."
+      },
+      "display-home": {
+        "displayName": "Home Display",
+        "purpose": "Home headline only: 800 weight, 3.75rem at lg, 4.5rem at xl (2.25rem / 3.75rem on the stop list). Home-scoped exception, not a calculator style."
+      },
+      "station": {
+        "displayName": "Station",
+        "purpose": "Fund Line and stop-list station names; the map interchange steps up to 1.875rem."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "One page title per calculator; 1.5rem below 640px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles; section headings step up to 1.125rem."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Stat-tile values, tabular numerals, coloured only by meaning."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Inputs, buttons, nav, tables and explanatory text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Stat labels, hints, chip metadata, footer disclaimer."
+      }
     },
     "shadows": [
-      { "name": "selection-nudge", "value": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)", "purpose": "Selected option in a segmented control." },
-      { "name": "intent-lift", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Hover on navigational cards, with a 2px upward translate and teal border." },
-      { "name": "overlay", "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)", "purpose": "The Fund Editor dialog, over a 50% black backdrop." }
+      {
+        "name": "selection-nudge",
+        "value": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "Selected option in a segmented control."
+      },
+      {
+        "name": "intent-lift",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Hover on navigational cards, with a 2px upward translate and teal border. No current surface uses it since Home became the Fund Line."
+      },
+      {
+        "name": "overlay",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "The Fund Editor dialog, over a 50% black backdrop."
+      }
     ],
     "motion": [
-      { "name": "state-transition", "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Tailwind default `transition` on buttons, nav links, chips and cards." }
+      {
+        "name": "state-transition",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Tailwind default `transition` on buttons, nav links, chips and cards."
+      },
+      {
+        "name": "fund-line-draw",
+        "value": "1.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "One-shot stroke-dashoffset draw of the Home Fund Line on load; fully drawn at rest, none under prefers-reduced-motion."
+      },
+      {
+        "name": "station-light",
+        "value": "200ms",
+        "purpose": "Fund Line hover/focus: main line to 35% opacity, ring r16 to r20 with teal fill."
+      }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
     ]
   },
   "components": [
@@ -129,26 +380,73 @@
       "description": "Caution panel for shared-fund imports and input warnings.",
       "html": "<div class=\"ds-notice\"><div>This link includes 1 fund that isn't in your library.</div><button class=\"ds-btn-primary\">Add to My Funds</button></div>",
       "css": ".ds-notice { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-radius: 8px; background: var(--warn-bg, #fef3c7); color: var(--warn-text, #92400e); font-size: 0.875rem; } .ds-btn-primary { background: var(--accent, #0f766e); color: var(--accent-text, #fff); border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.875rem; font-weight: 500; cursor: pointer; } .ds-btn-primary:hover { opacity: 0.9; }"
+    },
+    {
+      "name": "Fund Line Station",
+      "kind": "custom",
+      "refersTo": "station-label",
+      "description": "Home signature: teal transit line with ink ring station, pill interchange with Start here badge, and a fund branch; hover or focus a station to light its segment.",
+      "html": "<div class=\"ds-fl\"><svg viewBox=\"0 0 480 200\" aria-hidden=\"true\"><path d=\"M 300 196 V 140 L 330 110 V 80\" stroke=\"#6366f1\" stroke-width=\"10\" stroke-linejoin=\"round\" fill=\"none\"/><rect class=\"ds-fl-cap\" x=\"286\" y=\"186\" width=\"28\" height=\"12\" rx=\"6\"/><path class=\"ds-fl-main\" d=\"M 20 110 H 120 L 150 80 H 460\" stroke-width=\"22\" stroke-linejoin=\"round\" fill=\"none\"/><path class=\"ds-fl-seg\" d=\"M 20 110 H 120 L 150 80\" stroke-width=\"22\" stroke-linejoin=\"round\" fill=\"none\"/><rect class=\"ds-fl-cap\" x=\"14\" y=\"88\" width=\"12\" height=\"44\" rx=\"6\"/><rect class=\"ds-fl-cap\" x=\"454\" y=\"58\" width=\"12\" height=\"44\" rx=\"6\"/><rect class=\"ds-fl-hub\" x=\"280\" y=\"60\" width=\"120\" height=\"40\" rx=\"20\" stroke-width=\"6\"/><circle class=\"ds-fl-ring\" cx=\"80\" cy=\"110\" r=\"16\" stroke-width=\"6\"/></svg><a class=\"ds-fl-stop\" href=\"#\" style=\"left:16.7%;top:68%\"><span class=\"ds-fl-name\">Growth &amp; Fees</span><span class=\"ds-fl-q\">What a fee really costs</span></a><span class=\"ds-fl-badge\" style=\"left:70.8%;top:40%\">Start here</span></div>",
+      "css": ".ds-fl { position: relative; width: 100%; max-width: 30rem; aspect-ratio: 480/200; font-family: inherit; } .ds-fl svg { position: absolute; inset: 0; width: 100%; height: 100%; } .ds-fl-main { stroke: var(--accent, #0f766e); transition: opacity 200ms; } .ds-fl:has(.ds-fl-stop:hover, .ds-fl-stop:focus-visible) .ds-fl-main { opacity: 0.35; } .ds-fl-seg { stroke: var(--accent, #0f766e); opacity: 0; } .ds-fl:has(.ds-fl-stop:hover, .ds-fl-stop:focus-visible) .ds-fl-seg { opacity: 1; } .ds-fl-ring { fill: var(--surface, #fff); stroke: var(--text, #14171c); transition: all 200ms; } .ds-fl:has(.ds-fl-stop:hover, .ds-fl-stop:focus-visible) .ds-fl-ring { r: 20; fill: var(--accent, #0f766e); } .ds-fl-cap { fill: var(--text, #14171c); } .ds-fl-hub { fill: var(--surface, #fff); stroke: var(--text, #14171c); } .ds-fl-stop { position: absolute; left: 25%; top: 64%; transform: translateX(-50%); text-align: center; color: var(--text, #14171c); text-decoration: none; border-radius: 8px; padding: 0 4px; } .ds-fl-stop:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; } .ds-fl-name { display: block; font-size: 1.5rem; line-height: 1; font-weight: 800; letter-spacing: -0.025em; text-decoration-color: var(--accent, #0f766e); text-decoration-thickness: 4px; text-underline-offset: 6px; } .ds-fl-stop:hover .ds-fl-name, .ds-fl-stop:focus-visible .ds-fl-name { text-decoration-line: underline; } .ds-fl-q { display: block; margin-top: 8px; font-size: 0.875rem; color: var(--muted, #5d6673); } .ds-fl-badge { position: absolute; left: 75%; top: 40%; transform: translate(-50%, -50%); background: var(--accent, #0f766e); color: var(--accent-text, #fff); border-radius: 9999px; padding: 4px 12px; font-size: 0.875rem; font-weight: 700; }"
     }
   ],
   "narrative": {
     "northStar": "The Long View",
-    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.",
+    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is the Fund Line: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.",
     "keyCharacteristics": [
       "One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).",
       "Tabular numerals for every figure, so columns of money line up and changes are easy to compare.",
       "Flat bordered surfaces at rest; lift and shadow only on intent or overlay.",
       "Soft, consistent corners (8px controls, 12px containers, pill-like chips).",
-      "Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette."
+      "Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.",
+      "On Home only, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow."
     ],
     "rules": [
-      { "name": "The One Voice Rule", "body": "Ledger Teal is the only colour that signals \"you can act here.\" Data and semantic colours never appear on buttons, links or nav.", "section": "colors" },
-      { "name": "The Meaning-Only Rule", "body": "Green, rose and amber are reserved for gain, cost and caution. A number turns green or rose only because of what it means, never for emphasis.", "section": "colors" },
-      { "name": "The Twin Palette Rule", "body": "Every colour role has a light and a dark value with the same meaning. A new colour isn't done until both exist; Recharts gets the concrete hex values through `useChartTheme()`, not CSS variables.", "section": "colors" },
-      { "name": "The Tabular Rule", "body": "Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug.", "section": "typography" },
-      { "name": "The Sentence Lead Rule", "body": "The headline result is written as a plain sentence (\"After 30 years, X ends up $209,821 ahead of Y.\") at 1.125rem in its own card, with only the fund names and the key figure in bold. Lead with the consequence in words; tiles and charts follow.", "section": "typography" },
-      { "name": "The Inputs-Left Rule", "body": "On wide screens, inputs stay in the left column and results stay right, on every calculator. A visitor moving between calculators always knows where to look.", "section": "layout" },
-      { "name": "The Flat-By-Default Rule", "body": "No card or input carries a shadow at rest. If something lifts, it is because the user is reaching for it or because it is floating over the page.", "section": "elevation" }
+      {
+        "name": "The One Voice Rule",
+        "body": "Ledger Teal is the only colour that signals \"you can act here.\" Data and semantic colours never appear on buttons, links or nav. On the Fund Line, the fund branch lines are data (which funds you have), never the hover or focus signal; a station lights in teal whatever funds feed it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Meaning-Only Rule",
+        "body": "Green, rose and amber are reserved for gain, cost and caution. A number turns green or rose only because of what it means, never for emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Twin Palette Rule",
+        "body": "Every colour role has a light and a dark value with the same meaning. A new colour isn't done until both exist; Recharts gets the concrete hex values through `useChartTheme()`, not CSS variables.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug.",
+        "section": "typography"
+      },
+      {
+        "name": "The Home Weight Rule",
+        "body": "Weight 800 belongs to Home: the headline, station names and the \"how it works\" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Lead Rule",
+        "body": "The headline result is written as a plain sentence (\"After 30 years, X ends up $209,821 ahead of Y.\") at 1.125rem in its own card, with only the fund names and the key figure in bold. Lead with the consequence in words; tiles and charts follow.",
+        "section": "typography"
+      },
+      {
+        "name": "The Inputs-Left Rule",
+        "body": "On wide screens, inputs stay in the left column and results stay right, on every calculator. A visitor moving between calculators always knows where to look.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "No card or input carries a shadow at rest. If something lifts, it is because the user is reaching for it or because it is floating over the page. The Fund Line is flat too: it responds to intent with colour and stroke (the lit segment, the growing ring), never with shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Meaningful Geometry Rule",
+        "body": "Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out.",
+        "section": "shapes"
+      }
     ],
     "dos": [
       "Do keep Ledger Teal as the only accent for interactive and selected states, and use the soft wash rather than the full fill for selection.",
@@ -157,7 +455,9 @@
       "Do define every new colour as a light/dark pair in `src/index.css`, and pass concrete hex values to charts through `useChartTheme()`.",
       "Do keep surfaces flat with 1px hairline borders; reserve lift for hover on navigational cards and shadow for overlays.",
       "Do use 8px corners on controls and 12px on containers.",
-      "Do make sure every chart's key figures also appear as text or in a table."
+      "Do make sure every chart's key figures also appear as text or in a table.",
+      "Do draw Fund Line geometry with 45° bends, round joins and ink terminus caps, and keep its labels as real HTML links positioned over the SVG, not SVG text.",
+      "Do keep any draw-on motion one-shot, fully drawn at rest, and static under `prefers-reduced-motion`."
     ],
     "donts": [
       "Don't use green, rose or amber for emphasis or decoration; they mean gain, cost and caution only.",
@@ -165,7 +465,10 @@
       "Don't add shadows to cards or inputs at rest.",
       "Don't introduce a second typeface or a display font; hierarchy comes from weight and size.",
       "Don't use `var(--…)` for Recharts SVG attributes; they need concrete hex values.",
-      "Don't let long fund names or notes overflow; wrap them."
+      "Don't let long fund names or notes overflow; wrap them.",
+      "Don't add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line, not ornament.",
+      "Don't use weight 800 or the Home Display size on calculator pages.",
+      "Don't light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal."
     ]
   }
 }

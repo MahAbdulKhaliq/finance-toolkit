@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Spectral Rail: Home first viewport</title>
+<style>
+  :root { --ground:#1b1d20; --ash:#25282c; --bone:#e8e2d4; --dim:#9a958a; --violet:#7c6cf0; --cyan:#3fb5c9; --sodium:#f2b705; }
+  * { box-sizing:border-box; margin:0; }
+  body { width:1440px; height:900px; overflow:hidden; color:var(--bone);
+    font-family:"Inter Variable", Inter, "Segoe UI", system-ui, sans-serif;
+    background: repeating-linear-gradient(90deg, #1b1d20 0 3px, #1d1f22 3px 7px, #1a1c1f 7px 12px); }
+  nav { position:absolute; top:28px; left:56px; right:56px; display:flex; gap:40px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+  nav .mark { color:var(--bone); margin-right:auto; }
+  /* the rail: off-centre, one calibrated axis of years */
+  .rail { position:absolute; left:0; right:0; top:560px; height:1px; background:var(--bone); }
+  .tick { position:absolute; top:560px; width:1px; height:14px; background:var(--dim); }
+  .yr { position:absolute; top:584px; font-size:13px; letter-spacing:.1em; color:var(--dim); transform:translateX(-50%); }
+  .line { position:absolute; width:1px; bottom:340px; }
+  .plate { position:absolute; left:56px; top:120px; width:560px; background:var(--ash); padding:28px 32px; }
+  .plate h1 { font-size:58px; line-height:1; font-weight:500; letter-spacing:-.02em; }
+  .plate p { font-size:15px; line-height:1.6; color:var(--dim); margin-top:18px; }
+  .readout { position:absolute; left:1132px; top:120px; text-align:left; }
+  .readout .big { font-size:64px; font-weight:500; color:var(--sodium); letter-spacing:-.02em; }
+  .readout .lbl { font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-top:6px; }
+  .stub { position:absolute; top:640px; font-size:24px; font-weight:500; }
+  .stub small { display:block; font-size:13px; color:var(--dim); margin-top:6px; letter-spacing:.06em; }
+  .stub::before { content:""; position:absolute; left:0; top:-40px; width:1px; height:28px; background:var(--bone); }
+  .stub.open { color:var(--bone); }
+  .stub.open::before { height:40px; top:-52px; width:2px; }
+</style>
+</head>
+<body>
+  <nav><span class="mark">Finance Toolkit</span><span>Growth &amp; Fees</span><span>CAGR</span><span>Rent vs. Buy</span><span>Retirement</span><span>My Funds</span></nav>
+
+  <div class="plate">
+    <h1>Small numbers, big decisions.</h1>
+    <p>Every fund you define becomes a line on the same rail of years. The gap between two lines is what a fee costs.</p>
+  </div>
+
+  <!-- emission lines standing on the rail at year 30 -->
+  <div class="line" style="left:1100px; height:300px; background:var(--cyan);"></div>
+  <div class="line" style="left:1060px; height:200px; background:var(--violet);"></div>
+  <!-- the doubled sodium line: the fee gap -->
+  <div class="line" style="left:1080px; height:250px; background:var(--sodium);"></div>
+  <div class="line" style="left:1084px; height:250px; background:var(--sodium);"></div>
+  <!-- dashed contributed -->
+  <div class="line" style="left:1030px; height:90px; background:repeating-linear-gradient(var(--dim) 0 6px, transparent 6px 12px);"></div>
+
+  <div class="readout"><div class="big">$209,821</div><div class="lbl">Fee gap at year 30 · 0.2% vs 2.2%</div></div>
+
+  <div class="rail"></div>
+  <div class="tick" style="left:120px"></div><div class="yr" style="left:120px">0</div>
+  <div class="tick" style="left:364px"></div><div class="yr" style="left:364px">10</div>
+  <div class="tick" style="left:608px"></div><div class="yr" style="left:608px">20</div>
+  <div class="tick" style="left:852px"></div><div class="yr" style="left:852px">25</div>
+  <div class="tick" style="left:1082px"></div><div class="yr" style="left:1082px">30</div>
+  <div class="tick" style="left:1320px"></div><div class="yr" style="left:1320px">40</div>
+
+  <div class="stub open" style="left:120px">Growth &amp; Fees<small>OPEN · fee vs. decades</small></div>
+  <div class="stub" style="left:430px">CAGR<small>true annual growth</small></div>
+  <div class="stub" style="left:700px">Rent vs. Buy<small>mortgage vs. investing</small></div>
+  <div class="stub" style="left:980px">Retirement<small>years to independence</small></div>
+</body>
+</html>

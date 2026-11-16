@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>The Interest Table: Home first viewport</title>
+<style>
+  :root {
+    --paper: #f2f5ef; --grid: #9ec9c4; --grid-fine: #d3e6e2; --graphite: #22262b;
+    --pencil: #c8322b; --teal: #0f766e; --muted: #5a6168;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden; background: var(--paper); color: var(--graphite);
+    font-family: "Inter Variable", Inter, "Segoe UI", system-ui, sans-serif;
+  }
+  /* Semi-log graph paper: fine 1/10 rules, heavier decade rules */
+  .sheet {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      linear-gradient(var(--grid-fine) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px);
+    background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+    background-position: 48px 40px;
+    opacity: .9;
+  }
+  nav {
+    position: absolute; top: 0; left: 0; right: 0; height: 64px; display: flex; align-items: center;
+    gap: 32px; padding: 0 48px; background: var(--paper); border-bottom: 2px solid var(--graphite);
+    font-size: 14px; letter-spacing: .04em; text-transform: uppercase;
+  }
+  nav .mark { font-size: 24px; font-weight: 800; letter-spacing: -.01em; text-transform: none; margin-right: auto; }
+  nav .mark span { color: var(--teal); }
+  nav a { color: var(--graphite); text-decoration: none; }
+  /* The plate */
+  .plate {
+    position: absolute; left: 48px; top: 104px; width: 900px; height: 640px;
+    border: 2px solid var(--graphite); background: transparent;
+  }
+  .plate svg { position: absolute; inset: 0; }
+  .titleblock {
+    position: absolute; right: -2px; bottom: -2px; width: 380px; background: var(--paper);
+    border: 2px solid var(--graphite); padding: 16px 20px;
+  }
+  .titleblock .plateno { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .titleblock h1 {
+    font-family: "Archivo Narrow", "Arial Narrow", "Roboto Condensed", sans-serif;
+    font-size: 54px; line-height: .95; font-weight: 700; letter-spacing: -.02em; margin-top: 6px;
+  }
+  .gap-label {
+    position: absolute; left: 640px; top: 150px; color: var(--pencil);
+    font-family: "Archivo Narrow", "Arial Narrow", sans-serif; font-size: 40px; font-weight: 700; line-height: 1;
+    transform: rotate(-4deg);
+  }
+  .gap-label small { display: block; font-size: 15px; font-weight: 500; font-family: inherit; }
+  /* Test strips (raise from the darkroom) */
+  .strips { position: absolute; left: 48px; top: 760px; width: 900px; display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--graphite); border-top: 0; }
+  .strip { padding: 14px 20px; border-right: 1px solid var(--graphite); background: var(--paper); }
+  .strip:last-child { border-right: 0; }
+  .strip .fee { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .strip .val { font-family: "Archivo Narrow", "Arial Narrow", sans-serif; font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .strip:nth-child(3) .val { color: var(--pencil); }
+  /* Contents table: the calculators */
+  .contents { position: absolute; left: 1000px; top: 104px; width: 392px; background: var(--paper); border: 2px solid var(--graphite); }
+  .contents h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; padding: 14px 20px; border-bottom: 2px solid var(--graphite); }
+  .row { display: grid; grid-template-columns: 44px 1fr auto; align-items: baseline; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--grid); }
+  .row .n { font-family: "Archivo Narrow", "Arial Narrow", sans-serif; font-size: 28px; font-weight: 700; color: var(--teal); }
+  .row .t { font-family: "Archivo Narrow", "Arial Narrow", sans-serif; font-size: 30px; font-weight: 700; line-height: 1; }
+  .row .t small { display: block; font-family: "Inter Variable", Inter, sans-serif; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 6px; }
+  .row .go { font-size: 22px; color: var(--teal); }
+  .row.focus { background: #fff; }
+  .lib { padding: 16px 20px; font-size: 14px; color: var(--muted); }
+  .lib b { color: var(--graphite); }
+  .cta {
+    position: absolute; left: 1000px; top: 640px; width: 392px; padding: 18px 20px; background: var(--teal); color: #fff;
+    font-family: "Archivo Narrow", "Arial Narrow", sans-serif; font-size: 28px; font-weight: 700; border: 2px solid var(--graphite);
+  }
+  .cta small { display: block; font-family: "Inter Variable", Inter, sans-serif; font-size: 13px; font-weight: 400; opacity: .85; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <div class="sheet"></div>
+  <nav>
+    <div class="mark">Finance <span>Toolkit</span></div>
+    <a>Growth &amp; Fees</a><a>CAGR</a><a>Rent vs. Buy</a><a>Retirement</a><a>My Funds</a><a>Methodology</a><a>CA $</a>
+  </nav>
+
+  <section class="plate" aria-label="Plate 1">
+    <svg viewBox="0 0 900 640" width="900" height="640" aria-hidden="true">
+      <!-- axes -->
+      <line x1="60" y1="580" x2="880" y2="580" stroke="#22262b" stroke-width="2"/>
+      <line x1="60" y1="40" x2="60" y2="580" stroke="#22262b" stroke-width="2"/>
+      <!-- contributed (dashed graphite) -->
+      <path d="M60 560 C 300 540, 600 520, 880 500" fill="none" stroke="#5a6168" stroke-width="2" stroke-dasharray="6 6"/>
+      <!-- 2% fee fund -->
+      <path d="M60 560 C 300 500, 620 380, 880 300" fill="none" stroke="#c8322b" stroke-width="3"/>
+      <!-- 0.2% fee fund: the fixed keyline, one continuous stroke that leaves the plate -->
+      <path d="M60 560 C 300 470, 600 260, 900 110" fill="none" stroke="#0f766e" stroke-width="4"/>
+      <!-- red pencil gap bracket -->
+      <path d="M800 150 L 812 150 L 812 340 L 800 340" fill="none" stroke="#c8322b" stroke-width="2.5"/>
+      <!-- the bloom: focused endpoint -->
+      <circle cx="880" cy="122" r="9" fill="#0f766e" stroke="#f2f5ef" stroke-width="3"/>
+    </svg>
+    <div class="gap-label">$209,821<small>what a 2% fee quietly takes over 30 years</small></div>
+    <div class="titleblock">
+      <div class="plateno">Plate 1 · $10,000 + $500/mo · 7% · 30 yrs</div>
+      <h1>Small numbers, big decisions.</h1>
+    </div>
+  </section>
+
+  <div class="strips" aria-label="Test strips">
+    <div class="strip"><div class="fee">0.2% fee</div><div class="val">$633,876</div></div>
+    <div class="strip"><div class="fee">1.0% fee</div><div class="val">$537,957</div></div>
+    <div class="strip"><div class="fee">2.2% fee</div><div class="val">$424,055</div></div>
+  </div>
+
+  <aside class="contents">
+    <h2>Contents</h2>
+    <div class="row focus"><span class="n">1</span><span class="t">Growth &amp; Fees<small>What a fee costs over decades</small></span><span class="go">→</span></div>
+    <div class="row"><span class="n">2</span><span class="t">CAGR<small>True annual growth of any investment</small></span><span class="go">→</span></div>
+    <div class="row"><span class="n">3</span><span class="t">Rent vs. Buy<small>Mortgage, CMHC/PMI vs. renting and investing</small></span><span class="go">→</span></div>
+    <div class="row"><span class="n">4</span><span class="t">Retirement<small>Years until your funds cover your spending</small></span><span class="go">→</span></div>
+    <p class="lib"><b>One fund library, used everywhere.</b> Define a fund once in My Funds (4 saved); every table above reads from it.</p>
+  </aside>
+  <div class="cta">Open Growth &amp; Fees<small>Drag the fee on Plate 1 to re-plot</small></div>
+</body>
+</html>

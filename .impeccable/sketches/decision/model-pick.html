@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>The Fund Line: Home first viewport</title>
+<style>
+  :root { --white:#ffffff; --teal:#0f766e; --ink:#111111; --indigo:#6366f1; --rose:#e11d48; --amber:#d97706; --muted:#5d6673; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width:1440px; height:900px; overflow:hidden; background:var(--white); color:var(--ink);
+    font-family: "Inter Variable", Inter, "Segoe UI", system-ui, sans-serif; }
+  nav { height:64px; display:flex; align-items:center; gap:28px; padding:0 56px; border-bottom:6px solid var(--teal); font-size:15px; font-weight:600; }
+  nav .mark { font-size:24px; font-weight:800; margin-right:auto; display:flex; align-items:center; gap:10px; }
+  nav .roundel { width:28px; height:28px; border-radius:50%; border:6px solid var(--teal); }
+  h1 { position:absolute; left:56px; top:108px; font-size:76px; line-height:.95; font-weight:800; letter-spacing:-.03em; width:640px; }
+  .lede { position:absolute; left:56px; top:290px; width:520px; font-size:18px; line-height:1.5; color:var(--muted); }
+  svg { position:absolute; left:0; top:64px; }
+  .station { position:absolute; font-weight:800; line-height:1; }
+  .station .nm { font-size:30px; letter-spacing:-.01em; }
+  .station .sub { display:block; font-size:14px; font-weight:500; color:var(--muted); margin-top:6px; width:230px; }
+  .interchange .nm { font-size:34px; }
+  .badge { display:inline-block; margin-top:10px; padding:6px 12px; background:var(--teal); color:#fff; font-size:14px; font-weight:700; border-radius:999px; }
+  .legend { position:absolute; left:56px; bottom:40px; display:flex; gap:28px; font-size:14px; font-weight:600; color:var(--muted); }
+  .legend i { display:inline-block; width:36px; height:8px; border-radius:4px; margin-right:8px; vertical-align:middle; }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="mark"><span class="roundel"></span>Finance Toolkit</div>
+    <span>Growth &amp; Fees</span><span>CAGR</span><span>Rent vs. Buy</span><span>Retirement</span><span>My Funds</span><span>Methodology</span>
+  </nav>
+  <h1>Small numbers, big decisions.</h1>
+  <p class="lede">Define a fund once. Ride it through four calculators that show what fees, down payments and savings rates really cost over decades.</p>
+
+  <svg width="1440" height="836" viewBox="0 0 1440 836" aria-hidden="true">
+    <!-- the fund line: one bold teal line, 45-degree geometry -->
+    <path d="M -20 640 H 520 L 700 460 H 980 L 1120 320 H 1460" fill="none" stroke="#0f766e" stroke-width="22" stroke-linejoin="round"/>
+    <!-- branch lines: other funds -->
+    <path d="M 700 836 V 560 L 760 500 H 980" fill="none" stroke="#6366f1" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M 980 836 V 640 L 1120 500 V 320" fill="none" stroke="#e11d48" stroke-width="12" stroke-linejoin="round"/>
+    <!-- stations -->
+    <circle cx="300" cy="640" r="20" fill="#fff" stroke="#111" stroke-width="7"/>
+    <circle cx="620" cy="560" r="20" fill="#fff" stroke="#111" stroke-width="7"/>
+    <!-- interchange: My Funds -->
+    <rect x="684" y="436" width="312" height="48" rx="24" fill="#fff" stroke="#111" stroke-width="7"/>
+    <circle cx="1120" cy="320" r="20" fill="#fff" stroke="#111" stroke-width="7"/>
+    <circle cx="1330" cy="320" r="20" fill="#fff" stroke="#111" stroke-width="7"/>
+  </svg>
+
+  <div class="station" style="left:220px; top:740px;"><span class="nm">Growth &amp; Fees</span><span class="sub">What a fee costs over decades</span></div>
+  <div class="station" style="left:560px; top:654px;"><span class="nm">CAGR</span><span class="sub">True annual growth of any investment</span></div>
+  <div class="station interchange" style="left:720px; top:340px;"><span class="nm">My Funds</span><span class="sub">Interchange: 4 funds saved, used on every line</span><span class="badge">Start here</span></div>
+  <div class="station" style="left:1040px; top:200px;"><span class="nm">Rent vs. Buy</span><span class="sub">Mortgage, CMHC/PMI vs. investing</span></div>
+  <div class="station" style="left:1230px; top:370px;"><span class="nm">Retirement</span><span class="sub">When your funds cover your spending</span></div>
+
+  <div class="legend"><span><i style="background:#0f766e"></i>Broad index ETF</span><span><i style="background:#6366f1"></i>All-in-one ETF</span><span><i style="background:#e11d48"></i>Big-bank mutual fund</span></div>
+</body>
+</html>

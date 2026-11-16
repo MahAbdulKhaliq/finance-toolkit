@@ -39,6 +39,18 @@ typography:
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "-0.025em"
+  display-home:
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontSize: "3.75rem"
+    fontWeight: 800
+    lineHeight: 0.95
+    letterSpacing: "-0.03em"
+  station:
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.025em"
   headline:
     fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "1.875rem"
@@ -79,7 +91,7 @@ spacing:
   lg: "16px"
   xl: "20px"
   2xl: "24px"
-  section: "40px"
+  section: "56px"
 components:
   button-primary:
     backgroundColor: "{colors.ledger-teal}"
@@ -132,6 +144,14 @@ components:
   fund-chip-selected:
     backgroundColor: "{colors.ledger-teal-soft}"
     textColor: "{colors.ink}"
+  start-here-badge:
+    backgroundColor: "{colors.ledger-teal}"
+    textColor: "{colors.ledger-teal-ink}"
+    rounded: "{rounded.full}"
+    padding: "4px 12px"
+  station-label:
+    textColor: "{colors.ink}"
+    typography: "{typography.station}"
   notice:
     backgroundColor: "{colors.caution-amber-bg}"
     textColor: "{colors.caution-amber-ink}"
@@ -151,20 +171,23 @@ Density is that of a working tool. Inputs sit in a narrow left column, and resul
 
 The mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.
 
+Home is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.
+
 **Key Characteristics:**
 - One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).
 - Tabular numerals for every figure, so columns of money line up and changes are easy to compare.
 - Flat bordered surfaces at rest; lift and shadow only on intent or overlay.
 - Soft, consistent corners (8px controls, 12px containers, pill-like chips).
 - Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.
+- On Home only, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow.
 
 ## Colors
 
 A cool, low-chroma neutral system with one teal voice, plus a small set of semantic and data colours that always mean something.
 
 ### Primary
-- **Ledger Teal** (`ledger-teal`; `ledger-teal-dark` in dark mode): the single interactive accent. Primary buttons, the logo tile, focus rings and focused input borders, links, numbered step badges, the selected chip border, and the "Buy" or first-fund series in charts. Text on it uses `ledger-teal-ink` / `ledger-teal-ink-dark`.
-- **Ledger Teal Soft** (`ledger-teal-soft`; `ledger-teal-soft-dark`): the selected-state wash. Active nav link, selected fund chips, icon tiles on Home, and the winning-outcome card tint in Rent vs. Buy.
+- **Ledger Teal** (`ledger-teal`; `ledger-teal-dark` in dark mode): the single interactive accent. Primary buttons, the logo tile, focus rings and focused input borders, links, numbered step badges, the selected chip border, and the "Buy" or first-fund series in charts. On Home it is the Fund Line itself, the lit station segment and ring fill, the hover underline on station names, and the "Start here" badge. Text on it uses `ledger-teal-ink` / `ledger-teal-ink-dark`.
+- **Ledger Teal Soft** (`ledger-teal-soft`; `ledger-teal-soft-dark`): the selected-state wash. Active nav link, selected fund chips, and the winning-outcome card tint (Growth & Fees, Retirement, and Rent vs. Buy when buying wins).
 
 ### Secondary
 - **Rent Indigo** (`rent-indigo`; `rent-indigo-dark`; CSS `--rent`, Tailwind `rent`): the counter-voice to teal in comparisons. The "Rent + invest" line, the Rent bar and the renting outcome card in Rent vs. Buy, and the second default fund colour. Use it only where two options are being weighed against each other.
@@ -184,10 +207,10 @@ A cool, low-chroma neutral system with one teal voice, plus a small set of seman
 - **Chart Grid** (`chart-grid`) / **Night Grid** (`night-grid`): chart gridlines only.
 
 ### Data palette
-Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). A fund's colour is stored with the fund, so it is the same in both themes; all eight keep at least 3:1 against the surface in both. Fixed chart series (buy, rent, cost, lost growth, mortgage insurance, the Rent vs. Buy cost categories, the "contributed" reference line) live in `useChartTheme().series` / `.muted` in `src/state/useTheme.ts` as light/dark pairs with at least 3:1 against their surface; pages never write a chart hex literal. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, never as button or surface fills. Legend and marker labels are set in ink, not in the series colour, because several data colours fall below 4.5:1 as text.
+Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). A fund's colour is stored with the fund, so it is the same in both themes; all eight keep at least 3:1 against the surface in both. Fixed chart series (buy, rent, cost, lost growth, mortgage insurance, the Rent vs. Buy cost categories, the "contributed" reference line) live in `useChartTheme().series` / `.muted` in `src/state/useTheme.ts` as light/dark pairs with at least 3:1 against their surface; pages never write a chart hex literal. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, and on Home as each fund's branch line and legend swatch, never as button or surface fills. Legend and marker labels are set in ink, not in the series colour, because several data colours fall below 4.5:1 as text.
 
 ### Named Rules
-**The One Voice Rule.** Ledger Teal is the only colour that signals "you can act here." Data and semantic colours never appear on buttons, links or nav.
+**The One Voice Rule.** Ledger Teal is the only colour that signals "you can act here." Data and semantic colours never appear on buttons, links or nav. On the Fund Line, the fund branch lines are data (which funds you have), never the hover or focus signal; a station lights in teal whatever funds feed it.
 
 **The Meaning-Only Rule.** Green, rose and amber are reserved for gain, cost and caution. A number turns green or rose only because of what it means, never for emphasis.
 
@@ -200,9 +223,11 @@ Funds carry their own identity colour, chosen from a fixed set of eight in `src/
 **Character:** One neutral sans for everything, carried by weight and size rather than by a second family. Inter Variable is self-hosted from the `@fontsource-variable/inter` package (imported in `src/main.tsx`, `font-display: swap`, split by script so visitors download only the latin file, about 48 kB). No font is fetched from a third party, which keeps the "nothing is sent anywhere" promise. The system fonts after it in the stack are only a fallback while it loads.
 
 ### Hierarchy
-- **Display** (700, 3rem from 640px up, 1.875rem below; tight tracking): the Home hero line only.
+- **Display** (700, 3rem from 640px up, 1.875rem below; tight tracking): the display step for any non-Home hero line. Calculators never use it; they top out at Headline.
+- **Home Display** (`display-home`: 800, 3.75rem at 1024px up and 4.5rem from 1280px; on the stop list 2.25rem, 3.75rem from 640px; 0.95 leading, -0.03em tracking): the Home headline only. A deliberate Home-scoped exception, so the Fund Line's heavy station names have a headline above them; it does not change the calculators' type.
+- **Station** (`station`: 800, 1.5rem, leading 1, tight tracking): station names on the Fund Line and the stop list. The map's interchange name ("My Funds") steps up to 1.875rem. The "how it works" heading is 1.5rem at 800 and its stop titles 1.125rem at 800, the same Home voice.
 - **Headline** (700, 1.875rem from 640px up, 1.5rem below; tight tracking): one page title per calculator (`PageHeader`).
-- **Title** (600, 1rem): card titles. Home cards and section headings step up to 1.125rem.
+- **Title** (600, 1rem): card titles. Section headings step up to 1.125rem.
 - **Figure** (600, 1.25rem, tabular numerals): stat-tile values. Coloured by the Meaning-Only Rule.
 - **Body** (400, 0.875rem): inputs, buttons, nav, tables, explanatory text. Page intros run at the base size (1rem, muted); the Home lede is 1.125rem. Every paragraph is capped at 34em (about 75 characters of Inter) with `text-wrap: pretty` (a base rule in `src/index.css`).
 - **Label** (500, 0.75rem): stat labels, field hints, chip metadata, the footer disclaimer. Field labels use 0.875rem at 500.
@@ -210,13 +235,17 @@ Funds carry their own identity colour, chosen from a fixed set of eight in `src/
 ### Named Rules
 **The Tabular Rule.** Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug.
 
+**The Home Weight Rule.** Weight 800 belongs to Home: the headline, station names and the "how it works" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door.
+
 **The Sentence Lead Rule.** The headline result is written as a plain sentence ("After 30 years, X ends up $209,821 ahead of Y.") at 1.125rem in its own card, with only the fund names and the key figure in bold. Lead with the consequence in words; tiles and charts follow.
 
 ## Layout
 
 A centred container (max 1280px) with a 16px side gutter, a sticky header and a muted footer disclaimer. Calculator pages use a two-column grid from 1024px up: a fixed ~22rem input column on the left and a fluid results column on the right (20px gap). Below 1024px everything stacks, inputs first. Within cards, fields sit in a 2-column grid with 12px gaps, and stat tiles reflow from 2 to 3 columns as width allows.
 
-Spacing follows a 4px base: 12px between fields and tiles, 16–20px card padding (16px on phones, 20px from 640px up), 24px below page headers, 40px between Home sections. The header nav scrolls sideways on narrow screens and keeps the current link in view; it never wraps. Long fund names and notes wrap anywhere rather than overflowing. The layout must reflow cleanly to 375px.
+Spacing follows a 4px base: 12px between fields and tiles, 16–20px card padding (16px on phones, 20px from 640px up), 24px below page headers, 56px between Home sections. The header nav scrolls sideways on narrow screens and keeps the current link in view; it never wraps. Long fund names and notes wrap anywhere rather than overflowing. The layout must reflow cleanly to 375px.
+
+Home has its own layout. From 1024px up it is a transit map: one section with a fixed 1200:620 aspect ratio, SVG geometry in a 1200 × 620 coordinate space for the lines, rings and caps, and real HTML labels positioned over it by percentage (`left: x/1200`, `top: y/620`), so text stays at reading size and every station is an ordinary link. The headline and lede sit top-left (max 33rem), the fund legend sits in the empty lower-right band (20rem wide). Below 1024px the map becomes a vertical stop list down the page. The "how it works" section is a three-stop line under a hairline rule: a horizontal teal bar across a three-column grid from 640px up, and the same vertical bar and ring stops on phones.
 
 **The Inputs-Left Rule.** On wide screens, inputs stay in the left column and results stay right, on every calculator. A visitor moving between calculators always knows where to look.
 
@@ -226,16 +255,20 @@ Flat at rest, lift on intent. Depth comes from tonal layering (paper ground → 
 
 ### Shadow Vocabulary
 - **Selection nudge** (`shadow-sm`, `0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`): the selected option in a segmented control, raising it off its mist track.
-- **Intent lift** (`shadow-lg`, `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`, with a 2px upward translate and a teal border): hover on navigational cards (the Home calculator cards).
+- **Intent lift** (`shadow-lg`, `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`, with a 2px upward translate and a teal border): hover on navigational cards. Home no longer uses cards (its stations light the line instead), so no current surface uses it; keep it for any future navigational card.
 - **Overlay** (`shadow-2xl`, `0 25px 50px -12px rgb(0 0 0 / 0.25)`, over a 50% black backdrop): the Fund Editor dialog.
 - **Header glass**: the sticky header uses its surface colour at 90% with backdrop blur and a hairline bottom border; no shadow.
 
 ### Named Rules
-**The Flat-By-Default Rule.** No card or input carries a shadow at rest. If something lifts, it is because the user is reaching for it or because it is floating over the page.
+**The Flat-By-Default Rule.** No card or input carries a shadow at rest. If something lifts, it is because the user is reaching for it or because it is floating over the page. The Fund Line is flat too: it responds to intent with colour and stroke (the lit segment, the growing ring), never with shadow.
 
 ## Shapes
 
-Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog, Home cards) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; the one dashed border marks the "+ New fund" affordance. Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins), usually set in a soft-teal 8px tile; never Unicode glyphs or emoji standing in for an icon.
+Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; the one dashed border marks the "+ New fund" affordance. Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins); never Unicode glyphs or emoji standing in for an icon.
+
+The Fund Line's diagram geometry is the one exception to "no decorative geometry", because it is not decoration: it maps the product's real flow (funds board at My Funds and ride through four calculators). Its form language is transit-diagram: thick strokes, 45° bends only, round joins, rounded terminus caps, ring stations and a pill interchange. Use it where the diagram carries meaning, never as ornament.
+
+**The Meaningful Geometry Rule.** Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out.
 
 ## Components
 
@@ -255,7 +288,7 @@ Calm and tactile: compact, quietly bordered, and responsive to the pointer.
 ### Cards / Containers
 - **Corner Style:** 12px.
 - **Background:** Surface White / Night Surface on the paper ground.
-- **Shadow Strategy:** none at rest (see Flat-By-Default); Home cards take the Intent lift on hover.
+- **Shadow Strategy:** none at rest (see Flat-By-Default); a navigational card would take the Intent lift on hover.
 - **Border:** 1px hairline. Outcome cards may tint with the winner's colour at low opacity (teal soft at 40%, or indigo at 10% with a 40% border).
 - **Internal Padding:** 16px on phones, 20px from 640px up. Card titles sit 12px above content with an optional right-aligned action.
 
@@ -279,6 +312,18 @@ A full-width Caution Amber panel (8px, 12px × 16px) with dark amber ink and an 
 ### Tables and details
 Disclosure panels (`Details`) are 12px cards whose summary row has a muted 16px SVG chevron that rotates 90° when open; the body is separated by a hairline. Tables use tabular numerals, a sticky surface header with a hairline under it, zebra rows on mist at 40%, left-aligned first column and right-aligned figures, capped at ~28rem tall with internal scroll. Every chart has a table or stat equivalent.
 
+### The Fund Line (Home signature)
+The Home page as a transit map: bold, diagrammatic and still calm, with one gesture of motion.
+- **Main line:** a 22-unit Ledger Teal stroke with 45° bends and round joins, crossing the full map width through four stations (Growth & Fees, CAGR, Rent vs. Buy, Retirement). It ends in ink terminus caps (12 × 44, 6 radius), which switch to Night Muted in dark mode.
+- **Stations:** rings of radius 16 with a 6-unit ink stroke and a surface fill. Each station name is a real link in the Station style with its one-line question below in muted 0.875rem, always visible.
+- **Interchange (My Funds):** a 176 × 46 pill with a 6-unit ink stroke and surface fill, carrying the "Start here" badge (Ledger Teal fill, teal-ink text, 0.875rem bold, full pill, 4px × 12px). The interchange name sits above it at 1.875rem/800 with "Interchange · N funds saved" in muted text; hover underlines the name in teal.
+- **Fund branch lines:** 10 units wide, each in its fund's own colour, at most 6 drawn. Each starts at its own small horizontal ink terminus cap (28 × 12, 6 radius) near the bottom of the map, rises, bends 45° and enters the pill at its own point. They are data, not interaction.
+- **Fund legend:** plain rows in the lower-right band under a normal-case semibold title ("Your fund lines"): an 8 × 24 colour swatch pill, the fund name (truncated with a title tooltip), and the fee in muted tabular 0.75rem. Extra funds collapse to "+ N more in My Funds". No uppercase kicker.
+- **Signature interaction:** on hover or keyboard focus of a station, the main line dims to 35% opacity, that station's stretch is redrawn at full teal over it, the ring grows to radius 20 with a teal fill, and the name gets a 4px teal underline (6px offset). Transitions run 200ms.
+- **Load motion:** the main line draws itself once, a 1.4s `stroke-dashoffset` animation on `cubic-bezier(0.16, 1, 0.3, 1)` (`.fund-line-draw` in `src/index.css`). Its resting state is fully drawn, and it is static under `prefers-reduced-motion`.
+- **Below 1024px (stop list):** the line runs down the page as a 10px teal bar with stations as 32px rings with 5px ink borders on surface, and the interchange stood upright as a 48 × 32 pill with the "Start here" badge (0.75rem) beside its name and a row of fund-colour swatch pills under it.
+- **How it works:** the same language at small scale: a three-stop line (28px rings from 640px up on a horizontal 10px teal bar, 32px rings on a vertical bar on phones) with 1.125rem/800 stop titles and muted body text.
+
 ### Charts
 Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-rounded tooltip on surface with a hairline border, 2.5px series lines without dots for long horizons, and a dashed muted line for "contributed." Reference markers (Break-even, PMI ends) use a labelled dot or line in the relevant series colour.
 
@@ -292,6 +337,8 @@ Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-ro
 - **Do** keep surfaces flat with 1px hairline borders; reserve lift for hover on navigational cards and shadow for overlays.
 - **Do** use 8px corners on controls and 12px on containers.
 - **Do** make sure every chart's key figures also appear as text or in a table.
+- **Do** draw Fund Line geometry with 45° bends, round joins and ink terminus caps, and keep its labels as real HTML links positioned over the SVG, not SVG text.
+- **Do** keep any draw-on motion one-shot, fully drawn at rest, and static under `prefers-reduced-motion`.
 
 ### Don't:
 - **Don't** use green, rose or amber for emphasis or decoration; they mean gain, cost and caution only.
@@ -300,3 +347,6 @@ Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-ro
 - **Don't** introduce a second typeface or a display font; hierarchy comes from weight and size.
 - **Don't** use `var(--…)` for Recharts SVG attributes; they need concrete hex values.
 - **Don't** let long fund names or notes overflow; wrap them.
+- **Don't** add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line, not ornament.
+- **Don't** use weight 800 or the Home Display size on calculator pages.
+- **Don't** light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal.

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Category standard: Home first viewport</title>
+<style>
+  :root { --white:#ffffff; --ink:#111827; --muted:#6b7280; --teal:#0f766e; --soft:#f3f4f6; --line:#e5e7eb; }
+  * { box-sizing:border-box; margin:0; }
+  body { width:1440px; height:900px; overflow:hidden; background:var(--white); color:var(--ink);
+    font-family:"Inter Variable", Inter, "Segoe UI", system-ui, sans-serif; }
+  nav { height:68px; display:flex; align-items:center; gap:28px; padding:0 80px; border-bottom:1px solid var(--line); font-size:15px; color:var(--muted); }
+  nav .mark { color:var(--ink); font-weight:800; font-size:22px; margin-right:auto; }
+  nav .btn { background:var(--teal); color:#fff; padding:10px 16px; border-radius:8px; font-weight:600; }
+  .hero { display:grid; grid-template-columns: 1fr 1.1fr; gap:56px; padding:72px 80px 40px; align-items:center; }
+  h1 { font-size:64px; line-height:1.02; font-weight:800; letter-spacing:-.03em; }
+  .hero p { font-size:19px; line-height:1.5; color:var(--muted); margin-top:20px; }
+  .actions { display:flex; gap:12px; margin-top:28px; }
+  .a1 { background:var(--teal); color:#fff; padding:14px 22px; border-radius:10px; font-weight:700; font-size:16px; }
+  .a2 { border:1px solid var(--line); padding:14px 22px; border-radius:10px; font-weight:600; font-size:16px; }
+  .shot { height:380px; border-radius:16px; border:1px solid var(--line); background:var(--soft); padding:20px; box-shadow:0 20px 40px -20px rgba(0,0,0,.25); }
+  .shot .chart { height:100%; border-radius:10px; background:#fff; position:relative; }
+  .shot svg { position:absolute; inset:24px; }
+  .cards { display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; padding:0 80px; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:22px; }
+  .card .ic { width:40px; height:40px; border-radius:10px; background:#ccfbf1; }
+  .card h3 { font-size:22px; font-weight:700; margin-top:14px; }
+  .card p { font-size:14px; color:var(--muted); margin-top:6px; }
+</style>
+</head>
+<body>
+  <nav><span class="mark">Finance Toolkit</span><span>Calculators</span><span>My Funds</span><span>Methodology</span><span>About</span><span class="btn">Open a calculator</span></nav>
+  <section class="hero">
+    <div>
+      <h1>Small numbers, big decisions.</h1>
+      <p>Four connected calculators that show what fees, down payments and savings rates really cost over decades, for Canada and the US.</p>
+      <div class="actions"><span class="a1">Compare fund fees</span><span class="a2">How it works</span></div>
+    </div>
+    <div class="shot"><div class="chart">
+      <svg viewBox="0 0 600 300" width="560" height="300" aria-hidden="true">
+        <path d="M0 290 C 200 250, 400 150, 600 40" fill="none" stroke="#0f766e" stroke-width="4"/>
+        <path d="M0 290 C 200 270, 400 200, 600 130" fill="none" stroke="#e11d48" stroke-width="4"/>
+      </svg>
+    </div></div>
+  </section>
+  <section class="cards">
+    <div class="card"><div class="ic"></div><h3>Growth &amp; Fees</h3><p>See what a fee adds up to after decades of compounding.</p></div>
+    <div class="card"><div class="ic"></div><h3>CAGR</h3><p>Find the true annual growth rate of any investment.</p></div>
+    <div class="card"><div class="ic"></div><h3>Rent vs. Buy</h3><p>Mortgage and insurance vs. renting and investing.</p></div>
+    <div class="card"><div class="ic"></div><h3>Retirement</h3><p>How long until your investments cover your spending.</p></div>
+  </section>
+</body>
+</html>
