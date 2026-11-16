@@ -259,7 +259,18 @@ export function Details({ summary, children }: { summary: string; children: Reac
   return (
     <details className="group rounded-xl border border-line bg-surface">
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold sm:px-5">
-        <span className="mr-2 inline-block transition group-open:rotate-90">▸</span>
+        <svg
+          viewBox="0 0 24 24"
+          className="mr-2 inline-block h-4 w-4 -translate-y-px align-middle text-muted transition group-open:rotate-90"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M9 6l6 6-6 6" />
+        </svg>
         {summary}
       </summary>
       <div className="border-t border-line p-2 sm:p-3">{children}</div>

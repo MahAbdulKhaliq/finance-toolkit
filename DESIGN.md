@@ -235,7 +235,7 @@ Flat at rest, lift on intent. Depth comes from tonal layering (paper ground → 
 
 ## Shapes
 
-Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog, Home cards) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; the one dashed border marks the "+ New fund" affordance. Icons are simple 2px-stroke line glyphs at 24px, usually set in a soft-teal 8px tile.
+Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog, Home cards) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; the one dashed border marks the "+ New fund" affordance. Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins), usually set in a soft-teal 8px tile; never Unicode glyphs or emoji standing in for an icon.
 
 ## Components
 
@@ -271,13 +271,13 @@ The signature result unit. An 8px-rounded tile on Surface Mist at 50% with a hai
 A mist track with a hairline border and 2px inset; options are 6px-rounded, muted at rest, and the selected one becomes a surface "key" with the Selection nudge shadow. Used for Future $ / Today's $ and similar binary or ternary toggles; exposed as a radiogroup.
 
 ### Navigation
-A sticky 90%-opaque header with backdrop blur and a hairline bottom border. Left: the teal logo tile with a white rising line, plus the wordmark from 640px up. Centre: text nav links (body, 500, 8px-rounded); inactive links are muted with a mist hover, and the active link gets the Teal Soft wash with ink text. Right: a compact region select (flag + currency) and a theme cycle button (◐ / ☀ / ☾). On phones the link row scrolls horizontally.
+A sticky 90%-opaque header with backdrop blur and a hairline bottom border. Left: the teal logo tile with a white rising line, plus the wordmark from 640px up. Centre: text nav links (body, 500, 8px-rounded); inactive links are muted with a mist hover, and the active link gets the Teal Soft wash with ink text. Right: a compact region select (flag + currency) and a theme cycle button with 16px SVG line icons (half-filled circle for system, sun, moon). On phones the link row scrolls horizontally.
 
 ### Notice
 A full-width Caution Amber panel (8px, 12px × 16px) with dark amber ink and an optional right-aligned action. It is used for shared-fund imports and input warnings.
 
 ### Tables and details
-Disclosure panels (`Details`) are 12px cards whose summary row has a rotating ▸ marker; the body is separated by a hairline. Tables use tabular numerals, a sticky surface header with a hairline under it, zebra rows on mist at 40%, left-aligned first column and right-aligned figures, capped at ~28rem tall with internal scroll. Every chart has a table or stat equivalent.
+Disclosure panels (`Details`) are 12px cards whose summary row has a muted 16px SVG chevron that rotates 90° when open; the body is separated by a hairline. Tables use tabular numerals, a sticky surface header with a hairline under it, zebra rows on mist at 40%, left-aligned first column and right-aligned figures, capped at ~28rem tall with internal scroll. Every chart has a table or stat equivalent.
 
 ### Charts
 Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-rounded tooltip on surface with a hairline border, 2.5px series lines without dots for long horizons, and a dashed muted line for "contributed." Reference markers (Break-even, PMI ends) use a labelled dot or line in the relevant series colour.

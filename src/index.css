@@ -80,6 +80,9 @@ body {
     max-width: 34em;
     text-wrap: pretty;
   }
+  li {
+    text-wrap: pretty;
+  }
 }
 
 /* Remove number-input spinners; we use our own formatting */
