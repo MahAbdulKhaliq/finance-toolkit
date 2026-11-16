@@ -68,7 +68,7 @@ export function FundMultiPicker({
             >
               <Swatch color={f.color} />
               <span className="min-w-0 font-medium wrap-anywhere">{f.name}</span>
-              <span className="tabular text-xs opacity-75">
+              <span className={`tabular text-xs ${on ? '' : 'text-muted'}`}>
                 {pct(f.annualReturn)} return · {pct(f.fee)} {region.feeLabel}
               </span>
             </button>

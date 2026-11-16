@@ -219,7 +219,7 @@ export default function CagrCalculator() {
                       <XAxis dataKey="year" stroke={chart.axis} fontSize={12} tickLine={false} />
                       <YAxis stroke={chart.axis} tickFormatter={(v) => moneyShort(v, region)} fontSize={12} width={64} axisLine={false} tickLine={false} />
                       <Tooltip {...tip} formatter={(v: number) => money(v, region)} labelFormatter={(y) => `Year ${y}`} />
-                      <Line dataKey="value" name="Value" stroke="#0d9488" strokeWidth={2.5} dot={{ r: 3, fill: '#0d9488' }} />
+                      <Line dataKey="value" name="Value" stroke={chart.series.primary} strokeWidth={2.5} dot={{ r: 3, fill: chart.series.primary }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -273,7 +273,7 @@ export default function CagrCalculator() {
             </div>
           </Card>
 
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
             <Card>
               <CardTitle>CAGR by investment</CardTitle>
               <div className="h-72">

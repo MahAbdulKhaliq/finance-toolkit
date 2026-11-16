@@ -22,12 +22,41 @@ export function useIsDark() {
   return dark;
 }
 
+/**
+ * Fixed chart series colours (not user fund colours), as light/dark pairs. Every value keeps at
+ * least 3:1 against its theme's surface so lines and bars stay visible.
+ */
+const SERIES = {
+  light: {
+    primary: '#0d9488', // buy, single-series lines (Ledger Teal family)
+    rent: '#6366f1', // rent + invest (Rent Indigo)
+    cost: '#e11d48', // fees paid, interest
+    lostGrowth: '#ea580c',
+    insurance: '#db2777', // CMHC / PMI
+    propertyTax: '#d97706',
+    maintenance: '#7c3aed',
+    homeInsurance: '#0284c7',
+    closing: '#64748b',
+  },
+  dark: {
+    primary: '#2dd4bf',
+    rent: '#818cf8',
+    cost: '#fb7185',
+    lostGrowth: '#fb923c',
+    insurance: '#f472b6',
+    propertyTax: '#fbbf24',
+    maintenance: '#a78bfa',
+    homeInsurance: '#38bdf8',
+    closing: '#94a3b8',
+  },
+};
+
 /** Concrete colors for Recharts (SVG attributes can't reliably use CSS variables). */
 export function useChartTheme() {
   const dark = useIsDark();
   return dark
-    ? { grid: '#262e38', axis: '#98a2b0', tooltipBg: '#1c232b', tooltipBorder: '#2a323c', text: '#e8ecf1', muted: '#64748b' }
-    : { grid: '#e5e7eb', axis: '#5d6673', tooltipBg: '#ffffff', tooltipBorder: '#e3e6eb', text: '#14171c', muted: '#94a3b8' };
+    ? { grid: '#262e38', axis: '#98a2b0', tooltipBg: '#1c232b', tooltipBorder: '#2a323c', text: '#e8ecf1', muted: '#64748b', series: SERIES.dark }
+    : { grid: '#e5e7eb', axis: '#5d6673', tooltipBg: '#ffffff', tooltipBorder: '#e3e6eb', text: '#14171c', muted: '#64748b', series: SERIES.light };
 }
 
 export function tooltipStyle(t: ReturnType<typeof useChartTheme>) {

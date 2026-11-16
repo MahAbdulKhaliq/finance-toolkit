@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
 import Home from './pages/Home';
+// Self-hosted Inter (bundled with the site; no third-party font request).
+import '@fontsource-variable/inter';
 import './index.css';
 
 const GrowthCalculator = lazy(() => import('./pages/GrowthCalculator'));

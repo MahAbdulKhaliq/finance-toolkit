@@ -74,7 +74,7 @@ export default function FundsPage() {
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {funds.map((f: Fund) => {
           const starter = isStarter(f);
           return (
@@ -83,7 +83,7 @@ export default function FundsPage() {
                 <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full" style={{ background: f.color }} />
                 <div className="min-w-0 flex-1">
                   {/* Long unbroken words wrap rather than truncate or overflow (WCAG 1.4.10 Reflow). */}
-                  <h3 className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
+                  <h2 className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
                     <span className="min-w-0 wrap-anywhere">{f.name}</span>
                     {starter && (
                       <span
@@ -93,7 +93,7 @@ export default function FundsPage() {
                         Starter
                       </span>
                     )}
-                  </h3>
+                  </h2>
                   {f.notes && <p className="mt-0.5 text-sm text-muted wrap-anywhere">{f.notes}</p>}
                 </div>
               </div>

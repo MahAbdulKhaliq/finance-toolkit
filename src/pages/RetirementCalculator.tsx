@@ -191,7 +191,7 @@ export default function RetirementCalculator() {
             <Card className="text-center text-muted">Pick at least one fund to see results.</Card>
           ) : (
             <>
-              <Card className="border-accent/40 bg-accent-soft/40">
+              <Card className="border-accent/40! bg-accent-soft/40!">
                 {primary.plan.yearsToRetire === 0 ? (
                   <p className="text-lg"><strong>You can already retire.</strong> Your portfolio covers your expenses at a {pct(inputs.withdrawalRate, 1)} withdrawal rate.</p>
                 ) : primary.plan.yearsToRetire === null ? (

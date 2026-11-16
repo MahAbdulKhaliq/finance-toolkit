@@ -9,6 +9,7 @@ colors:
   ledger-teal-soft-dark: "#134e4a"
   ledger-teal-ink-dark: "#04201d"
   rent-indigo: "#6366f1"
+  rent-indigo-dark: "#818cf8"
   gain-green: "#15803d"
   gain-green-dark: "#4ade80"
   cost-rose: "#be123c"
@@ -33,35 +34,35 @@ colors:
   night-muted: "#98a2b0"
 typography:
   display:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "3rem"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "-0.025em"
   headline:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "1.875rem"
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.025em"
   title:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1.5
   figure:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "1.25rem"
     fontWeight: 600
     lineHeight: 1.4
     fontFeature: "tnum"
   body:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.43
   label:
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 500
     lineHeight: 1.33
@@ -166,7 +167,7 @@ A cool, low-chroma neutral system with one teal voice, plus a small set of seman
 - **Ledger Teal Soft** (`ledger-teal-soft`; `ledger-teal-soft-dark`): the selected-state wash. Active nav link, selected fund chips, icon tiles on Home, and the winning-outcome card tint in Rent vs. Buy.
 
 ### Secondary
-- **Rent Indigo** (`rent-indigo`): the counter-voice to teal in comparisons. The "Rent + invest" line and its outcome card in Rent vs. Buy, and the second default fund colour. Use it only where two options are being weighed against each other.
+- **Rent Indigo** (`rent-indigo`; `rent-indigo-dark`; CSS `--rent`, Tailwind `rent`): the counter-voice to teal in comparisons. The "Rent + invest" line, the Rent bar and the renting outcome card in Rent vs. Buy, and the second default fund colour. Use it only where two options are being weighed against each other.
 
 ### Tertiary (semantic)
 - **Gain Green** (`gain-green`; `gain-green-dark`): favourable figures, such as the amount one fund ends up ahead.
@@ -183,7 +184,7 @@ A cool, low-chroma neutral system with one teal voice, plus a small set of seman
 - **Chart Grid** (`chart-grid`) / **Night Grid** (`night-grid`): chart gridlines only.
 
 ### Data palette
-Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). Chart series for Rent vs. Buy cost categories reuse the same family. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, never as button or surface fills.
+Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). A fund's colour is stored with the fund, so it is the same in both themes; all eight keep at least 3:1 against the surface in both. Fixed chart series (buy, rent, cost, lost growth, mortgage insurance, the Rent vs. Buy cost categories, the "contributed" reference line) live in `useChartTheme().series` / `.muted` in `src/state/useTheme.ts` as light/dark pairs with at least 3:1 against their surface; pages never write a chart hex literal. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, never as button or surface fills. Legend and marker labels are set in ink, not in the series colour, because several data colours fall below 4.5:1 as text.
 
 ### Named Rules
 **The One Voice Rule.** Ledger Teal is the only colour that signals "you can act here." Data and semantic colours never appear on buttons, links or nav.
@@ -194,16 +195,16 @@ Funds carry their own identity colour, chosen from a fixed set of eight in `src/
 
 ## Typography
 
-**Body Font:** Inter (with ui-sans-serif, system-ui, Segoe UI, Roboto fallback)
+**Body Font:** Inter Variable, self-hosted (with ui-sans-serif, system-ui, Segoe UI, Roboto fallback)
 
-**Character:** One neutral sans for everything, carried by weight and size rather than by a second family. The font is declared but not web-loaded, so most visitors see their platform UI font (Segoe UI, SF Pro). The system has to hold up in any of them, which is why hierarchy relies on weight and tabular figures rather than on a face's personality.
+**Character:** One neutral sans for everything, carried by weight and size rather than by a second family. Inter Variable is self-hosted from the `@fontsource-variable/inter` package (imported in `src/main.tsx`, `font-display: swap`, split by script so visitors download only the latin file, about 48 kB). No font is fetched from a third party, which keeps the "nothing is sent anywhere" promise. The system fonts after it in the stack are only a fallback while it loads.
 
 ### Hierarchy
 - **Display** (700, 3rem from 640px up, 1.875rem below; tight tracking): the Home hero line only.
 - **Headline** (700, 1.875rem from 640px up, 1.5rem below; tight tracking): one page title per calculator (`PageHeader`).
 - **Title** (600, 1rem): card titles. Home cards and section headings step up to 1.125rem.
 - **Figure** (600, 1.25rem, tabular numerals): stat-tile values. Coloured by the Meaning-Only Rule.
-- **Body** (400, 0.875rem): inputs, buttons, nav, tables, explanatory text. Page intros run at the base size (1rem, muted) inside a ~42rem column; the Home lede is 1.125rem.
+- **Body** (400, 0.875rem): inputs, buttons, nav, tables, explanatory text. Page intros run at the base size (1rem, muted); the Home lede is 1.125rem. Every paragraph is capped at 34em (about 75 characters of Inter) with `text-wrap: pretty` (a base rule in `src/index.css`).
 - **Label** (500, 0.75rem): stat labels, field hints, chip metadata, the footer disclaimer. Field labels use 0.875rem at 500.
 
 ### Named Rules

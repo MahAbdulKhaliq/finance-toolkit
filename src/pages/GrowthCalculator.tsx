@@ -184,7 +184,7 @@ export default function GrowthCalculator() {
           ) : (
             <>
               {results.length > 1 && best && worst && best !== worst && (
-                <Card className="border-accent/40 bg-accent-soft/40">
+                <Card className="border-accent/40! bg-accent-soft/40!">
                   <p className="text-lg">
                     After {years} years, <strong>{best.fund.name}</strong> ends up{' '}
                     <strong className="text-good">{money(gap, region)}</strong> ahead of{' '}
@@ -194,7 +194,7 @@ export default function GrowthCalculator() {
                 </Card>
               )}
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {results.map(({ fund, fee, r }) => (
                   <Card key={fund.id} className="!p-4">
                     <div className="mb-3 flex items-center gap-2 font-semibold">
@@ -249,8 +249,8 @@ export default function GrowthCalculator() {
                       <YAxis type="category" dataKey="name" stroke={chart.axis} width={130} fontSize={12} tickLine={false} />
                       <Tooltip {...tip} formatter={(v: number) => money(v, region)} cursor={{ fill: chart.grid, opacity: 0.4 }} />
                       <Legend wrapperStyle={{ fontSize: 13 }} />
-                      <Bar dataKey="fees" name="Fees paid" stackId="a" fill="#e11d48" radius={[0, 0, 0, 0]} />
-                      <Bar dataKey="lost" name="Lost growth" stackId="a" fill="#fb923c" radius={[0, 4, 4, 0]} />
+                      <Bar dataKey="fees" name="Fees paid" stackId="a" fill={chart.series.cost} radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="lost" name="Lost growth" stackId="a" fill={chart.series.lostGrowth} radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

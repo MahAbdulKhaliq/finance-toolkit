@@ -110,8 +110,9 @@ export default function RentVsBuy() {
     },
     { name: 'Rent', Rent: sum('rent') },
   ];
+  const s = chart.series;
   const COST_COLORS: Record<string, string> = {
-    Interest: '#e11d48', 'Property tax': '#d97706', Maintenance: '#7c3aed', 'Home insurance & fees': '#0284c7', 'Mortgage insurance': '#db2777', 'Closing & selling': '#64748b', Rent: '#0d9488',
+    Interest: s.cost, 'Property tax': s.propertyTax, Maintenance: s.maintenance, 'Home insurance & fees': s.homeInsurance, 'Mortgage insurance': s.insurance, 'Closing & selling': s.closing, Rent: s.rent,
   };
 
   // Sensitivity: appreciation and investment return ±1%
@@ -227,7 +228,7 @@ export default function RentVsBuy() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-5">
-          <Card className={buyWins ? 'border-accent/40 bg-accent-soft/40' : 'border-[#6366f1]/40 bg-[#6366f1]/10'}>
+          <Card className={buyWins ? 'border-accent/40! bg-accent-soft/40!' : 'border-rent/40! bg-rent/10!'}>
             <p className="text-lg">
               After {last.year} years, <strong>{buyWins ? 'buying' : 'renting and investing'}</strong> leaves you about{' '}
               <strong className="text-good">{money(Math.abs(diff), region)}</strong> wealthier{real && " in today's dollars"}.
@@ -270,23 +271,23 @@ export default function RentVsBuy() {
                   <YAxis stroke={chart.axis} tickFormatter={(v) => moneyShort(v, region)} fontSize={12} width={64} axisLine={false} tickLine={false} />
                   <Tooltip {...tip} formatter={(v: number) => money(v, region)} labelFormatter={(y) => `Year ${y}`} />
                   <Legend wrapperStyle={{ fontSize: 13 }} />
-                  <Line dataKey="buy" name="Buy" stroke="#0d9488" strokeWidth={2.5} dot={false} />
-                  <Line dataKey="rent" name={`Rent + invest (${fund?.name ?? 'fund'})`} stroke="#6366f1" strokeWidth={2.5} dot={false} />
+                  <Line dataKey="buy" name="Buy" stroke={s.primary} strokeWidth={2.5} dot={false} />
+                  <Line dataKey="rent" name={`Rent + invest (${fund?.name ?? 'fund'})`} stroke={s.rent} strokeWidth={2.5} dot={false} />
                   {pmiEndYear !== null && (
                     <ReferenceLine
                       x={pmiEndYear}
-                      stroke="#db2777"
+                      stroke={s.insurance}
                       strokeDasharray="4 3"
                       label={{ value: 'PMI ends', position: 'insideTopLeft', fill: chart.text, fontSize: 12 }}
                     />
                   )}
-                  {be && <ReferenceDot x={be.year} y={be.buy} r={6} fill="#0d9488" stroke={chart.tooltipBg} strokeWidth={2} label={{ value: 'Break-even', position: 'top', fill: chart.text, fontSize: 12 }} />}
+                  {be && <ReferenceDot x={be.year} y={be.buy} r={6} fill={s.primary} stroke={chart.tooltipBg} strokeWidth={2} label={{ value: 'Break-even', position: 'top', fill: chart.text, fontSize: 12 }} />}
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </Card>
 
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
             <Card>
               <CardTitle>Money you don't get back</CardTitle>
               <p className="-mt-1 mb-3 text-sm text-muted">Total over {last.year} years. Mortgage principal isn't included because it becomes equity.</p>

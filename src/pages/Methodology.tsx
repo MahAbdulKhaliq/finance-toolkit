@@ -11,7 +11,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 function F({ children }: { children: ReactNode }) {
-  return <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[0.8rem] text-ink">{children}</code>;
+  return <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-ink">{children}</code>;
 }
 
 export default function Methodology() {
@@ -21,7 +21,7 @@ export default function Methodology() {
         title="Methodology"
         intro="How each calculator works, and the assumptions behind the numbers. The math is plain TypeScript, unit-tested against known reference values."
       />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Section title="Growth & Fees">
           <p>
             The portfolio is simulated in monthly steps, or weekly/bi-weekly when contributions are

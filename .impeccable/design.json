@@ -11,6 +11,7 @@
       "ledger-teal-soft-dark": { "role": "primary", "displayName": "Ledger Teal Soft (dark mode)", "canonical": "#134e4a" },
       "ledger-teal-ink-dark": { "role": "primary", "displayName": "Ledger Teal Ink (dark mode)", "canonical": "#04201d" },
       "rent-indigo": { "role": "secondary", "displayName": "Rent Indigo", "canonical": "#6366f1", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4f46e5", "#6366f1", "#818cf8", "#c7d2fe", "#e0e7ff"] },
+      "rent-indigo-dark": { "role": "secondary", "displayName": "Rent Indigo (dark mode)", "canonical": "#818cf8" },
       "gain-green": { "role": "tertiary", "displayName": "Gain Green", "canonical": "#15803d", "tonalRamp": ["#052e16", "#14532d", "#166534", "#15803d", "#16a34a", "#4ade80", "#bbf7d0", "#dcfce7"] },
       "gain-green-dark": { "role": "tertiary", "displayName": "Gain Green (dark mode)", "canonical": "#4ade80" },
       "cost-rose": { "role": "tertiary", "displayName": "Cost Rose", "canonical": "#be123c", "tonalRamp": ["#4c0519", "#881337", "#9f1239", "#be123c", "#e11d48", "#fb7185", "#fecdd3", "#ffe4e6"] },
