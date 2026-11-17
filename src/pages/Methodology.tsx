@@ -98,7 +98,16 @@ export default function Methodology() {
             Each year you invest <F>income − expenses</F>. The portfolio earns its real return on the
             balance at the start of the year, and the year's savings are added at the end. You can
             retire once it reaches <F>goal = expenses / withdrawal rate</F> (e.g. 25× spending at 4%).
-            The answer is interpolated within the year, so it can be fractional (e.g. 12.4 years).
+            The answer is interpolated within the year, so it can be fractional (e.g. 12.4 years), and is
+            shown as the age you'd be, rounded down. A plan that doesn't reach the goal by age 100 counts
+            as never.
+          </p>
+          <p>
+            <strong>Comparing funds:</strong> the page runs the same plan with two funds, so the
+            difference in years is what the fee and return difference costs you.{' '}
+            <strong>When the goal is out of reach</strong>, it finds the savings rate that would get you
+            there by 65 (or within 5 years if you're past 60), by bisection on the share of income saved,
+            keeping income fixed. The savings-rate chart reruns the plan at every rate from 0% to 100%.
           </p>
           <p>
             Everything is in today's dollars: each fund grows at its real return,{' '}

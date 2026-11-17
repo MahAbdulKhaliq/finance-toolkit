@@ -10,6 +10,7 @@ import {
 } from './mortgage';
 import { realRate, toReal } from './inflation';
 import { breakEvenAppreciation, rentVsBuy, type RentVsBuyInput } from './rentVsBuy';
+import { retirementPlan, savingsRateToRetireIn } from './retirement';
 
 const plan = (o: Partial<ContributionPlan> = {}): ContributionPlan => ({
   initial: 10_000,
@@ -222,5 +223,30 @@ describe('splitGap', () => {
     expect(s.feeEffect + s.returnEffect).toBeCloseTo(gap, 6);
     expect(s.feeEffect).toBeLessThan(0); // the better fund charges more
     expect(s.returnEffect).toBeGreaterThan(gap);
+  });
+});
+
+describe('retirement', () => {
+  const base = { income: 100_000, portfolio: 0, realReturn: 0.05, withdrawalRate: 0.04 };
+
+  it('reaches 25x spending in about 12.4 years at a 60% savings rate and 5% real', () => {
+    // 60,000 a year invested at year end: 60,000 × (1.05^n − 1) / 0.05 = 1,000,000.
+    const r = retirementPlan({ ...base, expenses: 40_000 });
+    expect(r.goal).toBe(1_000_000);
+    expect(r.yearsToRetire).toBeCloseTo(Math.log(1 + 1_000_000 * 0.05 / 60_000) / Math.log(1.05), 1);
+  });
+
+  it('is 0 when the portfolio already covers spending, and null when it never will', () => {
+    expect(retirementPlan({ ...base, portfolio: 2_000_000, expenses: 40_000 }).yearsToRetire).toBe(0);
+    expect(retirementPlan({ ...base, realReturn: 0, income: 40_000, expenses: 40_000 }).yearsToRetire).toBeNull();
+  });
+
+  it('finds the savings rate that retires you within a number of years', () => {
+    const years = retirementPlan({ ...base, expenses: 40_000 }).yearsToRetire!;
+    expect(savingsRateToRetireIn(base, years)).toBeCloseTo(0.6, 3);
+    // A higher rate is needed to get there sooner.
+    expect(savingsRateToRetireIn(base, 8)).toBeGreaterThan(0.6);
+    // A portfolio that already covers spending everything needs no savings at all.
+    expect(savingsRateToRetireIn({ ...base, income: 30_000, portfolio: 900_000 }, 5)).toBe(0);
   });
 });

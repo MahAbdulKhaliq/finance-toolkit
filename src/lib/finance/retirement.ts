@@ -98,3 +98,24 @@ export function savingsRateCurve(inp: Omit<RetirementInput, 'expenses'>, step = 
   }
   return points;
 }
+
+/**
+ * The lowest savings rate (share of income, keeping income fixed) that reaches the goal within
+ * `years`. Years to retire fall as the savings rate rises, so a bisection finds it. Saving all of
+ * your income means spending, and so the goal, is zero, so a rate always exists.
+ */
+export function savingsRateToRetireIn(inp: Omit<RetirementInput, 'expenses'>, years: number): number {
+  const reaches = (rate: number) => {
+    const t = retirementPlan({ ...inp, expenses: inp.income * (1 - rate) }).yearsToRetire;
+    return t !== null && t <= years;
+  };
+  if (reaches(0)) return 0;
+  let lo = 0;
+  let hi = 1;
+  for (let k = 0; k < 40; k++) {
+    const mid = (lo + hi) / 2;
+    if (reaches(mid)) hi = mid;
+    else lo = mid;
+  }
+  return hi;
+}

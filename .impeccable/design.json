@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-16T23:30:00-05:00",
+  "generatedAt": "2026-11-17T01:57:52.644Z",
   "title": "Design System: Finance Toolkit",
   "extensions": {
     "colorMeta": {
@@ -260,7 +260,7 @@
       },
       "answer": {
         "displayName": "Answer",
-        "purpose": "The one result figure on a Plan Sentence page: the fee gap on Growth & Fees (Gain Green), the break-even year on Rent vs. Buy (ink)."
+        "purpose": "The one result figure on a Plan Sentence page: the fee gap on Growth & Fees (Gain Green), the break-even year on Rent vs. Buy (ink), the retirement age on Retirement (ink)."
       },
       "plan-sentence": {
         "displayName": "Plan Sentence",
@@ -431,6 +431,14 @@
       "css": ".ds-ansy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; } .ds-ansy-fig { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--text, #14171c); } .ds-ansy-text { margin: 0; max-width: 30em; font-size: 1.25rem; color: var(--text, #14171c); } .ds-ansy-gain { color: var(--good, #15803d); font-variant-numeric: tabular-nums; } .ds-ansy-muted { color: var(--muted, #5d6673); }"
     },
     {
+      "name": "Answer Figure (age)",
+      "kind": "custom",
+      "refersTo": "answer-figure-age",
+      "description": "Retirement answer: the age you could retire in ink at Answer size (ages round down; Now and Never are the edge words); a muted clause compares the other fund, later in Cost Rose and sooner in Gain Green.",
+      "html": "<div class=\"ds-ansa\"><span class=\"ds-ansa-fig\">At 49</span><p class=\"ds-ansa-text\">is when you could retire, in <span class=\"ds-ansa-num\">19.7</span> years with <strong>Broad index ETF</strong>. Your goal is <strong class=\"ds-ansa-num\">$1,000,000</strong>: $40,000 a year at 4%.<span class=\"ds-ansa-muted\"> With <strong class=\"ds-ansa-ink\">Big-bank mutual fund</strong> you'd retire at 53, <strong class=\"ds-ansa-later\">3.5 years later</strong>.</span></p></div>",
+      "css": ".ds-ansa { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; } .ds-ansa-fig { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--text, #14171c); } .ds-ansa-text { margin: 0; max-width: 30em; font-size: 1.25rem; color: var(--text, #14171c); } .ds-ansa-num { font-variant-numeric: tabular-nums; } .ds-ansa-muted { color: var(--muted, #5d6673); } .ds-ansa-ink { color: var(--text, #14171c); } .ds-ansa-later { color: var(--bad, #be123c); }"
+    },
+    {
       "name": "Two-Path Sentence",
       "kind": "custom",
       "refersTo": "inline-input",
@@ -465,7 +473,7 @@
   ],
   "narrative": {
     "northStar": "The Long View",
-    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Rent vs. Buy uses the same pattern as a **Two-Path Sentence**: two sentences, one per way to live (buy, or rent and invest), plus how long you'd stay, answered by the year buying breaks even. Both charts borrow the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
+    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. On the sentence pages (Growth & Fees, Rent vs. Buy, Retirement) the inputs are an editable sentence at the top with results below; CAGR keeps a narrow left input column beside a wide results column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Rent vs. Buy uses the same pattern as a **Two-Path Sentence**: two sentences, one per way to live (buy, or rent and invest), plus how long you'd stay, answered by the year buying breaks even. Retirement is the third Plan Sentence: your age, income, spending and savings, then the pair of funds, answered by the age you could retire. All three charts borrow the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
     "keyCharacteristics": [
       "One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).",
       "Tabular numerals for every figure, so columns of money line up and changes are easy to compare.",
@@ -473,7 +481,7 @@
       "Soft, consistent corners (8px controls, 12px containers, pill-like chips).",
       "Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.",
       "On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it only with terminus-capped chart lines.",
-      "On Growth & Fees and Rent vs. Buy, an editable plan sentence in place of a labelled form rail, answered by one display-size figure."
+      "On Growth & Fees, Rent vs. Buy and Retirement, an editable plan sentence in place of a labelled form rail, answered by one display-size figure."
     ],
     "rules": [
       {
@@ -508,7 +516,7 @@
       },
       {
         "name": "The Inputs-Left Rule",
-        "body": "On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. The Plan Sentence pages (Growth & Fees and Rent vs. Buy) are the one exception: their inputs are the sentence at the top, and results always follow below it.",
+        "body": "On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. The Plan Sentence pages (Growth & Fees, Rent vs. Buy and Retirement) are the one exception: their inputs are the sentence at the top, and results always follow below it.",
         "section": "layout"
       },
       {
