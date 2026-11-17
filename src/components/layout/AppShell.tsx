@@ -3,16 +3,8 @@ import { useEffect } from 'react';
 import { useSettings, type Theme } from '../../state/settingsStore';
 import { REGIONS, type RegionCode } from '../../lib/region';
 import { useIsDark } from '../../state/useTheme';
+import { DesktopNav, MobileNav } from './SiteNav';
 
-const NAV = [
-  { to: '/growth', label: 'Growth & Fees' },
-  { to: '/cagr', label: 'CAGR' },
-  { to: '/rent-vs-buy', label: 'Rent vs. Buy' },
-  { to: '/retirement', label: 'Retirement' },
-  { to: '/funds', label: 'My Funds' },
-  { to: '/methodology', label: 'Methodology' },
-  { to: '/about', label: 'About' },
-];
 
 const THEME_NEXT: Record<Theme, Theme> = { system: 'light', light: 'dark', dark: 'system' };
 // 24px line icons in the same 2px stroke as the logo and Home icons.
@@ -39,42 +31,26 @@ export function AppShell() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
-    // On narrow screens the nav scrolls sideways; keep the current page's link visible.
-    document.querySelector('nav[aria-label="Calculators"] a[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, [pathname]);
 
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-2.5 sm:gap-3">
           <NavLink to="/" className="flex shrink-0 items-center gap-2 font-bold">
             <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden>
               <rect width="32" height="32" rx="7" fill="var(--accent)" />
               <path d="M7 22l6-6 4 4 8-9" stroke="var(--accent-text)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <span className="hidden sm:inline">Finance Toolkit</span>
+            <span className="hidden min-[360px]:inline">Finance Toolkit</span>
           </NavLink>
-          <nav className="-mx-1 flex min-w-0 flex-1 gap-1 overflow-x-auto px-1" aria-label="Calculators">
-            {NAV.map((n) => (
-              <NavLink
-                key={n.to}
-                to={n.to}
-                className={({ isActive }) =>
-                  `shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition ${
-                    isActive ? 'bg-accent-soft text-ink' : 'text-muted hover:bg-surface-2 hover:text-ink'
-                  }`
-                }
-              >
-                {n.label}
-              </NavLink>
-            ))}
-          </nav>
+          <DesktopNav />
           <label className="sr-only" htmlFor="region">Region</label>
           <select
             id="region"
             value={region}
             onChange={(e) => setRegion(e.target.value as RegionCode)}
-            className="shrink-0 cursor-pointer rounded-lg border border-line bg-surface px-2 py-1.5 text-sm"
+            className="ml-auto shrink-0 cursor-pointer rounded-lg border border-line bg-surface px-2 py-1.5 text-sm"
             title="Region: changes currency, terminology and mortgage rules"
           >
             {Object.values(REGIONS).map((r) => (
@@ -94,6 +70,7 @@ export function AppShell() {
               {THEME_ICON[theme]}
             </svg>
           </button>
+          <MobileNav />
         </div>
       </header>
 
