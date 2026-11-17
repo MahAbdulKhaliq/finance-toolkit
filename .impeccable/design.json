@@ -439,7 +439,7 @@
       },
       {
         "name": "The Meaning-Only Rule",
-        "body": "Green, rose and amber are reserved for gain, cost and caution. A number turns green or rose only because of what it means, never for emphasis. A breakdown that splits one cost into parts (fees paid vs. lost growth) uses neutrals, not a fund or second semantic colour; the total carries the meaning colour.",
+        "body": "Green, rose and amber are reserved for gain, cost and caution. A number turns green or rose only because of what it means, never for emphasis. Rose marks the cost figures as text (fees paid, lost growth, total fee cost); it never fills a chart part. A per-fund stacked bar may show its fee layers as tints of that fund's own colour (fees paid and lost growth as fainter layers above the balance), because those layers belong to that fund; it never borrows another fund's colour or a second semantic colour for them.",
         "section": "colors"
       },
       {
@@ -501,7 +501,7 @@
       "Don't add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its one echo (chart terminus caps), not ornament.",
       "Don't use weight 800 or the Home Display size on calculator pages.",
       "Don't light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal.",
-      "Don't colour the parts of a cost breakdown in fund or extra semantic colours; the parts are neutrals.",
+      "Don't colour the fee layers of a fund's bar in another fund's colour or a second semantic colour; they are tints of that fund's own colour, and Cost Rose stays on the cost figures as text.",
       "Don't put an accent bottom border on a rounded input box."
     ]
   }

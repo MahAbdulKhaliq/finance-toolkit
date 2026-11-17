@@ -1,6 +1,7 @@
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import {
-  CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  type TooltipProps,
 } from 'recharts';
 import { simulateGrowth, splitGap, type Frequency, type Timing } from '../lib/finance/growth';
 import { money, moneyShort, pct } from '../lib/format';
@@ -49,6 +50,23 @@ const TIMINGS: { value: Timing; label: string }[] = [
 ];
 
 const FUNDS_PANEL = 'growth-funds-panel';
+
+/** The three layers of each yearly fee bar, all in the fund's own colour. */
+const TINTS = [
+  { key: 'bal', label: 'Balance', opacity: 1 },
+  { key: 'paid', label: 'Fees paid', opacity: 0.62 },
+  { key: 'lost', label: 'Lost growth', opacity: 0.36 },
+] as const;
+
+interface Cost {
+  fund: { id: string; name: string; color: string };
+  contributed: number;
+  fees: number;
+  lost: number;
+  total: number;
+  final: number;
+  noFee: number;
+}
 
 /** One plain sentence on where the gap comes from, e.g. "All of it comes from the lower MER." */
 function splitSentence(s: { fee: number; ret: number; feeShare: number; retShare: number }, feeName: string) {
@@ -133,16 +151,60 @@ export default function GrowthCalculator() {
   const [gapHover, setGapHover] = useState(false);
   const gapOpen = Boolean(split) && (gapPinned || gapHover);
 
-  const costs = results.map(({ fund, fee, r }) => ({
+  const costs: Cost[] = results.map(({ fund, r }) => ({
     fund,
-    fee,
+    contributed: deflate(r.totalContributed, years),
     fees: deflate(r.totalFeesPaid, years),
     lost: deflate(r.totalFeeCost - r.totalFeesPaid, years),
     total: deflate(r.totalFeeCost, years),
     final: deflate(r.finalBalance, years),
-    share: r.totalFeeCost / (r.finalBalance + r.totalFeeCost),
+    noFee: deflate(r.finalBalance + r.totalFeeCost, years),
   }));
-  const maxCost = Math.max(1, ...costs.map((c) => c.total));
+
+  // Yearly stacked bars: balance, fees paid and lost growth stack to the no-fee balance.
+  // Narrow screens can't fit a pair of bars per year, so show every Nth year, counted back from
+  // the final year so the end is always there.
+  const wide = useMinWidth(640);
+  const barStep = Math.max(1, Math.ceil(years / (wide ? 40 : 12)));
+  const barData = useMemo(() => {
+    const rows = [];
+    for (let y = years; y >= 1; y -= barStep) {
+      const row: Record<string, number> = { year: y };
+      results.forEach(({ fund, r }) => {
+        const p = r.points[y];
+        row[`${fund.id}|bal`] = deflate(p.balance, y);
+        row[`${fund.id}|paid`] = deflate(p.feesPaid, y);
+        row[`${fund.id}|lost`] = deflate(p.noFeeBalance - p.balance - p.feesPaid, y);
+      });
+      rows.unshift(row);
+    }
+    return rows;
+  }, [results, years, deflate, barStep]);
+
+  const feeBarTip = ({ active, payload, label }: TooltipProps<number, string>) => {
+    if (!active || !payload?.length) return null;
+    const row = payload[0].payload as Record<string, number>;
+    return (
+      <div style={tooltipStyle(chart).contentStyle} className="px-3 py-2">
+        <p className="mb-1 font-semibold">Year {label}</p>
+        {results.map(({ fund }) => {
+          const bal = row[`${fund.id}|bal`], paid = row[`${fund.id}|paid`], lost = row[`${fund.id}|lost`];
+          return (
+            <div key={fund.id} className="tabular mt-1 grid grid-cols-[auto_auto] gap-x-4 text-xs">
+              <span className="col-span-2 flex items-center gap-1.5 text-sm font-semibold normal-nums">
+                <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: fund.color }} />
+                {fund.name}
+              </span>
+              <span>Balance</span><span className="text-right">{money(bal, region)}</span>
+              <span>Fees paid</span><span className="text-right">{money(paid, region)}</span>
+              <span>Lost growth</span><span className="text-right">{money(lost, region)}</span>
+              <span className="opacity-70">With no fees</span><span className="text-right opacity-70">{money(bal + paid + lost, region)}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const fmtAxis = (v: number) => moneyShort(v, region);
   const tip = tooltipStyle(chart);
@@ -431,48 +493,115 @@ export default function GrowthCalculator() {
             </Card>
 
             <Card className="min-w-0">
-              <CardTitle>What fees cost you</CardTitle>
-              <p className="-mt-1 text-sm text-muted">
+              <CardTitle>After {years} years</CardTitle>
+              <table className="tabular w-full text-sm">
+                <thead>
+                  <tr>
+                    <th className="sr-only">Measure</th>
+                    {costs.map((c) => (
+                      <th key={c.fund.id} scope="col" className="px-2 pb-2 text-right align-bottom font-semibold normal-nums">
+                        <span aria-hidden className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full" style={{ background: c.fund.color }} />
+                        <span className="wrap-anywhere">{c.fund.name}</span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { label: 'Contributed', value: (c: Cost) => c.contributed },
+                    { label: 'Investment growth', value: (c: Cost) => c.final - c.contributed },
+                    { label: 'Final balance', value: (c: Cost) => c.final, strong: true },
+                    { label: 'Fees paid', value: (c: Cost) => c.fees, bad: true, rule: true },
+                    { label: 'Lost growth', value: (c: Cost) => c.lost, bad: true },
+                    { label: 'Total fee cost', value: (c: Cost) => c.total, bad: true, strong: true },
+                    { label: 'Balance with no fees', value: (c: Cost) => c.noFee, muted: true, rule: true },
+                  ].map((row) => (
+                    <tr key={row.label} className={row.rule ? 'border-t border-line' : ''}>
+                      <th scope="row" className={`py-1.5 pr-2 text-left font-normal normal-nums ${row.muted ? 'text-muted' : ''}`}>{row.label}</th>
+                      {costs.map((c) => (
+                        <td
+                          key={c.fund.id}
+                          className={`px-2 py-1.5 text-right ${row.strong ? 'font-semibold' : ''} ${row.bad ? 'text-bad' : row.muted ? 'text-muted' : ''}`}
+                        >
+                          {money(row.value(c), region)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-3 text-xs text-muted">
                 <strong className="text-ink">Fees paid</strong> is what the fund charged.{' '}
                 <strong className="text-ink">Lost growth</strong> is what that money would have earned if it had stayed invested.
               </p>
-              <ul className="mt-4 flex flex-col gap-4">
-                {costs.map((c) => (
-                  <li key={c.fund.id}>
-                    <div className="flex items-baseline justify-between gap-3 text-sm">
-                      <span className="flex min-w-0 items-center gap-2 font-semibold">
-                        <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: c.fund.color }} />
-                        <span className="wrap-anywhere">{c.fund.name}</span>
-                      </span>
-                      <span className="tabular shrink-0 font-semibold text-bad">{money(c.total, region)}</span>
-                    </div>
-                    <div
-                      aria-hidden
-                      className="mt-1.5 flex h-5 overflow-hidden rounded"
-                      style={{ width: `${Math.max(2, (c.total / maxCost) * 100)}%` }}
-                    >
-                      <div style={{ width: `${(c.fees / Math.max(1, c.total)) * 100}%`, background: chart.series.feePaid }} />
-                      <div className="flex-1" style={{ background: chart.series.feeLost }} />
-                    </div>
-                    <p className="tabular mt-1.5 text-xs text-muted">
-                      {money(c.fees, region)} fees paid · {money(c.lost, region)} lost growth
-                    </p>
-                    <p className="tabular text-xs text-muted">
-                      {pct(c.share, 1)} <span className="normal-nums">of the no-fee balance</span> · ends at {money(c.final, region)}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 flex gap-4 text-xs text-muted">
-                <span className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: chart.series.feePaid }} />Fees paid</span>
-                <span className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: chart.series.feeLost }} />Lost growth</span>
-              </div>
             </Card>
           </div>
 
+          <Card className="min-w-0">
+            <CardTitle>What fees take, year by year</CardTitle>
+            <p className="-mt-1 max-w-none text-sm text-muted">
+              Each bar stacks to what the fund would hold with no fees. The solid part is what you keep, the stronger tint is
+              fees paid, and the faintest tint is the growth those fees would have earned.{barStep > 1 && ` Showing every ${barStep} years.`}
+            </p>
+            <div className="mt-3 h-80">
+              <ResponsiveContainer>
+                <BarChart data={barData} margin={{ top: 8, right: 28, left: 0, bottom: 18 }} barCategoryGap="18%" barGap={1}>
+                  <CartesianGrid stroke={chart.grid} vertical={false} />
+                  <XAxis dataKey="year" stroke={chart.axis} tickLine={false} fontSize={12} minTickGap={12} label={{ value: 'Year', position: 'insideBottomRight', offset: -14, fill: chart.axis, fontSize: 12 }} />
+                  <YAxis stroke={chart.axis} tickFormatter={fmtAxis} tickLine={false} axisLine={false} fontSize={12} width={64} />
+                  <Tooltip cursor={{ fill: chart.grid, fillOpacity: 0.6 }} content={feeBarTip} />
+                  {results.flatMap(({ fund }) =>
+                    TINTS.map((t) => (
+                      <Bar
+                        key={`${fund.id}-${t.key}`}
+                        dataKey={`${fund.id}|${t.key}`}
+                        name={`${fund.name}: ${t.label}`}
+                        stackId={fund.id}
+                        fill={fund.color}
+                        fillOpacity={t.opacity}
+                        radius={t.key === 'lost' ? [3, 3, 0, 0] : 0}
+                        isAnimationActive={false}
+                      />
+                    )),
+                  )}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+              {results.map(({ fund }) => (
+                <span key={fund.id} className="flex items-center gap-2">
+                  <span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: fund.color }} />
+                  {fund.name}
+                </span>
+              ))}
+              <span className="flex items-center gap-3 text-muted sm:ml-auto">
+                {TINTS.map((t) => (
+                  <span key={t.key} className="flex items-center gap-1.5">
+                    <span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: chart.text, opacity: t.opacity }} />
+                    {t.label}
+                  </span>
+                ))}
+              </span>
+            </div>
+          </Card>
+
           <Details summary="Year-by-year table">
             <Table
-              headers={['Year', 'Contributed', ...results.flatMap(({ fund }) => [`${fund.name}`, 'Fees to date'])]}
+              headers={[
+                'Year',
+                'Contributed',
+                ...results.flatMap(({ fund }) => [
+                  <span key={`${fund.id}-b`}>
+                    <span aria-hidden className="mr-1.5 inline-block h-2 w-2 rounded-full" style={{ background: fund.color }} />
+                    {fund.name}
+                  </span>,
+                  <span key={`${fund.id}-f`}>
+                    <span aria-hidden className="mr-1.5 inline-block h-2 w-2 rounded-full" style={{ background: fund.color }} />
+                    Fees to date
+                  </span>,
+                ]),
+                ...(results.length === 2 ? ['Gap'] : []),
+              ]}
               rows={lineData.map((row, y) => [
                 y,
                 money(row.contributed, region),
@@ -480,6 +609,7 @@ export default function GrowthCalculator() {
                   money(row[fund.id], region),
                   money(deflate(r.points[y].feesPaid, y), region),
                 ]),
+                ...(results.length === 2 ? [money(Math.abs(row[results[0].fund.id] - row[results[1].fund.id]), region)] : []),
               ])}
             />
           </Details>
@@ -487,4 +617,18 @@ export default function GrowthCalculator() {
       )}
     </>
   );
+}
+
+/** True while the viewport is at least `px` wide; follows resizes. */
+function useMinWidth(px: number) {
+  const query = `(min-width: ${px}px)`;
+  const [match, setMatch] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const m = window.matchMedia(query);
+    const on = (e: MediaQueryListEvent) => setMatch(e.matches);
+    setMatch(m.matches);
+    m.addEventListener('change', on);
+    return () => m.removeEventListener('change', on);
+  }, [query]);
+  return match;
 }
