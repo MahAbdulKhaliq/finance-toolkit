@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { simulateGrowth, type ContributionPlan } from './growth';
+import { simulateGrowth, splitGap, type ContributionPlan } from './growth';
 import { cagr, endValue, startValue, yearsBetween, yearsToReach } from './cagr';
 import {
   amortizationByYear,
@@ -178,5 +178,32 @@ describe('rent vs buy', () => {
   it('warns when the Canadian minimum down payment is not met', () => {
     const r = rentVsBuy({ ...base, region: 'CA', price: 800_000, downPayment: 40_000 });
     expect(r.warnings.length).toBeGreaterThan(0);
+  });
+});
+
+describe('splitGap', () => {
+  it('puts the whole gap on fees when returns match', () => {
+    const s = splitGap(plan(), { annualReturn: 0.07, fee: 0.022 }, { annualReturn: 0.07, fee: 0.002 });
+    expect(s.returnEffect).toBeCloseTo(0, 6);
+    expect(s.feeEffect).toBeCloseTo(s.gap, 6);
+    expect(s.gap).toBeGreaterThan(0);
+  });
+
+  it('puts the whole gap on returns when fees match', () => {
+    const s = splitGap(plan(), { annualReturn: 0.05, fee: 0.005 }, { annualReturn: 0.07, fee: 0.005 });
+    expect(s.feeEffect).toBeCloseTo(0, 6);
+    expect(s.returnEffect).toBeCloseTo(s.gap, 6);
+  });
+
+  it('parts add up to the gap and can pull in opposite directions', () => {
+    const p = plan({ contribution: 500, years: 30 });
+    const worse = { annualReturn: 0.06, fee: 0.002 };
+    const better = { annualReturn: 0.08, fee: 0.01 };
+    const s = splitGap(p, worse, better);
+    const gap = simulateGrowth(p, better).finalBalance - simulateGrowth(p, worse).finalBalance;
+    expect(s.gap).toBeCloseTo(gap, 6);
+    expect(s.feeEffect + s.returnEffect).toBeCloseTo(gap, 6);
+    expect(s.feeEffect).toBeLessThan(0); // the better fund charges more
+    expect(s.returnEffect).toBeGreaterThan(gap);
   });
 });

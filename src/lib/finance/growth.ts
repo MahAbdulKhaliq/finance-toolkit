@@ -98,3 +98,27 @@ export function simulateGrowth(plan: ContributionPlan, fund: FundParams): Growth
     totalFeeCost: shadow - bal,
   };
 }
+
+export interface GapSplit {
+  /** Final balance of `better` minus final balance of `worse`. */
+  gap: number;
+  /** Part of the gap that comes from the fee difference. */
+  feeEffect: number;
+  /** Part of the gap that comes from the return difference. feeEffect + returnEffect = gap. */
+  returnEffect: number;
+}
+
+/**
+ * Splits the gap between two funds into a fee part and a return part. The two effects
+ * interact (a fee costs more on a faster-growing balance), so the split averages both orders,
+ * fee first and return first (a Shapley split). The parts always add up to the gap, and either
+ * part can be negative, e.g. when the better fund charges more but grows faster.
+ */
+export function splitGap(plan: ContributionPlan, worse: FundParams, better: FundParams): GapSplit {
+  const B = (annualReturn: number, fee: number) => simulateGrowth(plan, { annualReturn, fee }).finalBalance;
+  const rw = worse.annualReturn, rb = better.annualReturn, fw = worse.fee, fb = better.fee;
+  const ww = B(rw, fw), bb = B(rb, fb), rbFw = B(rb, fw), rwFb = B(rw, fb);
+  const feeEffect = ((bb - rbFw) + (rwFb - ww)) / 2;
+  const gap = bb - ww;
+  return { gap, feeEffect, returnEffect: gap - feeEffect };
+}

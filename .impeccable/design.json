@@ -248,7 +248,7 @@
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "One page title per calculator; 1.5rem below 640px. Pages that open with the station strip use the lit stop as the visible title and an sr-only h1."
+        "purpose": "One page title per calculator; 1.5rem below 640px. A Plan Sentence page keeps an sr-only h1 so the sentence leads."
       },
       "title": {
         "displayName": "Title",
@@ -391,7 +391,7 @@
       "kind": "input",
       "refersTo": "inline-input",
       "description": "Editable value inside a sentence: inherits the sentence size, hairline box on Surface Mist, teal border on hover or focus; width from an invisible mirror.",
-      "html": "<p class=\"ds-ps\">Invest <span class=\"ds-ps-in\"><span aria-hidden=\"true\">$</span><span class=\"ds-ps-grid\"><span class=\"ds-ps-mirror\" aria-hidden=\"true\">10,000</span><input aria-label=\"Initial investment\" inputmode=\"decimal\" value=\"10,000\"></span></span>, then <span class=\"ds-ps-in\"><span aria-hidden=\"true\">$</span><span class=\"ds-ps-grid\"><span class=\"ds-ps-mirror\" aria-hidden=\"true\">500</span><input aria-label=\"Contribution\" inputmode=\"decimal\" value=\"500\"></span></span> every month.</p><p class=\"ds-ps\">Compare <button class=\"ds-ps-fund\"><span class=\"ds-ps-dot\" style=\"background:#0d9488\"></span>Broad index ETF <span class=\"ds-ps-fee\">· 0.20%</span></button> with <button class=\"ds-ps-add\">+ Add a fund</button></p>",
+      "html": "<p class=\"ds-ps\">Invest <span class=\"ds-ps-in\"><span aria-hidden=\"true\">$</span><span class=\"ds-ps-grid\"><span class=\"ds-ps-mirror\" aria-hidden=\"true\">10,000</span><input aria-label=\"Initial investment\" inputmode=\"decimal\" value=\"10,000\"></span></span>, then <span class=\"ds-ps-in\"><span aria-hidden=\"true\">$</span><span class=\"ds-ps-grid\"><span class=\"ds-ps-mirror\" aria-hidden=\"true\">500</span><input aria-label=\"Contribution\" inputmode=\"decimal\" value=\"500\"></span></span> every month.</p><p class=\"ds-ps\">Compare <button class=\"ds-ps-fund\"><span class=\"ds-ps-dot\" style=\"background:#0d9488\"></span>Broad index ETF <span class=\"ds-ps-fee\">0.20% MER · 7.00% return</span></button> with <button class=\"ds-ps-fund\"><span class=\"ds-ps-dot\" style=\"background:#e11d48\"></span>Big-bank mutual fund <span class=\"ds-ps-fee\">2.20% MER · 7.00% return</span></button></p>",
       "css": ".ds-ps { margin: 0; font-size: 1.5rem; line-height: 2; font-weight: 500; color: var(--muted, #5d6673); } .ds-ps-in { display: inline-flex; align-items: baseline; padding: 0 8px; border: 1px solid var(--border, #e3e6eb); border-radius: 8px; background: var(--surface-2, #f1f3f6); color: var(--text, #14171c); font-weight: 600; transition: border-color 150ms, box-shadow 150ms; } .ds-ps-in:hover, .ds-ps-in:focus-within { border-color: var(--accent, #0f766e); } .ds-ps-in:focus-within { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent, #0f766e) 25%, transparent); } .ds-ps-grid { display: inline-grid; } .ds-ps-mirror, .ds-ps-grid input { grid-area: 1 / 1; font: inherit; font-variant-numeric: tabular-nums; } .ds-ps-mirror { visibility: hidden; white-space: pre; padding-right: 1px; } .ds-ps-grid input { width: 0; min-width: 100%; border: none; outline: none; background: transparent; color: inherit; padding: 0; } .ds-ps-fund, .ds-ps-add { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 12px; border-radius: 9999px; font: inherit; cursor: pointer; transition: border-color 150ms; } .ds-ps-fund { border: 1px solid var(--border, #e3e6eb); background: var(--surface, #fff); color: var(--text, #14171c); font-weight: 600; } .ds-ps-add { border: 1px dashed var(--border, #e3e6eb); background: transparent; color: var(--accent, #0f766e); } .ds-ps-fund:hover, .ds-ps-add:hover { border-color: var(--accent, #0f766e); } .ds-ps-fund:focus-visible, .ds-ps-add:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; } .ds-ps-dot { width: 10px; height: 10px; border-radius: 9999px; align-self: center; } .ds-ps-fee { font-weight: 400; color: var(--muted, #5d6673); font-variant-numeric: tabular-nums; }"
     },
     {
@@ -401,14 +401,6 @@
       "description": "The Plan Sentence answer: one gain-green tabular figure at about 64px with its sentence beside it.",
       "html": "<div class=\"ds-ans\"><span class=\"ds-ans-fig\">$209,821</span><p class=\"ds-ans-text\">more with <strong>Broad index ETF</strong> than with <strong>Mutual fund</strong> after 30 years.</p></div>",
       "css": ".ds-ans { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; } .ds-ans-fig { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--good, #15803d); } .ds-ans-text { margin: 0; max-width: 26em; font-size: 1.25rem; color: var(--text, #14171c); }"
-    },
-    {
-      "name": "Station Strip",
-      "kind": "nav",
-      "refersTo": "station-strip-current",
-      "description": "The Fund Line in miniature at the top of a calculator: current stop lit at 700, other stops are links, later segments at 35%.",
-      "html": "<nav class=\"ds-ss\" aria-label=\"Calculators on the fund line\"><ol><li><a href=\"#\"><span class=\"ds-ss-ring\"></span>My Funds</a></li><li class=\"ds-ss-seg\" aria-hidden=\"true\"></li><li><span class=\"ds-ss-here\" aria-current=\"page\"><span class=\"ds-ss-ring is-here\"></span>Growth &amp; Fees</span></li><li class=\"ds-ss-seg is-after\" aria-hidden=\"true\"></li><li><a href=\"#\"><span class=\"ds-ss-ring\"></span>CAGR</a></li><li class=\"ds-ss-seg is-after\" aria-hidden=\"true\"></li><li><a href=\"#\"><span class=\"ds-ss-ring\"></span>Rent vs. Buy</a></li></ol></nav>",
-      "css": ".ds-ss { overflow-x: auto; } .ds-ss ol { display: flex; align-items: center; width: max-content; margin: 0; padding: 0; list-style: none; font-size: 0.75rem; color: var(--muted, #5d6673); } .ds-ss a, .ds-ss-here { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 6px; color: inherit; text-decoration: none; } .ds-ss a:hover { color: var(--text, #14171c); } .ds-ss a:focus-visible { outline: 2px solid var(--accent, #0f766e); } .ds-ss-here { font-weight: 700; color: var(--text, #14171c); } .ds-ss-ring { width: 14px; height: 14px; box-sizing: border-box; border-radius: 9999px; border: 3px solid var(--text, #14171c); background: var(--surface, #fff); } .ds-ss-ring.is-here { width: 18px; height: 18px; background: var(--accent, #0f766e); } .ds-ss-seg { width: 48px; height: 6px; border-radius: 9999px; background: var(--accent, #0f766e); } .ds-ss-seg.is-after { opacity: 0.35; }"
     },
     {
       "name": "Notice",
@@ -429,14 +421,14 @@
   ],
   "narrative": {
     "northStar": "The Long View",
-    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is the Fund Line: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size. Growth & Fees opens with a station strip (the Fund Line in miniature, its own stop lit) and is laid out as a Plan Sentence: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
+    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is the Fund Line: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a Plan Sentence: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
     "keyCharacteristics": [
       "One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).",
       "Tabular numerals for every figure, so columns of money line up and changes are easy to compare.",
       "Flat bordered surfaces at rest; lift and shadow only on intent or overlay.",
       "Soft, consistent corners (8px controls, 12px containers, pill-like chips).",
       "Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.",
-      "On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it with a station strip and terminus-capped chart lines.",
+      "On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it only with terminus-capped chart lines.",
       "On Growth & Fees, an editable plan sentence in place of a labelled form rail, answered by one display-size figure."
     ],
     "rules": [
@@ -462,7 +454,7 @@
       },
       {
         "name": "The Home Weight Rule",
-        "body": "Weight 800 belongs to Home: the headline, station names and the \"how it works\" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door. The station strip lights its current stop at 700, not 800, and the Answer figure is 700.",
+        "body": "Weight 800 belongs to Home: the headline, station names and the \"how it works\" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door. The Answer figure is 700.",
         "section": "typography"
       },
       {
@@ -482,7 +474,7 @@
       },
       {
         "name": "The Meaningful Geometry Rule",
-        "body": "Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out. The station strip and ink terminus caps on chart fund lines qualify: they carry the same meaning at calculator scale.",
+        "body": "Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out. Ink terminus caps on chart fund lines qualify: they carry the same meaning at calculator scale.",
         "section": "shapes"
       }
     ],
@@ -506,7 +498,7 @@
       "Don't introduce a second typeface or a display font; hierarchy comes from weight and size.",
       "Don't use `var(--…)` for Recharts SVG attributes; they need concrete hex values.",
       "Don't let long fund names or notes overflow; wrap them.",
-      "Don't add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its echoes (station strip, chart terminus caps), not ornament.",
+      "Don't add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its one echo (chart terminus caps), not ornament.",
       "Don't use weight 800 or the Home Display size on calculator pages.",
       "Don't light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal.",
       "Don't colour the parts of a cost breakdown in fund or extra semantic colours; the parts are neutrals.",

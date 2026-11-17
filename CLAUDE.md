@@ -42,7 +42,7 @@ Deploy: `.github/workflows/deploy.yml` runs tests + build on push to `main` and 
 
 **Cross-calculator links (keep these working):**
 - CAGR "Save as fund" opens `FundEditor` pre-filled with the CAGR as `annualReturn`.
-- Growth & Fees uses `FundMultiPicker` and allows per-page fee/return overrides that don't change the library.
+- Growth & Fees compares exactly two funds: each slot uses `FundSelect` (choosing the other slot's fund swaps them) and allows per-page fee/return overrides that don't change the library. Retirement uses `FundMultiPicker`.
 - Rent vs. Buy uses `FundSelect` for the renter's investment.
 - Both pickers can create a fund inline through `FundEditor` (a native `<dialog>`).
 

@@ -175,13 +175,6 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.full}"
     padding: "0 12px"
-  add-fund-pill:
-    textColor: "{colors.ledger-teal}"
-    rounded: "{rounded.full}"
-    padding: "0 12px"
-  station-strip-current:
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
   answer-figure:
     textColor: "{colors.gain-green}"
     typography: "{typography.answer}"
@@ -206,7 +199,7 @@ The mood is calm, patient and clear. Components feel calm and tactile: restraine
 
 Home is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.
 
-Calculators echo the line at instrument size. Growth & Fees opens with a **station strip** (the Fund Line in miniature, its own stop lit) and is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).
+Calculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).
 
 **Key Characteristics:**
 - One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).
@@ -214,7 +207,7 @@ Calculators echo the line at instrument size. Growth & Fees opens with a **stati
 - Flat bordered surfaces at rest; lift and shadow only on intent or overlay.
 - Soft, consistent corners (8px controls, 12px containers, pill-like chips).
 - Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.
-- On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it with a station strip and terminus-capped chart lines.
+- On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it only with terminus-capped chart lines.
 - On Growth & Fees, an editable plan sentence in place of a labelled form rail, answered by one display-size figure.
 
 ## Colors
@@ -264,16 +257,16 @@ Funds carry their own identity colour, chosen from a fixed set of eight in `src/
 - **Station** (`station`: 800, 1.5rem, leading 1, tight tracking): station names on the Fund Line and the stop list. The map's interchange name ("My Funds") steps up to 1.875rem. The "how it works" heading is 1.5rem at 800 and its stop titles 1.125rem at 800, the same Home voice.
 - **Answer** (`answer`: 700, 3.75rem from 640px up, 3rem below; leading 1, -0.03em tracking, tabular): the one result figure on a Plan Sentence page (the Growth & Fees fee gap), coloured by the Meaning-Only Rule, with its answer sentence beside it at 1.25rem (1.125rem on phones, max 26em). The largest calculator type, still at 700.
 - **Plan Sentence** (`plan-sentence`: 500, 1.5rem from 640px up, 1.125rem below; leading 2 so inline inputs fit between lines; muted text, input values in ink at 600): the editable plan sentence.
-- **Headline** (700, 1.875rem from 640px up, 1.5rem below; tight tracking): one page title per calculator (`PageHeader`). A page that opens with the station strip uses the lit stop as its visible title and keeps an `sr-only` h1 instead.
+- **Headline** (700, 1.875rem from 640px up, 1.5rem below; tight tracking): one page title per calculator (`PageHeader`). A Plan Sentence page keeps an `sr-only` h1 instead, so the sentence leads the page.
 - **Title** (600, 1rem): card titles. Section headings step up to 1.125rem.
 - **Figure** (600, 1.25rem, tabular numerals): stat-tile values. Coloured by the Meaning-Only Rule.
 - **Body** (400, 0.875rem): inputs, buttons, nav, tables, explanatory text. Page intros run at the base size (1rem, muted); the Home lede is 1.125rem. Every paragraph is capped at 34em (about 75 characters of Inter) with `text-wrap: pretty` (a base rule in `src/index.css`).
-- **Label** (500, 0.75rem): stat labels, field hints, chip metadata, the footer disclaimer, station-strip stops (the lit stop at 700). Field labels use 0.875rem at 500.
+- **Label** (500, 0.75rem): stat labels, field hints, chip metadata, the footer disclaimer. Field labels use 0.875rem at 500.
 
 ### Named Rules
 **The Tabular Rule.** Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug. Gotcha: `tnum` also widens Inter's hyphen, so prose that shares a line with tabular figures (e.g. "of the no-fee balance") is wrapped in `normal-nums`.
 
-**The Home Weight Rule.** Weight 800 belongs to Home: the headline, station names and the "how it works" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door. The station strip lights its current stop at 700, not 800, and the Answer figure is 700.
+**The Home Weight Rule.** Weight 800 belongs to Home: the headline, station names and the "how it works" stops. Calculator pages stay at 700 and below, so the tools read as calm instruments under a bolder front door. The Answer figure is 700.
 
 **The Sentence Lead Rule.** The headline result is written as a plain sentence ("After 30 years, X ends up $209,821 ahead of Y.") at 1.125rem in its own card, with only the fund names and the key figure in bold. Lead with the consequence in words; tiles and charts follow. On a Plan Sentence page the plan itself is the sentence, and the answer leads with its figure at Answer size, followed by a 1.25rem sentence with the fund names in bold.
 
@@ -285,7 +278,7 @@ Spacing follows a 4px base: 12px between fields and tiles, 16–20px card paddin
 
 Home has its own layout. From 1024px up it is a transit map: one section with a fixed 1200:620 aspect ratio, SVG geometry in a 1200 × 620 coordinate space for the lines, rings and caps, and real HTML labels positioned over it by percentage (`left: x/1200`, `top: y/620`), so text stays at reading size and every station is an ordinary link. The headline and lede sit top-left (max 33rem), the fund legend sits in the empty lower-right band (20rem wide). Below 1024px the map becomes a vertical stop list down the page. The "how it works" section is a three-stop line under a hairline rule: a horizontal teal bar across a three-column grid from 640px up, and the same vertical bar and ring stops on phones.
 
-Growth & Fees uses the **Plan Sentence** layout instead of the two-column grid: station strip; a full-width card holding the plan sentence and a second line of fund pills ("Compare [fund] with [fund] + Add a fund"), with per-fund fee/return overrides opening in a panel inside the card; a muted overrides note with a ghost Reset under it; the Answer figure and sentence; a grid of the balance chart beside "What fees cost you" (3fr / 2fr from 1280px up, stacked below with the chart first); and the year table in a collapsed `Details`. This page has no Share button (removed at the user's request); its inputs still live in the URL.
+Growth & Fees uses the **Plan Sentence** layout instead of the two-column grid, with an `sr-only` h1 so the sentence leads (the header nav already lists the calculators): a full-width card holding the plan sentence and a second line of exactly two fund pills ("Compare [fund] with [fund]"; the page measures one gap, so it compares one pair), either of which opens a panel inside the card with a fund select per slot (including "+ New fund…") and per-fund fee/return overrides, where choosing the fund already in the other slot swaps the two; a muted overrides note with a ghost Reset under it; the Answer figure and sentence (ending in a muted clause on where the gap comes from, e.g. "46% comes from the MER difference and 54% from the return difference."); a grid of the balance chart beside "What fees cost you" (3fr / 2fr from 1280px up, stacked below with the chart first); and the year table in a collapsed `Details`. This page has no Share button (removed at the user's request); its inputs still live in the URL.
 
 **The Inputs-Left Rule.** On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. A Plan Sentence page is the one exception: its inputs are the sentence at the top, and results always follow below it.
 
@@ -294,7 +287,7 @@ Growth & Fees uses the **Plan Sentence** layout instead of the two-column grid: 
 Flat at rest, lift on intent. Depth comes from tonal layering (paper ground → white surface → mist tiles) and hairline borders, not shadows. Shadows appear only in response to intent or for things that float above the page.
 
 ### Shadow Vocabulary
-- **Selection nudge** (`shadow-sm`, `0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`): the selected option in a segmented control, raising it off its mist track.
+- **Selection nudge** (`shadow-sm`, `0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`): the selected option in a segmented control, raising it off its mist track; also the gap split panel where it floats over the chart.
 - **Intent lift** (`shadow-lg`, `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`, with a 2px upward translate and a teal border): hover on navigational cards. Home no longer uses cards (its stations light the line instead), so no current surface uses it; keep it for any future navigational card.
 - **Overlay** (`shadow-2xl`, `0 25px 50px -12px rgb(0 0 0 / 0.25)`, over a 50% black backdrop): the Fund Editor dialog.
 - **Header glass**: the sticky header uses its surface colour at 90% with backdrop blur and a hairline bottom border; no shadow.
@@ -304,9 +297,9 @@ Flat at rest, lift on intent. Depth comes from tonal layering (paper ground → 
 
 ## Shapes
 
-Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; dashed borders mark only the add-a-fund affordances ("+ New fund", "+ Add a fund"). Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins); never Unicode glyphs or emoji standing in for an icon.
+Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; dashed borders mark only the add-a-fund affordance ("+ New fund"). Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins); never Unicode glyphs or emoji standing in for an icon.
 
-The Fund Line's diagram geometry is the one exception to "no decorative geometry", because it is not decoration: it maps the product's real flow (funds board at My Funds and ride through four calculators). Its form language is transit-diagram: thick strokes, 45° bends only, round joins, rounded terminus caps, ring stations and a pill interchange. Use it where the diagram carries meaning, never as ornament. Two calculator-scale echoes qualify because they carry the same meaning: the station strip (the real order of the calculators, each stop a link) and ink terminus caps on chart fund lines (where a fund's line ends).
+The Fund Line's diagram geometry is the one exception to "no decorative geometry", because it is not decoration: it maps the product's real flow (funds board at My Funds and ride through four calculators). Its form language is transit-diagram: thick strokes, 45° bends only, round joins, rounded terminus caps, ring stations and a pill interchange. Use it where the diagram carries meaning, never as ornament. One calculator-scale echo qualifies because it carries the same meaning: ink terminus caps on chart fund lines (where a fund's line ends).
 
 **The Meaningful Geometry Rule.** Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out.
 
@@ -346,20 +339,13 @@ The signature result unit. An 8px-rounded tile on Surface Mist at 50% with a hai
 - **Hover / focus:** the border turns Ledger Teal; focus adds the 2px teal ring at 25% (`focus-within`).
 - **Width:** an invisible tabular copy of the text in the same grid cell sizes the box, so it hugs the value at any size.
 - **Values:** grouped digits at rest (10,000), raw digits while focused (10000). Units ($, %) sit inside the box. Each input carries its own `aria-label`.
-- **Fund pills in the sentence:** full-pill buttons on surface with a hairline border, a 10px swatch dot, the name at 600 and the fee in muted tabular text; hover turns the border teal. The "+ Add a fund" pill is dashed with teal text.
+- **Fund chips in the sentence:** buttons on surface with a hairline border, a 10px swatch dot and the name at 600, then both numbers named in muted tabular text: "2.20% MER · 7.00% return" (the fee label from `region.feeLabelInline`). From 640px up the chip is one full-pill line; on phones the details drop to a second line under the name and the chip rounds to 16px (`rounded-2xl`). Hover turns the border teal. A small teal SVG chevron ends the chip to show it opens the fund picker; it flips while the panel is open.
 
 ### Segmented control
 A mist track with a hairline border and 2px inset; options are 6px-rounded, muted at rest, and the selected one becomes a surface "key" with the Selection nudge shadow. Used for Future $ / Today's $ and similar binary or ternary toggles; exposed as a radiogroup.
 
 ### Navigation
 A sticky 90%-opaque header with backdrop blur and a hairline bottom border. Left: the teal logo tile with a white rising line, plus the wordmark from 640px up. Centre: text nav links (body, 500, 8px-rounded); inactive links are muted with a mist hover, and the active link gets the Teal Soft wash with ink text. Right: a compact region select (flag + currency) and a theme cycle button with 16px SVG line icons (half-filled circle for system, sun, moon). On phones the link row scrolls horizontally.
-
-### Station strip
-`src/components/StationStrip.tsx`: the Fund Line in miniature at the top of a calculator (My Funds → Growth & Fees → CAGR → Rent vs. Buy → Retirement), a labelled `nav` of Label-size stops.
-- **Stops:** 14px rings with a 3px ink border on surface; every stop except the current one is a link (muted, hover to ink, teal focus outline).
-- **Current stop:** an 18px teal-filled ring with a 3px ink border and the name at 700 in ink, `aria-current="page"`. Never 800 (Home Weight Rule).
-- **Segments:** 6px-tall full-pill teal bars (32px wide, 48px from 640px up). Segments up to the current stop are full teal; later ones sit at 35% opacity.
-- **Phones:** the strip scrolls sideways and fades out at the right edge (mask from 85% to transparent); no fade from 640px up.
 
 ### Notice
 A full-width Caution Amber panel (8px, 12px × 16px) with dark amber ink and an optional right-aligned action. It is used for shared-fund imports and input warnings.
@@ -382,7 +368,8 @@ The Home page as a transit map: bold, diagrammatic and still calm, with one gest
 ### Charts
 Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-rounded tooltip on surface with a hairline border, 2.5px series lines without dots for long horizons, and a dashed muted line for "contributed." Reference markers (Break-even, PMI ends) use a labelled dot or line in the relevant series colour.
 - **Terminus caps (Growth & Fees):** fund lines are drawn 4px with round joins and end at the final year in an ink terminus cap (8 × 22, 4 radius, in the chart text colour), echoing the Home map.
-- **Gap bracket:** a 2px Gain Green bracket just right of the caps spans the best and worst fund at the final year, with end ticks and a "gap" label (13px, 700) in the same colour.
+- **Gap bracket:** a 2px Gain Green bracket just right of the caps spans the best and worst fund at the final year, with end ticks and a label in the same colour: the short dollar value (13px, 700, e.g. "$209.8K") over "gap" (11px, 600). It is a button: hover or focus highlights it (a 12% Gain Green tint behind it, 3px stroke) and opens the gap split panel; click, Enter or Space pins the panel open, Escape unpins it.
+- **Gap split panel:** a 12px-rounded surface panel with a hairline border and `shadow-sm`, Body size. A "Gap after N years" row with the full gap in bold Gain Green; a 10px full-pill two-part bar (fee part solid Gain Green, return part at 40%), drawn only when both parts are positive; two rows ("Lower/Higher MER", "Higher/Lower return") with a matching swatch, the dollar part and its share, and old → new values in muted 0.75rem. A negative part is Cost Rose with a minus sign. A muted footnote says the split averages both orders (a Shapley split, `splitGap` in `src/lib/finance/growth.ts`). From 640px up it overlays the chart's top-left; on phones it sits below the chart.
 - **Legend:** an HTML row under the chart: a 4px × 20px colour bar per fund and a dashed muted mark for "Contributed", labels in ink.
 - **Fee breakdown ("What fees cost you"):** one row per fund: swatch and name, the total in Cost Rose, then a 20px, 4px-rounded stacked bar of fees paid (`series.feePaid`) and lost growth (`series.feeLost`) scaled to the largest total, then muted tabular sub-lines and a two-swatch key. Neutral, never fund-coloured.
 
@@ -408,7 +395,7 @@ Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-ro
 - **Don't** introduce a second typeface or a display font; hierarchy comes from weight and size.
 - **Don't** use `var(--…)` for Recharts SVG attributes; they need concrete hex values.
 - **Don't** let long fund names or notes overflow; wrap them.
-- **Don't** add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its echoes (station strip, chart terminus caps), not ornament.
+- **Don't** add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its one echo (chart terminus caps), not ornament.
 - **Don't** colour the parts of a cost breakdown in fund or extra semantic colours; the parts are neutrals.
 - **Don't** put an accent bottom border on a rounded input box.
 - **Don't** use weight 800 or the Home Display size on calculator pages.

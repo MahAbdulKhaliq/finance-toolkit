@@ -37,6 +37,15 @@ export default function Methodology() {
             balance − actual balance. It counts the fees themselves plus the growth those dollars would
             have earned.
           </p>
+          <p>
+            <strong>Where the gap comes from.</strong> The gap between the best and worst fund is split
+            into a fee part and a return part. The two interact (a fee costs more on a faster-growing
+            balance), so the split averages both orders: changing the fee first and then the return, and
+            the reverse. With <F>B(return, fee)</F> as the final balance, the fee part is{' '}
+            <F>½[(B(r₂, f₂) − B(r₂, f₁)) + (B(r₁, f₂) − B(r₁, f₁))]</F>, and the return part is
+            the rest of the gap. The parts always add up to the gap. One can be negative, for example when
+            the better fund charges more but grows faster.
+          </p>
         </Section>
 
         <Section title="CAGR">

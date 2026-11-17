@@ -2,15 +2,14 @@ import { Fragment, useMemo, useState } from 'react';
 import {
   CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
-import { simulateGrowth, type Frequency, type Timing } from '../lib/finance/growth';
+import { simulateGrowth, splitGap, type Frequency, type Timing } from '../lib/finance/growth';
 import { money, moneyShort, pct } from '../lib/format';
 import { useRegion, useSettings } from '../state/settingsStore';
 import { useShareFunds, useUrlState } from '../state/useUrlState';
 import { tooltipStyle, useChartTheme } from '../state/useTheme';
 import { feeIsHigh, FUND_LIMITS, returnIsHigh, STARTER_FUNDS } from '../state/fundsStore';
-import { FundMultiPicker, ImportSharedFunds, useAvailableFunds } from '../components/funds/FundPicker';
+import { FundSelect, ImportSharedFunds, useAvailableFunds } from '../components/funds/FundPicker';
 import { DollarsToggle, useDeflator } from '../components/Toolbar';
-import { StationStrip } from '../components/StationStrip';
 import { InlineNumber, InlineSelect } from '../components/PlanSentence';
 import { Button, Card, CardTitle, Details, PercentField, Table } from '../components/ui';
 
@@ -51,6 +50,18 @@ const TIMINGS: { value: Timing; label: string }[] = [
 
 const FUNDS_PANEL = 'growth-funds-panel';
 
+/** One plain sentence on where the gap comes from, e.g. "All of it comes from the lower MER." */
+function splitSentence(s: { fee: number; ret: number; feeShare: number; retShare: number }, feeName: string) {
+  // Parts pulling in opposite directions: one difference outweighs the other.
+  if (s.fee < 0 || s.ret < 0)
+    return s.ret > 0
+      ? `The higher return more than makes up for the higher ${feeName}.`
+      : `The lower ${feeName} more than makes up for the lower return.`;
+  if (s.feeShare >= 0.995) return `All of it comes from the ${feeName} difference.`;
+  if (s.retShare >= 0.995) return 'All of it comes from the return difference.';
+  return `${pct(s.feeShare, 0)} comes from the ${feeName} difference and ${pct(s.retShare, 0)} from the return difference.`;
+}
+
 export default function GrowthCalculator() {
   const region = useRegion();
   const real = useSettings((s) => s.realDollars);
@@ -60,9 +71,25 @@ export default function GrowthCalculator() {
 
   const url = useUrlState<Inputs>(DEFAULTS);
   const { all, missing } = useAvailableFunds(url.sharedFunds);
-  const selectedFunds = url.inputs.fundIds
-    .map((id) => all.find((f) => f.id === id))
-    .filter((f): f is NonNullable<typeof f> => Boolean(f));
+  // Exactly two slots: the page compares one fund with another. Older links with more funds keep
+  // the first two; a missing or duplicate slot falls back to the defaults, then any other fund.
+  const selectedFunds = useMemo(() => {
+    const picked: typeof all = [];
+    for (const id of [...url.inputs.fundIds, ...DEFAULTS.fundIds, ...all.map((f) => f.id)]) {
+      const f = all.find((x) => x.id === id);
+      if (f && !picked.includes(f)) picked.push(f);
+      if (picked.length === 2) break;
+    }
+    return picked;
+  }, [url.inputs.fundIds, all]);
+  // Choosing the fund already in the other slot swaps the two.
+  const setSlot = (slot: number, id: string) => {
+    const ids = selectedFunds.map((f) => f.id);
+    const other = 1 - slot;
+    if (ids[other] === id) ids[other] = ids[slot];
+    ids[slot] = id;
+    url.update({ fundIds: ids });
+  };
   useShareFunds(url.setShareFunds, selectedFunds);
   const { inputs, update, reset } = url;
 
@@ -95,6 +122,17 @@ export default function GrowthCalculator() {
   const gap = best && worst ? deflate(best.r.finalBalance - worst.r.finalBalance, years) : 0;
   const inToday = real ? ", in today's dollars" : '';
 
+  // How much of the gap comes from fees vs. returns (deflated the same way as the gap).
+  const split = useMemo(() => {
+    if (!hasGap || !best || !worst) return null;
+    const s = splitGap(inputs, worst, best);
+    const k = s.gap ? gap / s.gap : 0;
+    return { fee: s.feeEffect * k, ret: s.returnEffect * k, feeShare: s.feeEffect / s.gap, retShare: s.returnEffect / s.gap };
+  }, [hasGap, best, worst, inputs, gap]);
+  const [gapPinned, setGapPinned] = useState(false);
+  const [gapHover, setGapHover] = useState(false);
+  const gapOpen = Boolean(split) && (gapPinned || gapHover);
+
   const costs = results.map(({ fund, fee, r }) => ({
     fund,
     fee,
@@ -117,15 +155,48 @@ export default function GrowthCalculator() {
     return <rect key={`t-${index}`} x={cx - 4} y={cy - 11} width={8} height={22} rx={4} fill={chart.text} />;
   };
 
-  // The gap, measured: a bracket set just right of the terminus caps, with end ticks and its label.
+  // The gap, measured: a bracket set just right of the terminus caps, labelled with its value.
+  // Hover, focus or click it to see how the gap splits between fees and returns.
   const gapBracket = (props: { x1?: number; y1?: number; x2?: number; y2?: number }) => {
     const { x1, y1, y2 } = props;
     if (x1 === undefined || y1 === undefined || y2 === undefined) return <g />;
     const x = x1 + 12;
+    const top = Math.min(y1, y2);
+    const mid = (y1 + y2) / 2;
     return (
-      <g>
-        <path d={`M ${x} ${y1} h 6 V ${y2} h -6`} fill="none" stroke={chart.series.gain} strokeWidth={2} />
-        <text x={x + 12} y={(y1 + y2) / 2} dy="0.35em" fill={chart.series.gain} fontSize={13} fontWeight={700}>
+      <g
+        role="button"
+        tabIndex={0}
+        aria-label={`Gap of ${money(gap, region)}. Show how it splits between fees and returns.`}
+        aria-expanded={gapOpen}
+        aria-controls="gap-split"
+        style={{ cursor: 'pointer', outline: 'none' }}
+        onMouseEnter={() => setGapHover(true)}
+        onMouseLeave={() => setGapHover(false)}
+        onFocus={() => setGapHover(true)}
+        onBlur={() => setGapHover(false)}
+        onClick={() => setGapPinned((p) => !p)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setGapPinned((p) => !p);
+          } else if (e.key === 'Escape') setGapPinned(false);
+        }}
+      >
+        <rect
+          x={x - 6}
+          y={top - 8}
+          width={76}
+          height={Math.abs(y2 - y1) + 16}
+          rx={6}
+          fill={chart.series.gain}
+          fillOpacity={gapOpen ? 0.12 : 0}
+        />
+        <path d={`M ${x} ${y1} h 6 V ${y2} h -6`} fill="none" stroke={chart.series.gain} strokeWidth={gapOpen ? 3 : 2} />
+        <text x={x + 12} y={mid} dy="-0.2em" fill={chart.series.gain} fontSize={13} fontWeight={700}>
+          {moneyShort(gap, region)}
+        </text>
+        <text x={x + 12} y={mid} dy="1.05em" fill={chart.series.gain} fontSize={11} fontWeight={600}>
           gap
         </text>
       </g>
@@ -140,19 +211,28 @@ export default function GrowthCalculator() {
         type="button"
         aria-expanded={fundsOpen}
         aria-controls={FUNDS_PANEL}
-        onClick={() => setFundsOpen(true)}
-        className="inline-flex max-w-full items-baseline gap-2 rounded-full border border-line bg-surface px-3 font-semibold text-ink transition hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        onClick={() => setFundsOpen((open) => !open)}
+        // On phones the details drop under the name; from sm up the chip is one line in the sentence.
+        className="inline-flex max-w-full flex-wrap items-baseline gap-x-2 rounded-2xl border border-line bg-surface px-3 py-1.5 text-left leading-snug font-semibold text-ink transition hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:rounded-full sm:py-0 sm:leading-[inherit]"
       >
-        <span aria-hidden className="h-2.5 w-2.5 shrink-0 self-center rounded-full" style={{ background: f.color }} />
-        <span className="wrap-anywhere">{f.name}</span>
-        <span className="tabular font-normal text-muted">· {pct(o.fee ?? f.fee)}</span>
+        <span className="wrap-anywhere">
+          <span aria-hidden className="mr-2 inline-block h-2.5 w-2.5 rounded-full align-[0.05em]" style={{ background: f.color }} />
+          {f.name}
+        </span>
+        {/* Both numbers carry their names: the fee label (MER / expense ratio) and the return. */}
+        <span className="basis-full pl-[1.125rem] text-base font-normal text-muted sm:basis-auto sm:pl-0 sm:text-lg">
+          <span className="tabular">{pct(o.fee ?? f.fee)}</span> {region.feeLabelInline} ·{' '}
+          <span className="tabular">{pct(o.annualReturn ?? f.annualReturn)}</span> return
+          <svg aria-hidden viewBox="0 0 12 12" className={`ml-1.5 inline-block h-3 w-3 align-[0.05em] text-accent transition ${fundsOpen ? 'rotate-180' : ''}`}>
+            <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
       </button>
     );
   };
 
   return (
     <>
-      <StationStrip current="/growth" />
       <h1 className="sr-only">Growth &amp; Fees</h1>
       <ImportSharedFunds missing={missing} />
 
@@ -170,44 +250,30 @@ export default function GrowthCalculator() {
           years.
         </p>
         <p className="mt-1 max-w-none text-lg leading-[2.1] font-medium text-muted sm:text-2xl sm:leading-[2]">
-          {selectedFunds.length === 0 ? 'Compare ' : selectedFunds.length === 1 ? 'Grow it in ' : 'Compare '}
+          Compare{' '}
           {selectedFunds.map((f, i) => (
             <Fragment key={f.id}>
-              {i > 0 && (i === selectedFunds.length - 1 ? (selectedFunds.length === 2 ? ' with ' : ' and ') : ', ')}
+              {i > 0 && ' with '}
               {fundChip(f)}
             </Fragment>
-          ))}{' '}
-          <button
-            type="button"
-            aria-expanded={fundsOpen}
-            aria-controls={FUNDS_PANEL}
-            onClick={() => setFundsOpen((o) => !o)}
-            className="inline-flex items-baseline rounded-full border border-dashed border-line px-3 text-accent transition hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            {fundsOpen ? 'Done' : '+ Add a fund'}
-          </button>
+          ))}
         </p>
 
         {fundsOpen && (
           <div id={FUNDS_PANEL} className="mt-4 border-t border-line pt-4">
-            <FundMultiPicker
-              // Show this page's overrides on the chips so they match the results.
-              funds={all.map((f) => ({ ...f, ...inputs.overrides[f.id] }))}
-              selected={inputs.fundIds}
-              onChange={(fundIds) => update({ fundIds })}
-            />
-            {selectedFunds.length > 0 && (
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {selectedFunds.map((f) => {
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {selectedFunds.map((f, slot) => {
                   const o = inputs.overrides[f.id] ?? {};
                   const set = (patch: { fee?: number; annualReturn?: number }) =>
                     update({ overrides: { ...inputs.overrides, [f.id]: { ...o, ...patch } } });
                   return (
-                    <div key={f.id}>
-                      <div className="mb-1 flex items-center gap-2 text-sm font-medium">
-                        <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: f.color }} />
-                        <span className="wrap-anywhere">{f.name}</span>
-                      </div>
+                    <div key={slot} className="flex flex-col gap-2">
+                      <FundSelect
+                        label={slot === 0 ? 'Compare' : 'With'}
+                        funds={all}
+                        value={f.id}
+                        onChange={(id) => setSlot(slot, id)}
+                      />
                       <div className="grid grid-cols-2 gap-2">
                         <PercentField
                           label={region.feeLabel}
@@ -229,14 +295,16 @@ export default function GrowthCalculator() {
                     </div>
                   );
                 })}
-              </div>
-            )}
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button variant="ghost" onClick={() => setFundsOpen(false)}>Done</Button>
+            </div>
           </div>
         )}
       </Card>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-sm text-muted">
         <p className="max-w-none min-w-0 flex-1">Fee and return changes apply to this comparison only. Your library isn't changed.</p>
-        <Button variant="ghost" onClick={reset}>Reset</Button>
+        <Button variant="ghost" onClick={() => { reset(); setGapPinned(false); }}>Reset</Button>
       </div>
 
       {/* The answer */}
@@ -250,7 +318,7 @@ export default function GrowthCalculator() {
             </span>
             <p className="max-w-[26em] text-lg sm:text-xl">
               more with <strong>{best.fund.name}</strong> than with <strong>{worst.fund.name}</strong> after {years}{' '}
-              years{inToday}.
+              years{inToday}.{split && <span className="text-muted"> {splitSentence(split, region.feeLabelInline)}</span>}
             </p>
           </div>
         ) : (
@@ -273,9 +341,60 @@ export default function GrowthCalculator() {
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-[3fr_2fr]">
             <Card className="min-w-0">
               <CardTitle action={<DollarsToggle />}>Portfolio value over time</CardTitle>
-              <div className="h-80">
-                <ResponsiveContainer>
-                  <LineChart data={lineData} margin={{ top: 12, right: 64, left: 0, bottom: 18 }}>
+              <div className="relative flex flex-col-reverse sm:block">
+                {split && best && worst && gapOpen && (
+                  <div
+                    id="gap-split"
+                    className="mt-3 rounded-xl sm:pointer-events-none sm:absolute sm:top-1 sm:left-[72px] sm:z-10 sm:mt-0 sm:w-[min(21rem,calc(100%-96px))] border border-line bg-surface p-3 text-sm shadow-sm"
+                  >
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="font-semibold">Gap after {years} years</span>
+                      <span className="tabular font-bold text-good">{money(gap, region)}</span>
+                    </div>
+                    {split.fee >= 0 && split.ret >= 0 && (
+                      <div aria-hidden className="mt-2 flex h-2.5 overflow-hidden rounded-full">
+                        <div style={{ width: `${split.feeShare * 100}%`, background: chart.series.gain }} />
+                        <div className="flex-1" style={{ background: chart.series.gain, opacity: 0.4 }} />
+                      </div>
+                    )}
+                    <dl className="mt-2 flex flex-col gap-1.5">
+                      {[
+                        {
+                          key: 'fee',
+                          label: `${best.fee <= worst.fee ? 'Lower' : 'Higher'} ${region.feeLabelInline}`,
+                          detail: `${pct(worst.fee)} → ${pct(best.fee)}`,
+                          value: split.fee,
+                          share: split.feeShare,
+                          opacity: 1,
+                        },
+                        {
+                          key: 'ret',
+                          label: `${best.annualReturn >= worst.annualReturn ? 'Higher' : 'Lower'} return`,
+                          detail: `${pct(worst.annualReturn)} → ${pct(best.annualReturn)}`,
+                          value: split.ret,
+                          share: split.retShare,
+                          opacity: 0.4,
+                        },
+                      ].map((row) => (
+                        <div key={row.key} className="grid grid-cols-[auto_1fr_auto] items-baseline gap-x-2">
+                          <span aria-hidden className="h-2.5 w-2.5 self-center rounded-sm" style={{ background: chart.series.gain, opacity: row.opacity }} />
+                          <dt>{row.label}</dt>
+                          <dd className={`tabular text-right font-semibold ${row.value < 0 ? 'text-bad' : ''}`}>
+                            {row.value < 0 ? '−' : ''}{money(Math.abs(row.value), region)}
+                            {split.fee >= 0 && split.ret >= 0 && <span className="font-normal text-muted"> · {pct(row.share, 0)}</span>}
+                          </dd>
+                          <dd className="tabular col-start-2 col-end-4 text-xs text-muted">{row.detail}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <p className="mt-2 text-xs text-muted">
+                      Fees and returns compound together, so the split averages both orders.{' '}
+                      {gapPinned ? 'Click or tap the bracket to close.' : 'Click or tap the bracket to keep this open.'}
+                    </p>
+                  </div>
+                )}
+                <div className="h-80"><ResponsiveContainer>
+                  <LineChart data={lineData} margin={{ top: 12, right: 84, left: 0, bottom: 18 }}>
                     <CartesianGrid stroke={chart.grid} vertical={false} />
                     <XAxis dataKey="year" type="number" domain={[0, years]} allowDecimals={false} stroke={chart.axis} tickLine={false} fontSize={12} label={{ value: 'Year', position: 'insideBottomRight', offset: -14, fill: chart.axis, fontSize: 12 }} />
                     <YAxis stroke={chart.axis} tickFormatter={fmtAxis} tickLine={false} axisLine={false} fontSize={12} width={64} />
@@ -295,7 +414,7 @@ export default function GrowthCalculator() {
                       />
                     )}
                   </LineChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer></div>
               </div>
               <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                 {results.map(({ fund }) => (
