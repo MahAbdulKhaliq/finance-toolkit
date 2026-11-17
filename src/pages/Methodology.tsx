@@ -77,7 +77,15 @@ export default function Methodology() {
           </p>
           <p>
             Buyer's net worth = home value × (1 − selling costs) − mortgage balance + invested savings.
-            The break-even year is the first year this is at least the renter's portfolio.
+            The break-even year is the first year this is at least the renter's portfolio. It is searched
+            over 40 years, even when you plan to move out sooner, so the page can say whether buying
+            would have caught up later; past 40 years it reports "40+ years".
+          </p>
+          <p>
+            <strong>What would flip the answer:</strong> the page also finds the yearly home appreciation
+            at which buying exactly breaks even in your move-out year, by bisection between −10% and
+            +20% a year with every other input held fixed. The sensitivity grid reruns the whole model
+            with appreciation and the fund's return each 1% higher or lower.
           </p>
           <p>
             Insurance and condo/HOA fees rise with inflation. Rent rises at its own rate. Taxes on

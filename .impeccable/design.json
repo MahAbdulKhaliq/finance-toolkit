@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-16T21:00:00-05:00",
+  "generatedAt": "2026-11-16T23:30:00-05:00",
   "title": "Design System: Finance Toolkit",
   "extensions": {
     "colorMeta": {
@@ -169,6 +169,16 @@
         "displayName": "Chart Grid",
         "canonical": "#e5e7eb"
       },
+      "scroll-thumb": {
+        "role": "neutral",
+        "displayName": "Scroll Thumb",
+        "canonical": "#c5cbd3"
+      },
+      "scroll-thumb-hover": {
+        "role": "neutral",
+        "displayName": "Scroll Thumb Hover",
+        "canonical": "#8e98a5"
+      },
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
@@ -214,6 +224,16 @@
         "displayName": "Night Grid",
         "canonical": "#262e38"
       },
+      "night-scroll-thumb": {
+        "role": "neutral",
+        "displayName": "Night Scroll Thumb",
+        "canonical": "#3a444f"
+      },
+      "night-scroll-thumb-hover": {
+        "role": "neutral",
+        "displayName": "Night Scroll Thumb Hover",
+        "canonical": "#5b6775"
+      },
       "night-ink": {
         "role": "neutral",
         "displayName": "Night Ink",
@@ -240,7 +260,7 @@
       },
       "answer": {
         "displayName": "Answer",
-        "purpose": "The one result figure on a Plan Sentence page (Growth & Fees fee gap): 700, 3.75rem from sm, 3rem below, tabular, coloured by meaning."
+        "purpose": "The one result figure on a Plan Sentence page: the fee gap on Growth & Fees (Gain Green), the break-even year on Rent vs. Buy (ink)."
       },
       "plan-sentence": {
         "displayName": "Plan Sentence",
@@ -403,6 +423,30 @@
       "css": ".ds-ans { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; } .ds-ans-fig { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--good, #15803d); } .ds-ans-text { margin: 0; max-width: 26em; font-size: 1.25rem; color: var(--text, #14171c); }"
     },
     {
+      "name": "Answer Figure (year)",
+      "kind": "custom",
+      "refersTo": "answer-figure-year",
+      "description": "Rent vs. Buy answer: the break-even year in ink at Answer size; the dollar gap inside the sentence carries Gain Green and a muted clause says what would flip it.",
+      "html": "<div class=\"ds-ansy\"><span class=\"ds-ansy-fig\">Year 7</span><p class=\"ds-ansy-text\">is when buying breaks even. Staying 10 years, <strong>buying</strong> leaves you <strong class=\"ds-ansy-gain\">$31,556</strong> ahead.<span class=\"ds-ansy-muted\"> If homes rose less than 1.40% a year, renting would come out ahead.</span></p></div>",
+      "css": ".ds-ansy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; } .ds-ansy-fig { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--text, #14171c); } .ds-ansy-text { margin: 0; max-width: 30em; font-size: 1.25rem; color: var(--text, #14171c); } .ds-ansy-gain { color: var(--good, #15803d); font-variant-numeric: tabular-nums; } .ds-ansy-muted { color: var(--muted, #5d6673); }"
+    },
+    {
+      "name": "Two-Path Sentence",
+      "kind": "custom",
+      "refersTo": "inline-input",
+      "description": "Rent vs. Buy plan: one sentence line per path, each starting with a 12px path dot in that path's series colour; the fund chip names its net return.",
+      "html": "<p class=\"ds-tp\"><span class=\"ds-tp-dot\" style=\"background:#0f766e\"></span>Buy a <span class=\"ds-tp-in\">$750,000</span> home with <span class=\"ds-tp-in\">10.00%</span> down…</p><p class=\"ds-tp\"><span class=\"ds-tp-dot\" style=\"background:#6366f1\"></span>Or rent for <span class=\"ds-tp-in\">$2,800</span> a month, and invest the difference in <button class=\"ds-tp-fund\"><span class=\"ds-tp-fdot\" style=\"background:#0284c7\"></span>Balanced fund <span class=\"ds-tp-net\">6.56% after MER</span><svg viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" aria-hidden=\"true\"><path d=\"M2.5 4.5 6 8l3.5-3.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></p><p class=\"ds-tp\">I'd stay <span class=\"ds-tp-in\">10</span> years.</p>",
+      "css": ".ds-tp { margin: 0; font-size: 1.5rem; line-height: 2; font-weight: 500; color: var(--muted, #5d6673); } .ds-tp-dot { display: inline-block; width: 12px; height: 12px; border-radius: 9999px; margin-right: 8px; vertical-align: 0.05em; } .ds-tp-in { display: inline-block; padding: 0 8px; border: 1px solid var(--border, #e3e6eb); border-radius: 8px; background: var(--surface-2, #f1f3f6); color: var(--text, #14171c); font-weight: 600; font-variant-numeric: tabular-nums; transition: border-color 150ms; } .ds-tp-in:hover { border-color: var(--accent, #0f766e); } .ds-tp-fund { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 12px; border: 1px solid var(--border, #e3e6eb); border-radius: 9999px; background: var(--surface, #fff); color: var(--text, #14171c); font: inherit; font-weight: 600; cursor: pointer; transition: border-color 150ms; } .ds-tp-fund:hover { border-color: var(--accent, #0f766e); } .ds-tp-fund:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; } .ds-tp-fund svg { color: var(--accent, #0f766e); align-self: center; } .ds-tp-fdot { width: 10px; height: 10px; border-radius: 9999px; align-self: center; } .ds-tp-net { font-size: 1.125rem; font-weight: 400; color: var(--muted, #5d6673); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Sensitivity Grid",
+      "kind": "custom",
+      "refersTo": "sensitivity-cell",
+      "description": "\"What would change the answer?\": break-even year over a signed gap per cell, home-price growth by fund return, current cell ringed in teal.",
+      "html": "<table class=\"ds-sg\"><thead><tr><td></td><th colspan=\"3\" class=\"ds-sg-cap\">Fund return, after MER</th></tr><tr><th class=\"ds-sg-cap ds-sg-l\">Home prices rise</th><th>5.6%</th><th>6.6%</th><th>7.6%</th></tr></thead><tbody><tr><th class=\"ds-sg-l\">4.0%</th><td><div class=\"ds-sg-c\"><b>Year 5</b><span class=\"ds-g\">+$88K</span></div></td><td><div class=\"ds-sg-c\"><b>Year 6</b><span class=\"ds-g\">+$61K</span></div></td><td><div class=\"ds-sg-c\"><b>Year 7</b><span class=\"ds-g\">+$33K</span></div></td></tr><tr><th class=\"ds-sg-l\">3.0%</th><td><div class=\"ds-sg-c\"><b>Year 6</b><span class=\"ds-g\">+$58K</span></div></td><td><div class=\"ds-sg-c ds-sg-now\"><b>Year 7</b><span class=\"ds-g\">+$31.6K</span></div></td><td><div class=\"ds-sg-c\"><b>Year 11</b><span class=\"ds-b\">−$4K</span></div></td></tr></tbody></table>",
+      "css": ".ds-sg { border-collapse: collapse; font-size: 0.875rem; font-variant-numeric: tabular-nums; color: var(--text, #14171c); } .ds-sg th { padding: 8px; text-align: right; font-weight: 600; } .ds-sg td { padding: 4px; text-align: right; white-space: nowrap; } .ds-sg .ds-sg-l { text-align: left; } .ds-sg-cap { font-size: 0.75rem; font-weight: 500 !important; color: var(--muted, #5d6673); font-variant-numeric: normal; } .ds-sg-c { display: flex; flex-direction: column; border-radius: 8px; padding: 4px 8px; } .ds-sg-c b { font-weight: 600; } .ds-sg-now { box-shadow: inset 0 0 0 2px var(--accent, #0f766e); } .ds-g, .ds-b { font-size: 0.75rem; } .ds-g { color: var(--good, #15803d); } .ds-b { color: var(--bad, #be123c); }"
+    },
+    {
       "name": "Notice",
       "kind": "custom",
       "refersTo": "notice",
@@ -421,7 +465,7 @@
   ],
   "narrative": {
     "northStar": "The Long View",
-    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is the Fund Line: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a Plan Sentence: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
+    "overview": "Finance Toolkit is about decades, not days. Its visual system is built so a small number, such as a 0.2% fee, can be followed patiently out to its 30-year consequence. The interface stays calm and out of the way: cool paper-grey ground, white surfaces with hairline borders, one teal accent, and type that steps back so the figures and the curves carry the page. Nothing pulses, nothing shouts. Emphasis comes from the outcome sentence and the chart, never from decoration.\n\nDensity is that of a working tool. Inputs sit in a narrow left column, and results, stat tiles and charts fill the wide right column. Surfaces are flat at rest and respond to intent: interactive cards lift slightly, controls shift tone on hover, and the focused field gains a teal ring. Light and dark themes are equal citizens. Dark mode is a deep blue-black night ground, not an inverted afterthought, and every token has a counterpart in both.\n\nThe mood is calm, patient and clear. Components feel calm and tactile: restrained at rest, with a gentle physical response when you reach for them.\n\nHome is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.\n\nCalculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Rent vs. Buy uses the same pattern as a **Two-Path Sentence**: two sentences, one per way to live (buy, or rent and invest), plus how long you'd stay, answered by the year buying breaks even. Both charts borrow the map's ink terminus caps. The voice stays at calculator weight (700 and below).",
     "keyCharacteristics": [
       "One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).",
       "Tabular numerals for every figure, so columns of money line up and changes are easy to compare.",
@@ -429,7 +473,7 @@
       "Soft, consistent corners (8px controls, 12px containers, pill-like chips).",
       "Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.",
       "On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it only with terminus-capped chart lines.",
-      "On Growth & Fees, an editable plan sentence in place of a labelled form rail, answered by one display-size figure."
+      "On Growth & Fees and Rent vs. Buy, an editable plan sentence in place of a labelled form rail, answered by one display-size figure."
     ],
     "rules": [
       {
@@ -449,7 +493,7 @@
       },
       {
         "name": "The Tabular Rule",
-        "body": "Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug. Gotcha: `tnum` also widens Inter's hyphen, so prose that shares a line with tabular figures is wrapped in `normal-nums`.",
+        "body": "Every number a user compares (inputs, stat values, tables, chip metadata) uses tabular numerals (`.tabular`). Proportional digits in a money column are a bug. Gotcha: `tnum` also widens Inter's hyphen, so prose that shares a line with tabular figures (e.g. \"of the no-fee balance\") is wrapped in `normal-nums`.",
         "section": "typography"
       },
       {
@@ -464,7 +508,7 @@
       },
       {
         "name": "The Inputs-Left Rule",
-        "body": "On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. A Plan Sentence page is the one exception: its inputs are the sentence at the top, and results always follow below it.",
+        "body": "On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. The Plan Sentence pages (Growth & Fees and Rent vs. Buy) are the one exception: their inputs are the sentence at the top, and results always follow below it.",
         "section": "layout"
       },
       {
@@ -474,7 +518,7 @@
       },
       {
         "name": "The Meaningful Geometry Rule",
-        "body": "Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out. Ink terminus caps on chart fund lines qualify: they carry the same meaning at calculator scale.",
+        "body": "Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out.",
         "section": "shapes"
       }
     ],
@@ -489,7 +533,8 @@
       "Do draw Fund Line geometry with 45° bends, round joins and ink terminus caps, and keep its labels as real HTML links positioned over the SVG, not SVG text.",
       "Do keep any draw-on motion one-shot, fully drawn at rest, and static under `prefers-reduced-motion`.",
       "Do set prose that shares a line with tabular figures in `normal-nums`.",
-      "Do mark inline sentence inputs with a full hairline box that turns teal on hover or focus."
+      "Do mark inline sentence inputs with a full hairline box that turns teal on hover or focus.",
+      "Do halo any SVG chart label that sits over lines or grid with a 4px stroke in the tooltip background colour (`paint-order: stroke`)."
     ],
     "donts": [
       "Don't use green, rose or amber for emphasis or decoration; they mean gain, cost and caution only.",
@@ -499,10 +544,10 @@
       "Don't use `var(--…)` for Recharts SVG attributes; they need concrete hex values.",
       "Don't let long fund names or notes overflow; wrap them.",
       "Don't add lines, rings or pills that map nothing in the product; transit geometry is for the Fund Line and its one echo (chart terminus caps), not ornament.",
-      "Don't use weight 800 or the Home Display size on calculator pages.",
-      "Don't light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal.",
       "Don't colour the fee layers of a fund's bar in another fund's colour or a second semantic colour; they are tints of that fund's own colour, and Cost Rose stays on the cost figures as text.",
-      "Don't put an accent bottom border on a rounded input box."
+      "Don't put an accent bottom border on a rounded input box.",
+      "Don't use weight 800 or the Home Display size on calculator pages.",
+      "Don't light a station or signal hover in a fund's colour; the hover signal is always Ledger Teal."
     ]
   }
 }

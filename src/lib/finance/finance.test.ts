@@ -9,7 +9,7 @@ import {
   monthlyRate,
 } from './mortgage';
 import { realRate, toReal } from './inflation';
-import { rentVsBuy, type RentVsBuyInput } from './rentVsBuy';
+import { breakEvenAppreciation, rentVsBuy, type RentVsBuyInput } from './rentVsBuy';
 
 const plan = (o: Partial<ContributionPlan> = {}): ContributionPlan => ({
   initial: 10_000,
@@ -178,6 +178,23 @@ describe('rent vs buy', () => {
   it('warns when the Canadian minimum down payment is not met', () => {
     const r = rentVsBuy({ ...base, region: 'CA', price: 800_000, downPayment: 40_000 });
     expect(r.warnings.length).toBeGreaterThan(0);
+  });
+
+  it('finds the appreciation at which buying breaks even at a given year', () => {
+    const inp: RentVsBuyInput = {
+      ...base, region: 'CA', price: 750_000, downPayment: 150_000, mortgageRate: 0.045, amortizationYears: 25,
+      propertyTaxRate: 0.007, homeInsurance: 1800, maintenanceRate: 0.01, buyClosingRate: 0.03, sellingCostRate: 0.05,
+      appreciation: 0.03, rent: 2800, rentIncrease: 0.03, rentersInsurance: 300, investReturn: 0.0656, inflation: 0.02,
+    };
+    // At 3% renting is ahead after 10 years; at 4% buying is (break-even in year 7).
+    const a = breakEvenAppreciation(inp, 10)!;
+    expect(a).toBeGreaterThan(0.03);
+    expect(a).toBeLessThan(0.04);
+    const at = rentVsBuy({ ...inp, appreciation: a }).years[9];
+    expect(Math.abs(at.buyerNetWorth - at.renterNetWorth)).toBeLessThan(0.01);
+    expect(rentVsBuy({ ...inp, appreciation: a + 0.001 }).breakEvenYear).not.toBeNull();
+    // Buying already ahead at -10%: nothing to solve for.
+    expect(breakEvenAppreciation({ ...base, rent: 5000 }, 10)).toBeNull();
   });
 });
 

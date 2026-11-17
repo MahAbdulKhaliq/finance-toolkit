@@ -201,3 +201,28 @@ export function rentVsBuy(inp: RentVsBuyInput): RentVsBuyResult {
     warnings,
   };
 }
+
+/** The longest horizon the break-even search looks at, in years. */
+export const BREAK_EVEN_HORIZON = 40;
+
+/**
+ * The yearly home appreciation at which buying exactly breaks even at the end of `atYear`
+ * (buyer's net worth equals the renter's), found by bisection between -10% and +20%.
+ * Returns null when buying is ahead even at -10%, or still behind at +20%.
+ */
+export function breakEvenAppreciation(inp: RentVsBuyInput, atYear: number = inp.years): number | null {
+  const years = Math.max(1, Math.round(atYear));
+  const gapAt = (appreciation: number) => {
+    const last = rentVsBuy({ ...inp, appreciation, years }).years[years - 1];
+    return last.buyerNetWorth - last.renterNetWorth;
+  };
+  let lo = -0.1;
+  let hi = 0.2;
+  if (gapAt(lo) >= 0 || gapAt(hi) < 0) return null;
+  for (let k = 0; k < 50; k++) {
+    const mid = (lo + hi) / 2;
+    if (gapAt(mid) < 0) lo = mid;
+    else hi = mid;
+  }
+  return hi;
+}

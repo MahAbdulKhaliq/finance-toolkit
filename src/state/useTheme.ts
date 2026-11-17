@@ -34,7 +34,7 @@ const SERIES = {
     lostGrowth: '#ea580c',
     insurance: '#db2777', // CMHC / PMI
     propertyTax: '#d97706',
-    maintenance: '#7c3aed',
+    maintenance: '#4d7c0f',
     homeInsurance: '#0284c7',
     closing: '#64748b',
     gain: '#15803d', // the fee gap, money you keep
@@ -46,7 +46,7 @@ const SERIES = {
     lostGrowth: '#fb923c',
     insurance: '#f472b6',
     propertyTax: '#fbbf24',
-    maintenance: '#a78bfa',
+    maintenance: '#a3e635',
     homeInsurance: '#38bdf8',
     closing: '#94a3b8',
     gain: '#4ade80',

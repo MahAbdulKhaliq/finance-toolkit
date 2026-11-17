@@ -69,7 +69,7 @@ export function FundMultiPicker({
               <Swatch color={f.color} />
               <span className="min-w-0 font-medium wrap-anywhere">{f.name}</span>
               <span className={`tabular text-xs ${on ? '' : 'text-muted'}`}>
-                {pct(f.annualReturn)} return · {pct(f.fee)} {region.feeLabel}
+                {pct(f.annualReturn)} return · {pct(f.fee)} {region.feeLabelInline}
               </span>
             </button>
           );
@@ -122,7 +122,7 @@ export function FundSelect({
         >
           {funds.map((f) => (
             <option key={f.id} value={f.id}>
-              {f.name}: {pct(f.annualReturn)} return, {pct(f.fee)} {region.feeLabel}
+              {f.name}: {pct(f.annualReturn)} return, {pct(f.fee)} {region.feeLabelInline}
             </option>
           ))}
           <option value="__new">+ New fund…</option>

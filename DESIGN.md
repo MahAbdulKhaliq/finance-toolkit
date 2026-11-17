@@ -23,6 +23,8 @@ colors:
   surface-mist: "#f1f3f6"
   hairline: "#e3e6eb"
   chart-grid: "#e5e7eb"
+  scroll-thumb: "#c5cbd3"
+  scroll-thumb-hover: "#8e98a5"
   ink: "#14171c"
   slate-muted: "#5d6673"
   night-ground: "#0d1014"
@@ -30,6 +32,8 @@ colors:
   night-surface-2: "#1c232b"
   night-hairline: "#2a323c"
   night-grid: "#262e38"
+  night-scroll-thumb: "#3a444f"
+  night-scroll-thumb-hover: "#5b6775"
   night-ink: "#e8ecf1"
   night-muted: "#98a2b0"
 typography:
@@ -178,6 +182,14 @@ components:
   answer-figure:
     textColor: "{colors.gain-green}"
     typography: "{typography.answer}"
+  answer-figure-year:
+    textColor: "{colors.ink}"
+    typography: "{typography.answer}"
+  sensitivity-cell:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.lg}"
+    padding: "4px 8px"
   notice:
     backgroundColor: "{colors.caution-amber-bg}"
     textColor: "{colors.caution-amber-ink}"
@@ -199,7 +211,7 @@ The mood is calm, patient and clear. Components feel calm and tactile: restraine
 
 Home is where the long view is drawn literally. It is **the Fund Line**: the fund library as one bold Ledger Teal transit line, each calculator a ring station on it, and My Funds the pill interchange where every fund boards. The page gets louder type and heavier strokes than the calculators, but the same palette, the same single accent and the same calm motion. It is the one place the system draws its own flow.
 
-Calculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Its chart borrows the map's ink terminus caps. The voice stays at calculator weight (700 and below).
+Calculators echo the line at instrument size, and only in their charts. Growth & Fees is laid out as a **Plan Sentence**: the plan is one sentence with its values as inline inputs, and the answer is a single large gain-green number under it. Rent vs. Buy uses the same pattern as a **Two-Path Sentence**: two sentences, one per way to live (buy, or rent and invest), plus how long you'd stay, answered by the year buying breaks even. Both charts borrow the map's ink terminus caps. The voice stays at calculator weight (700 and below).
 
 **Key Characteristics:**
 - One accent (Ledger Teal) on a cool neutral ground; colour elsewhere means data or meaning (gain, cost, caution, a fund's identity).
@@ -208,7 +220,7 @@ Calculators echo the line at instrument size, and only in their charts. Growth &
 - Soft, consistent corners (8px controls, 12px containers, pill-like chips).
 - Paired light and dark palettes with matching roles; charts take concrete hex values from the same palette.
 - On Home, a transit-map diagram (teal line, ink ring stations, pill interchange, fund-coloured branch lines) that maps the product's real flow; calculators echo it only with terminus-capped chart lines.
-- On Growth & Fees, an editable plan sentence in place of a labelled form rail, answered by one display-size figure.
+- On Growth & Fees and Rent vs. Buy, an editable plan sentence in place of a labelled form rail, answered by one display-size figure.
 
 ## Colors
 
@@ -216,10 +228,10 @@ A cool, low-chroma neutral system with one teal voice, plus a small set of seman
 
 ### Primary
 - **Ledger Teal** (`ledger-teal`; `ledger-teal-dark` in dark mode): the single interactive accent. Primary buttons, the logo tile, focus rings and focused input borders, links, numbered step badges, the selected chip border, and the "Buy" or first-fund series in charts. On Home it is the Fund Line itself, the lit station segment and ring fill, the hover underline on station names, and the "Start here" badge. Text on it uses `ledger-teal-ink` / `ledger-teal-ink-dark`.
-- **Ledger Teal Soft** (`ledger-teal-soft`; `ledger-teal-soft-dark`): the selected-state wash. Active nav link, selected fund chips, and the winning-outcome card tint (Growth & Fees, Retirement, and Rent vs. Buy when buying wins).
+- **Ledger Teal Soft** (`ledger-teal-soft`; `ledger-teal-soft-dark`): the selected-state wash. Active nav link, selected fund chips, and the winning-outcome card tint (Growth & Fees, Retirement).
 
 ### Secondary
-- **Rent Indigo** (`rent-indigo`; `rent-indigo-dark`; CSS `--rent`, Tailwind `rent`): the counter-voice to teal in comparisons. The "Rent + invest" line, the Rent bar and the renting outcome card in Rent vs. Buy, and the second default fund colour. Use it only where two options are being weighed against each other.
+- **Rent Indigo** (`rent-indigo`; `rent-indigo-dark`; CSS `--rent`, Tailwind `rent`): the counter-voice to teal in comparisons. The "Rent + invest" line, the Rent bar, and the path dot that starts the rent line of the Two-Path Sentence in Rent vs. Buy (the buy line's dot is Ledger Teal), and the second default fund colour. Use it only where two options are being weighed against each other.
 
 ### Tertiary (semantic)
 - **Gain Green** (`gain-green`; `gain-green-dark`): favourable figures, such as the amount one fund ends up ahead. On Growth & Fees it is the Answer figure (the fee gap, money you keep) and the chart's gap bracket and label (`series.gain`).
@@ -234,9 +246,10 @@ A cool, low-chroma neutral system with one teal voice, plus a small set of seman
 - **Ink** (`ink`) / **Night Ink** (`night-ink`): primary text.
 - **Slate Muted** (`slate-muted`) / **Night Muted** (`night-muted`): secondary text, intros, hints, units, inactive nav and chip text, chart axes.
 - **Chart Grid** (`chart-grid`) / **Night Grid** (`night-grid`): chart gridlines only.
+- **Scroll Thumb** (`scroll-thumb`, hover `scroll-thumb-hover`) / **Night Scroll Thumb** (`night-scroll-thumb`, hover `night-scroll-thumb-hover`): scrollbar thumbs only.
 
 ### Data palette
-Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). A fund's colour is stored with the fund, so it is the same in both themes; all eight keep at least 3:1 against the surface in both. Fixed chart series (buy, rent, cost, lost growth, mortgage insurance, the Rent vs. Buy cost categories, the "contributed" reference line) live in `useChartTheme().series` / `.muted` in `src/state/useTheme.ts` as light/dark pairs with at least 3:1 against their surface; pages never write a chart hex literal. There are no fee-breakdown series: the Growth & Fees yearly fee bars draw each fund's fee layers as tints of that fund's own colour (see Charts). `series.gain` (`#15803d` / `#4ade80`) mirrors Gain Green for the gap bracket. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, and on Home as each fund's branch line and legend swatch, never as button or surface fills. Legend and marker labels are set in ink, not in the series colour, because several data colours fall below 4.5:1 as text.
+Funds carry their own identity colour, chosen from a fixed set of eight in `src/state/fundsStore.ts` (teal 600, indigo, rose, amber, sky, violet, green, pink). A fund's colour is stored with the fund, so it is the same in both themes; all eight keep at least 3:1 against the surface in both. Fixed chart series (buy, rent, cost, lost growth, mortgage insurance, the Rent vs. Buy cost categories, the "contributed" reference line) live in `useChartTheme().series` / `.muted` in `src/state/useTheme.ts` as light/dark pairs with at least 3:1 against their surface; pages never write a chart hex literal. There are no fee-breakdown series: the Growth & Fees yearly fee bars draw each fund's fee layers as tints of that fund's own colour (see Charts). `series.gain` (`#15803d` / `#4ade80`) mirrors Gain Green for the gap bracket. `series.maintenance` is olive (`#4d7c0f` / `#a3e635`), chosen to stay clear of Rent Indigo so the maintenance layer of the Buy cost bar never reads as rent; a new Rent vs. Buy cost series must likewise keep its distance from both teal and indigo. These are data colours, not UI colours: they appear as swatch dots, chart lines and bars, and on Home as each fund's branch line and legend swatch, never as button or surface fills. Legend and marker labels are set in ink, not in the series colour, because several data colours fall below 4.5:1 as text.
 
 ### Named Rules
 **The One Voice Rule.** Ledger Teal is the only colour that signals "you can act here." Data and semantic colours never appear on buttons, links or nav. On the Fund Line, the fund branch lines are data (which funds you have), never the hover or focus signal; a station lights in teal whatever funds feed it.
@@ -255,8 +268,8 @@ Funds carry their own identity colour, chosen from a fixed set of eight in `src/
 - **Display** (700, 3rem from 640px up, 1.875rem below; tight tracking): the display step for any non-Home hero line. Calculators never use it; they top out at Headline.
 - **Home Display** (`display-home`: 800, 3.75rem at 1024px up and 4.5rem from 1280px; on the stop list 2.25rem, 3.75rem from 640px; 0.95 leading, -0.03em tracking): the Home headline only. A deliberate Home-scoped exception, so the Fund Line's heavy station names have a headline above them; it does not change the calculators' type.
 - **Station** (`station`: 800, 1.5rem, leading 1, tight tracking): station names on the Fund Line and the stop list. The map's interchange name ("My Funds") steps up to 1.875rem. The "how it works" heading is 1.5rem at 800 and its stop titles 1.125rem at 800, the same Home voice.
-- **Answer** (`answer`: 700, 3.75rem from 640px up, 3rem below; leading 1, -0.03em tracking, tabular): the one result figure on a Plan Sentence page (the Growth & Fees fee gap), coloured by the Meaning-Only Rule, with its answer sentence beside it at 1.25rem (1.125rem on phones, max 26em). The largest calculator type, still at 700.
-- **Plan Sentence** (`plan-sentence`: 500, 1.5rem from 640px up, 1.125rem below; leading 2 so inline inputs fit between lines; muted text, input values in ink at 600): the editable plan sentence.
+- **Answer** (`answer`: 700, 3.75rem from 640px up, 3rem below; leading 1, -0.03em tracking, tabular): the one result figure on a Plan Sentence page, with its answer sentence beside it at 1.25rem (1.125rem on phones, max 26em on Growth & Fees, 30em on Rent vs. Buy). The largest calculator type, still at 700. On Growth & Fees it is the fee gap, coloured by the Meaning-Only Rule. On Rent vs. Buy it is a year ("Year 7", or "40+ years" when buying never catches up within the 40-year horizon) and stays in ink, because a year is neither gain nor cost (`answer-figure-year`); the dollar gap inside its sentence carries Gain Green, and the sentence ends in a muted clause on what would flip the answer (the home-price growth at which it changes by the move-out year).
+- **Plan Sentence** (`plan-sentence`: 500, 1.5rem from 640px up, 1.125rem below; leading 2 so inline inputs fit between lines, 1.9 on phones on Rent vs. Buy; muted text, input values in ink at 600): the editable plan sentence.
 - **Headline** (700, 1.875rem from 640px up, 1.5rem below; tight tracking): one page title per calculator (`PageHeader`). A Plan Sentence page keeps an `sr-only` h1 instead, so the sentence leads the page.
 - **Title** (600, 1rem): card titles. Section headings step up to 1.125rem.
 - **Figure** (600, 1.25rem, tabular numerals): stat-tile values. Coloured by the Meaning-Only Rule.
@@ -280,7 +293,9 @@ Home has its own layout. From 1024px up it is a transit map: one section with a 
 
 Growth & Fees uses the **Plan Sentence** layout instead of the two-column grid, with an `sr-only` h1 so the sentence leads (the header nav already lists the calculators): a full-width card holding the plan sentence and a second line of exactly two fund pills ("Compare [fund] with [fund]"; the page measures one gap, so it compares one pair), either of which opens a panel inside the card with a fund select per slot (including "+ New fund…") and per-fund fee/return overrides, where choosing the fund already in the other slot swaps the two; a muted overrides note with a ghost Reset under it; the Answer figure and sentence (ending in a muted clause on where the gap comes from, e.g. "46% comes from the MER difference and 54% from the return difference."); a grid of the balance chart beside the "After N years" summary table (3fr / 2fr from 1280px up, stacked below with the chart first); the full-width "What fees take, year by year" bar chart card; and the year table in a collapsed `Details` (fund-swatched headers, plus a Gap column with the absolute difference between the two balances). This page has no Share button (removed at the user's request); its inputs still live in the URL.
 
-**The Inputs-Left Rule.** On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. A Plan Sentence page is the one exception: its inputs are the sentence at the top, and results always follow below it.
+Rent vs. Buy uses the same layout as a **Two-Path Sentence**, again with an `sr-only` h1. A full-width plan card (24px padding from 640px up) holds three sentence lines: a teal-dot buy line (price, down %, mortgage rate, amortization, appreciation), an indigo-dot rent line (rent, rent increase, and the fund chip naming its net return, e.g. "6.56% after MER", which opens a panel inside the card with the fund select and a ghost Done), and "I'd stay N years." A hairline footer row under the sentence carries a muted "Also assumed:" summary of the other assumptions (each item kept on one line with `nowrap`, separated by middots), an "Edit N more assumptions" disclosure in teal with a chevron (it opens a 2-column grid of ordinary fields, 4 columns from 1024px up, and hides the summary while open), and a ghost "Reset to Canadian/US defaults" pushed right from 640px up. Region warnings follow the card as Notices. Then the Answer row (stacked with an 8px gap below 1024px, a row with a 20px gap from 1024px up); a grid of the net-worth chart beside the "Cost of buying" card (3fr / 2fr from 1280px up, stacked below with the chart first), where the card holds four stat tiles in two columns and the "What would change the answer?" sensitivity grid; the full-width "Money you don't get back" card of horizontal stacked bars, with both totals as text in its intro and an HTML legend that names each category's short value; and the year table in a collapsed `Details`. Like Growth & Fees it has no Share button; inputs stay in the URL.
+
+**The Inputs-Left Rule.** On wide screens, inputs stay in the left column and results stay right, on every two-column calculator. A visitor moving between calculators always knows where to look. The Plan Sentence pages (Growth & Fees and Rent vs. Buy) are the one exception: their inputs are the sentence at the top, and results always follow below it.
 
 ## Elevation & Depth
 
@@ -299,7 +314,7 @@ Flat at rest, lift on intent. Depth comes from tonal layering (paper ground → 
 
 Soft, consistent rounding with no sharp corners and no decorative geometry. Controls (buttons, inputs, selects, nav links, stat tiles, notices) use 8px. Containers (cards, details panels, dialog) use 12px. Segmented-control options use 6px to nest inside their 8px track. Fund chips use 16px so they read as pills that can still wrap to two lines. Swatches, step badges, the avatar and skill tags are full circles or pills. Borders are always 1px hairlines; dashed borders mark only the add-a-fund affordance ("+ New fund"). Icons are simple 2px-stroke SVG line icons on a 24px grid (round caps and joins); never Unicode glyphs or emoji standing in for an icon.
 
-The Fund Line's diagram geometry is the one exception to "no decorative geometry", because it is not decoration: it maps the product's real flow (funds board at My Funds and ride through four calculators). Its form language is transit-diagram: thick strokes, 45° bends only, round joins, rounded terminus caps, ring stations and a pill interchange. Use it where the diagram carries meaning, never as ornament. One calculator-scale echo qualifies because it carries the same meaning: ink terminus caps on chart fund lines (where a fund's line ends).
+The Fund Line's diagram geometry is the one exception to "no decorative geometry", because it is not decoration: it maps the product's real flow (funds board at My Funds and ride through four calculators). Its form language is transit-diagram: thick strokes, 45° bends only, round joins, rounded terminus caps, ring stations and a pill interchange. Use it where the diagram carries meaning, never as ornament. One calculator-scale echo qualifies because it carries the same meaning: ink terminus caps on chart lines where a path ends (a fund's line at the final year on Growth & Fees, the buy and rent lines at the move-out year on Rent vs. Buy).
 
 **The Meaningful Geometry Rule.** Lines, rings and pills appear only where they map a real relationship in the product (which calculator follows which, which funds feed the library). A teal line that connects nothing is decoration and is out.
 
@@ -322,7 +337,7 @@ Calm and tactile: compact, quietly bordered, and responsive to the pointer.
 - **Corner Style:** 12px.
 - **Background:** Surface White / Night Surface on the paper ground.
 - **Shadow Strategy:** none at rest (see Flat-By-Default); a navigational card would take the Intent lift on hover.
-- **Border:** 1px hairline. Outcome cards may tint with the winner's colour at low opacity (teal soft at 40%, or indigo at 10% with a 40% border).
+- **Border:** 1px hairline. Outcome cards may tint with the winner's colour at low opacity (teal soft at 40% with a 40% teal border, as on Retirement).
 - **Internal Padding:** 16px on phones, 20px from 640px up. Card titles sit 12px above content with an optional right-aligned action.
 
 ### Stat tiles
@@ -339,7 +354,11 @@ The signature result unit. An 8px-rounded tile on Surface Mist at 50% with a hai
 - **Hover / focus:** the border turns Ledger Teal; focus adds the 2px teal ring at 25% (`focus-within`).
 - **Width:** an invisible tabular copy of the text in the same grid cell sizes the box, so it hugs the value at any size.
 - **Values:** grouped digits at rest (10,000), raw digits while focused (10000). Units ($, %) sit inside the box. Each input carries its own `aria-label`.
-- **Fund chips in the sentence:** buttons on surface with a hairline border, a 10px swatch dot and the name at 600, then both numbers named in muted tabular text: "2.20% MER · 7.00% return" (the fee label from `region.feeLabelInline`). From 640px up the chip is one full-pill line; on phones the details drop to a second line under the name and the chip rounds to 16px (`rounded-2xl`). Hover turns the border teal. A small teal SVG chevron ends the chip to show it opens the fund picker; it flips while the panel is open.
+- **Fund chips in the sentence:** buttons on surface with a hairline border, a 10px swatch dot and the name at 600, then both numbers named in muted tabular text: "2.20% MER · 7.00% return" (the fee label from `region.feeLabelInline`). From 640px up the chip is one full-pill line; on phones the details drop to a second line under the name and the chip rounds to 16px (`rounded-2xl`). Hover turns the border teal. A small teal SVG chevron ends the chip to show it opens the fund picker; it flips while the panel is open. On Rent vs. Buy the chip names one number, the fund's net return after fees ("6.56% after MER"), since that is the rate the renter's savings earn.
+- **Path dots:** on a Two-Path Sentence each line starts with a 12px circle in that path's chart series colour (buy in `series.primary`, rent in `series.rent`), set 8px before the first word. They are data colour, so they are decorative (`aria-hidden`) and never interactive. The "I'd stay" line has no dot because it belongs to both paths.
+
+### Sensitivity grid
+The "What would change the answer?" table on Rent vs. Buy: a 3 × 3 grid of break-even outcomes as home-price growth (rows) and the fund's net return (columns) move 1% either way. A spanning muted 0.75rem column-group header ("Fund return, after MER", from `region.feeLabelInline`) sits over the three return values (600, tabular); the row-header column is titled "Home prices rise" in the same muted style, with each rate at 600. Each cell is an 8px-rounded block (4px × 8px padding, 6px side padding on phones): the break-even year at 600 ("Year 9", or "40+ yrs") over a 0.75rem signed gap after the stay ("+$31.6K" in Gain Green, "−$12K" in Cost Rose). The current-inputs cell (the centre) is ringed with a 2px inset Ledger Teal ring. The table scrolls sideways rather than overflowing on narrow screens.
 
 ### Segmented control
 A mist track with a hairline border and 2px inset; options are 6px-rounded, muted at rest, and the selected one becomes a surface "key" with the Selection nudge shadow. Used for Future $ / Today's $ and similar binary or ternary toggles; exposed as a radiogroup.
@@ -348,6 +367,9 @@ A mist track with a hairline border and 2px inset; options are 6px-rounded, mute
 A sticky 90%-opaque header with backdrop blur and a hairline bottom border. Left: the teal logo tile with a white rising line, plus the wordmark (hidden only below 360px). Then three top-level items (body, 500, 8px-rounded; inactive muted with a mist hover, active on the Teal Soft wash with ink text): **Calculators**, **My Funds** and **About**. Calculators is a disclosure button with a 16px SVG chevron that flips when open; it is active on any calculator or Methodology page. Its dropdown is a 12px surface card (20rem, hairline border, `shadow-lg`) that drops in over 150ms (`.nav-pop`, off under reduced motion) and lists the four calculators, each as a 600 name over a muted one-line blurb, then a hairline and a muted "How the math works" link to Methodology. It closes on Escape (focus returns to the button), an outside press, focus leaving it, or navigation. Right: a compact region select (flag + currency) and a theme cycle button with 16px SVG line icons (half-filled circle for system, sun, moon).
 
 Below 640px the three items collapse into a bordered menu button (16px three-line SVG icon) at the far left, before the logo. It opens a side nav built on a modal `<dialog>` (focus trap, Escape, top layer): a 40% black scrim fades in while a surface panel (`min(20rem, 86vw)`, hairline right border, `shadow-xl`) slides in from the left, under the button, over 280ms on an ease-out curve (`cubic-bezier(0.22, 1, 0.36, 1)`); both run in reverse on close. Under reduced motion the panel does not move: it and the scrim fade over 150ms instead. The panel has a "Menu" title row with a bordered close button, then Calculators as an expandable group (chevron; the list grows by animating its grid row from 0fr to 1fr, set off by a 2px hairline rule on the left, open by default on calculator pages), followed by My Funds and About. Page scroll is locked while it is open, and choosing a link closes it.
+
+### Scrollbars
+Every scrollbar (the page and internal scrollers such as tables and the side nav) is the native one, restyled: a 6px rounded pill (12px track, 3px transparent inset) in Scroll Thumb on a transparent track, so it sits on whatever is behind it, darkening to the hover tone in light mode and lightening in dark. Firefox gets `scrollbar-width: thin` with the same colours. The page reserves its gutter (`scrollbar-gutter: stable`), so short and long pages and the side nav's scroll lock never shift the layout. The page scrollbar runs the full window height, beside the sticky header: scrolling a container below the header was rejected because it breaks `window.scrollTo`, the scroll lock and mobile browser-chrome collapse.
 
 ### Notice
 A full-width Caution Amber panel (8px, 12px × 16px) with dark amber ink and an optional right-aligned action. It is used for shared-fund imports and input warnings.
@@ -368,11 +390,14 @@ The Home page as a transit map: bold, diagrammatic and still calm, with one gest
 - **How it works:** the same language at small scale: a three-stop line (28px rings from 640px up on a horizontal 10px teal bar, 32px rings on a vertical bar on phones) with 1.125rem/800 stop titles and muted body text.
 
 ### Charts
-Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-rounded tooltip on surface with a hairline border, 2.5px series lines without dots for long horizons, and a dashed muted line for "contributed." Reference markers (Break-even, PMI ends) use a labelled dot or line in the relevant series colour.
+Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-rounded tooltip on surface with a hairline border, 2.5px series lines without dots for long horizons, and a dashed muted line for "contributed." Reference markers use a dot or line in the relevant series colour (the PMI ends line is dashed in the mortgage-insurance series), with their labels set in the chart text colour at 12px. A label drawn over lines or grid gets a halo: a 4px stroke in the tooltip background colour painted under the fill (`paint-order: stroke`).
 - **Terminus caps (Growth & Fees):** fund lines are drawn 4px with round joins and end at the final year in an ink terminus cap (8 × 22, 4 radius, in the chart text colour), echoing the Home map.
+- **Terminus caps (Rent vs. Buy):** the buy and rent net-worth lines are 4px with round joins and end at the move-out year in a slimmer ink cap (6 × 16, 3 radius), so the cap reads as a stop on the path rather than the end of the chart.
+- **Break-even marker (Rent vs. Buy):** a 7px-radius Ledger Teal dot on the buy line where buying overtakes renting, with a 3px stroke in the tooltip background colour, labelled "Break-even · year N" (12px, 600, haloed) below-right of the dot, where lines rising to the right leave space. When break-even comes after the stay, the chart runs on to two years past it (at most 40) and a dashed ink line (5 4) marks the stay, labelled "You move out" (12px, 600) at the top. When the lines don't cross on the chart, a haloed label above the upper cap says who is ahead and by how much ("Renting ahead $X · year N").
+- **Cost bars (Rent vs. Buy, "Money you don't get back"):** two horizontal bars (Buy, Rent) on a 160px chart, the Buy bar stacked from the cost-category series and the Rent bar in Rent Indigo, with a vertical-only grid. Its legend is an HTML row of 10px rounded squares, each category name followed by its short total in muted tabular text, so every figure is readable without hovering.
 - **Gap bracket:** a 2px Gain Green bracket just right of the caps spans the best and worst fund at the final year, with end ticks and a label in the same colour: the short dollar value (13px, 700, e.g. "$209.8K") over "gap" (11px, 600). It is a button: hover or focus highlights it (a 12% Gain Green tint behind it, 3px stroke) and opens the gap split panel; click, Enter or Space pins the panel open, Escape unpins it.
 - **Gap split panel:** a 12px-rounded surface panel with a hairline border and `shadow-sm`, Body size. A "Gap after N years" row with the full gap in bold Gain Green; a 10px full-pill two-part bar (fee part solid Gain Green, return part at 40%), drawn only when both parts are positive; two rows ("Lower/Higher MER", "Higher/Lower return") with a matching swatch, the dollar part and its share, and old → new values in muted 0.75rem. A negative part is Cost Rose with a minus sign. A muted footnote says the split averages both orders (a Shapley split, `splitGap` in `src/lib/finance/growth.ts`). From 640px up it overlays the chart's top-left; on phones it sits below the chart.
-- **Legend:** an HTML row under the chart: a 4px × 20px colour bar per fund and a dashed muted mark for "Contributed", labels in ink.
+- **Legend:** an HTML row under the chart: a 4px × 20px colour bar per fund (on Rent vs. Buy, per path) and a dashed muted mark for "Contributed", labels in ink.
 - **Summary table ("After N years"):** a compact tabular comparison card beside the balance chart. One column per fund, headed by a 10px swatch and the name at 600 (headers in `normal-nums`, since `tnum` widens Inter's hyphen in names). Rows: Contributed, Investment growth, Final balance (600); a hairline rule; Fees paid, Lost growth and Total fee cost (600), all in Cost Rose; a rule; Balance with no fees in muted. A muted 0.75rem note under it defines Fees paid and Lost growth.
 - **Yearly fee bars ("What fees take, year by year"):** a full-width Recharts BarChart of grouped stacked bars, one stack per fund per year, all in that fund's own colour: balance at opacity 1, fees paid at 0.62, lost growth at 0.36, stacking to the no-fee balance; the top layer has 3px top corners. The intro calls the layers "the solid part", "the stronger tint" and "the faintest tint" (never darker or lighter, so the wording holds in both themes). Legend: a swatch per fund, then a generic key of three ink swatches at the same opacities. A custom tooltip lists, per fund, Balance, Fees paid, Lost growth and With no fees. Below 640px it shows every Nth year so there are at most 12 groups (at most 40 from 640px up), counted back from the final year, and the intro adds "Showing every N years."
 
@@ -390,6 +415,7 @@ Recharts on the same palette: hairline-coloured grid, muted axis text, an 8px-ro
 - **Do** keep any draw-on motion one-shot, fully drawn at rest, and static under `prefers-reduced-motion`.
 - **Do** set prose that shares a line with tabular figures in `normal-nums`.
 - **Do** mark inline sentence inputs with a full hairline box that turns teal on hover or focus.
+- **Do** halo any SVG chart label that sits over lines or grid with a 4px stroke in the tooltip background colour (`paint-order: stroke`).
 
 ### Don't:
 - **Don't** use green, rose or amber for emphasis or decoration; they mean gain, cost and caution only.

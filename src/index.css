@@ -18,6 +18,8 @@
   --warn-bg: #fef3c7;
   --warn-text: #92400e;
   --grid: #e5e7eb;
+  --scroll-thumb: #c5cbd3;
+  --scroll-thumb-hover: #8e98a5;
   color-scheme: light;
 }
 
@@ -37,6 +39,8 @@
   --warn-bg: #422006;
   --warn-text: #fcd34d;
   --grid: #262e38;
+  --scroll-thumb: #3a444f;
+  --scroll-thumb-hover: #5b6775;
   color-scheme: dark;
 }
 
@@ -62,6 +66,37 @@ html,
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+/* Scrollbars: a slim rounded thumb on the page background, darkening on hover. The gutter is
+   reserved so short and long pages (and the side nav's scroll lock) don't shift the layout.
+   Chromium and Safari take the ::-webkit-scrollbar rules (they ignore them once scrollbar-color
+   is set, so the standard properties are scoped to browsers without the pseudo-elements). */
+html {
+  scrollbar-gutter: stable;
+}
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  min-height: 40px;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--scroll-thumb) padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-thumb-hover);
 }
 
 body {
