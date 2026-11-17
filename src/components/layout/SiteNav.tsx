@@ -4,7 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 /*
  * Site navigation: three top-level items (Calculators, My Funds, About). From 640px up they sit in
  * the header, with Calculators opening a dropdown. Below 640px a menu button opens a side nav that
- * slides in from the right, with Calculators as an expandable group.
+ * slides in from the left, with Calculators as an expandable group.
  */
 
 export const CALCULATORS = [
@@ -138,12 +138,14 @@ export function DesktopNav() {
 }
 
 const SLIDE_MS = 280;
+const FADE_MS = 150; // reduced motion: a short fade replaces the slide
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Menu button and slide-in side nav for screens under 640px. */
 export function MobileNav() {
   const { pathname } = useLocation();
   const dialog = useRef<HTMLDialogElement>(null);
+  const panel = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false); // drives the slide/fade classes
   const [calcOpen, setCalcOpen] = useState(() => isCalcPath(pathname));
   const groupId = useId();
@@ -154,8 +156,10 @@ export function MobileNav() {
     setCalcOpen(isCalcPath(pathname));
     d.showModal();
     document.documentElement.style.overflow = 'hidden';
-    // Let the closed position paint once, then slide in.
-    requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)));
+    // Flush styles at the closed position (reading layout forces it), so the change to `shown`
+    // starts a transition instead of jumping straight to the open position.
+    void panel.current?.offsetWidth;
+    setShown(true);
   };
 
   const close = () => {
@@ -165,7 +169,7 @@ export function MobileNav() {
     window.setTimeout(() => {
       d.close();
       document.documentElement.style.overflow = '';
-    }, reducedMotion() ? 0 : SLIDE_MS);
+    }, reducedMotion() ? FADE_MS : SLIDE_MS);
   };
 
   // Navigating from the side nav closes it.
@@ -205,11 +209,13 @@ export function MobileNav() {
         <div
           aria-hidden
           onClick={close}
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-[280ms] motion-reduce:transition-none ${shown ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-[280ms] motion-reduce:duration-150 ${shown ? 'opacity-100' : 'opacity-0'}`}
         />
+        {/* Slides in from the left, under the menu button. With reduced motion it fades instead. */}
         <aside
-          className={`absolute inset-y-0 right-0 flex w-[min(20rem,86vw)] flex-col border-l border-line bg-surface shadow-xl transition-transform duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
-            shown ? 'translate-x-0' : 'translate-x-full'
+          ref={panel}
+          className={`absolute inset-y-0 left-0 flex w-[min(20rem,86vw)] flex-col border-r border-line bg-surface shadow-xl transition-transform duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity motion-reduce:duration-150 ${
+            shown ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-100 motion-reduce:translate-x-0 motion-reduce:opacity-0'
           }`}
         >
           <div className="flex items-center justify-between border-b border-line px-4 py-2.5">

@@ -37,6 +37,7 @@ export function AppShell() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-2.5 sm:gap-3">
+          <MobileNav />
           <NavLink to="/" className="flex shrink-0 items-center gap-2 font-bold">
             <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden>
               <rect width="32" height="32" rx="7" fill="var(--accent)" />
@@ -70,7 +71,6 @@ export function AppShell() {
               {THEME_ICON[theme]}
             </svg>
           </button>
-          <MobileNav />
         </div>
       </header>
 
