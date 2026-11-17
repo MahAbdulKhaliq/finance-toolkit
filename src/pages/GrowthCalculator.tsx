@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import {
-  Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import { simulateGrowth, type Frequency, type Timing } from '../lib/finance/growth';
 import { money, moneyShort, pct } from '../lib/format';
@@ -9,10 +9,10 @@ import { useShareFunds, useUrlState } from '../state/useUrlState';
 import { tooltipStyle, useChartTheme } from '../state/useTheme';
 import { feeIsHigh, FUND_LIMITS, returnIsHigh, STARTER_FUNDS } from '../state/fundsStore';
 import { FundMultiPicker, ImportSharedFunds, useAvailableFunds } from '../components/funds/FundPicker';
-import { DollarsToggle, ShareButton, useDeflator } from '../components/Toolbar';
-import {
-  Button, Card, CardTitle, Details, MoneyField, NumberField, PageHeader, PercentField, SelectField, Stat, Table,
-} from '../components/ui';
+import { DollarsToggle, useDeflator } from '../components/Toolbar';
+import { StationStrip } from '../components/StationStrip';
+import { InlineNumber, InlineSelect } from '../components/PlanSentence';
+import { Button, Card, CardTitle, Details, PercentField, Table } from '../components/ui';
 
 interface Inputs {
   initial: number;
@@ -36,19 +36,27 @@ const DEFAULTS: Inputs = {
   overrides: {},
 };
 
+// Worded to read inside the plan sentence ("then $500 every month").
 const FREQS: { value: Frequency; label: string }[] = [
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'biweekly', label: 'Every 2 weeks' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'annually', label: 'Annually' },
+  { value: 'weekly', label: 'every week' },
+  { value: 'biweekly', label: 'every 2 weeks' },
+  { value: 'monthly', label: 'every month' },
+  { value: 'quarterly', label: 'every quarter' },
+  { value: 'annually', label: 'every year' },
 ];
+const TIMINGS: { value: Timing; label: string }[] = [
+  { value: 'start', label: 'start' },
+  { value: 'end', label: 'end' },
+];
+
+const FUNDS_PANEL = 'growth-funds-panel';
 
 export default function GrowthCalculator() {
   const region = useRegion();
   const real = useSettings((s) => s.realDollars);
   const deflate = useDeflator();
   const chart = useChartTheme();
+  const [fundsOpen, setFundsOpen] = useState(false);
 
   const url = useUrlState<Inputs>(DEFAULTS);
   const { all, missing } = useAvailableFunds(url.sharedFunds);
@@ -83,65 +91,113 @@ export default function GrowthCalculator() {
 
   const best = results.length ? results.reduce((a, b) => (b.r.finalBalance > a.r.finalBalance ? b : a)) : null;
   const worst = results.length ? results.reduce((a, b) => (b.r.finalBalance < a.r.finalBalance ? b : a)) : null;
+  const hasGap = results.length > 1 && best && worst && best.r.finalBalance - worst.r.finalBalance >= 0.5;
   const gap = best && worst ? deflate(best.r.finalBalance - worst.r.finalBalance, years) : 0;
+  const inToday = real ? ", in today's dollars" : '';
 
-  const costData = results.map(({ fund, r }) => ({
-    name: fund.name,
-    color: fund.color,
+  const costs = results.map(({ fund, fee, r }) => ({
+    fund,
+    fee,
     fees: deflate(r.totalFeesPaid, years),
     lost: deflate(r.totalFeeCost - r.totalFeesPaid, years),
+    total: deflate(r.totalFeeCost, years),
+    final: deflate(r.finalBalance, years),
+    share: r.totalFeeCost / (r.finalBalance + r.totalFeeCost),
   }));
+  const maxCost = Math.max(1, ...costs.map((c) => c.total));
 
   const fmtAxis = (v: number) => moneyShort(v, region);
   const tip = tooltipStyle(chart);
+  const lastIndex = lineData.length - 1;
+
+  // Each fund line ends in an ink terminus cap, as on the Home map.
+  const terminus = (props: { cx?: number; cy?: number; index?: number }) => {
+    const { cx, cy, index } = props;
+    if (index !== lastIndex || cx === undefined || cy === undefined) return <g key={`t-${index}`} />;
+    return <rect key={`t-${index}`} x={cx - 4} y={cy - 11} width={8} height={22} rx={4} fill={chart.text} />;
+  };
+
+  // The gap, measured: a bracket set just right of the terminus caps, with end ticks and its label.
+  const gapBracket = (props: { x1?: number; y1?: number; x2?: number; y2?: number }) => {
+    const { x1, y1, y2 } = props;
+    if (x1 === undefined || y1 === undefined || y2 === undefined) return <g />;
+    const x = x1 + 12;
+    return (
+      <g>
+        <path d={`M ${x} ${y1} h 6 V ${y2} h -6`} fill="none" stroke={chart.series.gain} strokeWidth={2} />
+        <text x={x + 12} y={(y1 + y2) / 2} dy="0.35em" fill={chart.series.gain} fontSize={13} fontWeight={700}>
+          gap
+        </text>
+      </g>
+    );
+  };
+
+  const fundChip = (f: (typeof selectedFunds)[number]) => {
+    const o = inputs.overrides[f.id] ?? {};
+    return (
+      <button
+        key={f.id}
+        type="button"
+        aria-expanded={fundsOpen}
+        aria-controls={FUNDS_PANEL}
+        onClick={() => setFundsOpen(true)}
+        className="inline-flex max-w-full items-baseline gap-2 rounded-full border border-line bg-surface px-3 font-semibold text-ink transition hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      >
+        <span aria-hidden className="h-2.5 w-2.5 shrink-0 self-center rounded-full" style={{ background: f.color }} />
+        <span className="wrap-anywhere">{f.name}</span>
+        <span className="tabular font-normal text-muted">· {pct(o.fee ?? f.fee)}</span>
+      </button>
+    );
+  };
 
   return (
     <>
-      <PageHeader
-        title="Growth & Fees"
-        intro={`See how much a fund's ${region.feeLabelInline} really costs. The fee is small each year, but it also takes away the growth that money would have earned, and that compounds over decades.`}
-        actions={<ShareButton />}
-      />
+      <StationStrip current="/growth" />
+      <h1 className="sr-only">Growth &amp; Fees</h1>
       <ImportSharedFunds missing={missing} />
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[22rem_1fr]">
-        <div className="flex flex-col gap-5">
-          <Card>
-            <CardTitle action={<Button variant="ghost" onClick={reset}>Reset</Button>}>Your plan</CardTitle>
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 xl:grid-cols-2">
-              <MoneyField label="Initial investment" value={inputs.initial} onChange={(initial) => update({ initial })} />
-              <MoneyField label="Contribution" value={inputs.contribution} onChange={(contribution) => update({ contribution })} />
-              <SelectField label="Frequency" value={inputs.frequency} onChange={(frequency) => update({ frequency })} options={FREQS} />
-              <SelectField
-                label="Timing"
-                value={inputs.timing}
-                onChange={(timing) => update({ timing })}
-                options={[
-                  { value: 'start', label: 'Start of period' },
-                  { value: 'end', label: 'End of period' },
-                ]}
-              />
-              <PercentField
-                label="Yearly raise"
-                hint="Grow contributions each year"
-                value={inputs.annualIncrease}
-                min={0}
-                max={0.5}
-                onChange={(annualIncrease) => update({ annualIncrease })}
-              />
-              <NumberField label="Years" suffix="yrs" value={inputs.years} min={1} max={70} decimals={0} onChange={(y) => update({ years: Math.round(y) })} />
-            </div>
-          </Card>
+      {/* The plan, as one sentence you edit in place */}
+      <Card className="sm:p-6!">
+        <p className="max-w-none text-lg leading-[2.1] font-medium text-muted sm:text-2xl sm:leading-[2]">
+          Invest <InlineNumber label="Initial investment" prefix="$" value={inputs.initial} min={0} onChange={(initial) => update({ initial })} />,
+          then <InlineNumber label="Contribution" prefix="$" value={inputs.contribution} min={0} onChange={(contribution) => update({ contribution })} />{' '}
+          <InlineSelect label="Contribution frequency" value={inputs.frequency} options={FREQS} onChange={(frequency) => update({ frequency })} />{' '}
+          at the <InlineSelect label="Contribution timing" value={inputs.timing} options={TIMINGS} onChange={(timing) => update({ timing })} /> of
+          each period, raising it{' '}
+          <InlineNumber label="Yearly raise (%)" suffix="%" scale={100} decimals={2} value={inputs.annualIncrease} min={0} max={0.5} onChange={(annualIncrease) => update({ annualIncrease })} />{' '}
+          a year, for{' '}
+          <InlineNumber label="Years" value={inputs.years} decimals={0} min={1} max={70} onChange={(y) => update({ years: Math.round(y) })} />{' '}
+          years.
+        </p>
+        <p className="mt-1 max-w-none text-lg leading-[2.1] font-medium text-muted sm:text-2xl sm:leading-[2]">
+          {selectedFunds.length === 0 ? 'Compare ' : selectedFunds.length === 1 ? 'Grow it in ' : 'Compare '}
+          {selectedFunds.map((f, i) => (
+            <Fragment key={f.id}>
+              {i > 0 && (i === selectedFunds.length - 1 ? (selectedFunds.length === 2 ? ' with ' : ' and ') : ', ')}
+              {fundChip(f)}
+            </Fragment>
+          ))}{' '}
+          <button
+            type="button"
+            aria-expanded={fundsOpen}
+            aria-controls={FUNDS_PANEL}
+            onClick={() => setFundsOpen((o) => !o)}
+            className="inline-flex items-baseline rounded-full border border-dashed border-line px-3 text-accent transition hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {fundsOpen ? 'Done' : '+ Add a fund'}
+          </button>
+        </p>
 
-          <Card>
-            <CardTitle>Funds to compare</CardTitle>
+        {fundsOpen && (
+          <div id={FUNDS_PANEL} className="mt-4 border-t border-line pt-4">
             <FundMultiPicker
               // Show this page's overrides on the chips so they match the results.
               funds={all.map((f) => ({ ...f, ...inputs.overrides[f.id] }))}
-              selected={inputs.fundIds} onChange={(fundIds) => update({ fundIds })} />
+              selected={inputs.fundIds}
+              onChange={(fundIds) => update({ fundIds })}
+            />
             {selectedFunds.length > 0 && (
-              <div className="mt-4 flex flex-col gap-3 border-t border-line pt-4">
-                <p className="text-xs text-muted">Adjust for this comparison only. Your library isn't changed.</p>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {selectedFunds.map((f) => {
                   const o = inputs.overrides[f.id] ?? {};
                   const set = (patch: { fee?: number; annualReturn?: number }) =>
@@ -149,8 +205,8 @@ export default function GrowthCalculator() {
                   return (
                     <div key={f.id}>
                       <div className="mb-1 flex items-center gap-2 text-sm font-medium">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ background: f.color }} />
-                        {f.name}
+                        <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: f.color }} />
+                        <span className="wrap-anywhere">{f.name}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <PercentField
@@ -175,104 +231,141 @@ export default function GrowthCalculator() {
                 })}
               </div>
             )}
-          </Card>
-        </div>
-
-        <div className="flex min-w-0 flex-col gap-5">
-          {results.length === 0 ? (
-            <Card className="text-center text-muted">Pick at least one fund to see results.</Card>
-          ) : (
-            <>
-              {results.length > 1 && best && worst && best !== worst && (
-                <Card className="border-accent/40! bg-accent-soft/40!">
-                  <p className="text-lg">
-                    After {years} years, <strong>{best.fund.name}</strong> ends up{' '}
-                    <strong className="text-good">{money(gap, region)}</strong> ahead of{' '}
-                    <strong>{worst.fund.name}</strong>
-                    {real && " in today's dollars"}.
-                  </p>
-                </Card>
-              )}
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {results.map(({ fund, fee, r }) => (
-                  <Card key={fund.id} className="!p-4">
-                    <div className="mb-3 flex items-center gap-2 font-semibold">
-                      <span className="h-3 w-3 rounded-full" style={{ background: fund.color }} />
-                      <span className="truncate">{fund.name}</span>
-                      <span className="ml-auto text-xs font-normal text-muted">{pct(fee)} {region.feeLabel}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Stat label="Final balance" value={money(deflate(r.finalBalance, years), region)} />
-                      <Stat label="You contributed" value={money(deflate(r.totalContributed, years), region)} />
-                      <Stat label="Fees paid" value={money(deflate(r.totalFeesPaid, years), region)} tone="bad" />
-                      <Stat
-                        label="Total cost of fees"
-                        value={money(deflate(r.totalFeeCost, years), region)}
-                        sub={`${pct(r.totalFeeCost / (r.finalBalance + r.totalFeeCost), 1)} of what you'd have`}
-                        tone="bad"
-                      />
-                    </div>
-                  </Card>
-                ))}
-              </div>
-
-              <Card>
-                <CardTitle action={<DollarsToggle />}>Portfolio value over time</CardTitle>
-                <div className="h-80">
-                  <ResponsiveContainer>
-                    <LineChart data={lineData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid stroke={chart.grid} vertical={false} />
-                      <XAxis dataKey="year" stroke={chart.axis} tickLine={false} fontSize={12} label={{ value: 'Year', position: 'insideBottomRight', offset: -2, fill: chart.axis, fontSize: 12 }} />
-                      <YAxis stroke={chart.axis} tickFormatter={fmtAxis} tickLine={false} axisLine={false} fontSize={12} width={64} />
-                      <Tooltip {...tip} formatter={(v: number) => money(v, region)} labelFormatter={(y) => `Year ${y}`} />
-                      <Legend wrapperStyle={{ fontSize: 13 }} />
-                      {results.map(({ fund }) => (
-                        <Line key={fund.id} dataKey={fund.id} name={fund.name} stroke={fund.color} strokeWidth={2.5} dot={false} />
-                      ))}
-                      <Line dataKey="contributed" name="Contributed" stroke={chart.muted} strokeDasharray="5 4" strokeWidth={1.5} dot={false} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              <Card>
-                <CardTitle>What fees cost you</CardTitle>
-                <p className="-mt-1 mb-3 text-sm text-muted">
-                  <strong>Fees paid</strong> is what the fund charged. <strong>Lost growth</strong> is what that money would have earned if it had stayed invested.
-                </p>
-                <div style={{ height: Math.max(140, costData.length * 56 + 50) }}>
-                  <ResponsiveContainer>
-                    <BarChart data={costData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid stroke={chart.grid} horizontal={false} />
-                      <XAxis type="number" stroke={chart.axis} tickFormatter={fmtAxis} fontSize={12} />
-                      <YAxis type="category" dataKey="name" stroke={chart.axis} width={130} fontSize={12} tickLine={false} />
-                      <Tooltip {...tip} formatter={(v: number) => money(v, region)} cursor={{ fill: chart.grid, opacity: 0.4 }} />
-                      <Legend wrapperStyle={{ fontSize: 13 }} />
-                      <Bar dataKey="fees" name="Fees paid" stackId="a" fill={chart.series.cost} radius={[0, 0, 0, 0]} />
-                      <Bar dataKey="lost" name="Lost growth" stackId="a" fill={chart.series.lostGrowth} radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              <Details summary="Year-by-year table">
-                <Table
-                  headers={['Year', 'Contributed', ...results.flatMap(({ fund }) => [`${fund.name}`, 'Fees to date'])]}
-                  rows={lineData.map((row, y) => [
-                    y,
-                    money(row.contributed, region),
-                    ...results.flatMap(({ fund, r }) => [
-                      money(row[fund.id], region),
-                      money(deflate(r.points[y].feesPaid, y), region),
-                    ]),
-                  ])}
-                />
-              </Details>
-            </>
-          )}
-        </div>
+          </div>
+        )}
+      </Card>
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-sm text-muted">
+        <p className="max-w-none min-w-0 flex-1">Fee and return changes apply to this comparison only. Your library isn't changed.</p>
+        <Button variant="ghost" onClick={reset}>Reset</Button>
       </div>
+
+      {/* The answer */}
+      <div aria-live="polite" className="mt-6 mb-6">
+        {results.length === 0 ? (
+          <p className="text-lg text-muted">Choose at least one fund to see what its fees cost.</p>
+        ) : hasGap && best && worst ? (
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
+            <span className="tabular text-5xl leading-none font-bold tracking-[-0.03em] text-good sm:text-6xl">
+              {money(gap, region)}
+            </span>
+            <p className="max-w-[26em] text-lg sm:text-xl">
+              more with <strong>{best.fund.name}</strong> than with <strong>{worst.fund.name}</strong> after {years}{' '}
+              years{inToday}.
+            </p>
+          </div>
+        ) : (
+          best && (
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
+              <span className="tabular text-5xl leading-none font-bold tracking-[-0.03em] sm:text-6xl">
+                {money(deflate(best.r.finalBalance, years), region)}
+              </span>
+              <p className="max-w-[26em] text-lg sm:text-xl">
+                is what <strong>{best.fund.name}</strong> grows to after {years} years{inToday}. Fees and the growth
+                they'd have earned cost <strong className="text-bad">{money(deflate(best.r.totalFeeCost, years), region)}</strong>.
+              </p>
+            </div>
+          )
+        )}
+      </div>
+
+      {results.length > 0 && (
+        <div className="flex flex-col gap-5">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-[3fr_2fr]">
+            <Card className="min-w-0">
+              <CardTitle action={<DollarsToggle />}>Portfolio value over time</CardTitle>
+              <div className="h-80">
+                <ResponsiveContainer>
+                  <LineChart data={lineData} margin={{ top: 12, right: 64, left: 0, bottom: 18 }}>
+                    <CartesianGrid stroke={chart.grid} vertical={false} />
+                    <XAxis dataKey="year" type="number" domain={[0, years]} allowDecimals={false} stroke={chart.axis} tickLine={false} fontSize={12} label={{ value: 'Year', position: 'insideBottomRight', offset: -14, fill: chart.axis, fontSize: 12 }} />
+                    <YAxis stroke={chart.axis} tickFormatter={fmtAxis} tickLine={false} axisLine={false} fontSize={12} width={64} />
+                    <Tooltip {...tip} formatter={(v: number) => money(v, region)} labelFormatter={(y) => `Year ${y}`} />
+                    <Line dataKey="contributed" name="Contributed" stroke={chart.muted} strokeDasharray="5 4" strokeWidth={1.5} dot={false} isAnimationActive={false} />
+                    {results.map(({ fund }) => (
+                      <Line key={fund.id} dataKey={fund.id} name={fund.name} stroke={fund.color} strokeWidth={4} strokeLinejoin="round" dot={terminus} activeDot={{ r: 5 }} isAnimationActive={false} />
+                    ))}
+                    {hasGap && best && worst && (
+                      <ReferenceLine
+                        segment={[
+                          { x: years, y: deflate(worst.r.finalBalance, years) },
+                          { x: years, y: deflate(best.r.finalBalance, years) },
+                        ]}
+                        ifOverflow="visible"
+                        shape={gapBracket}
+                      />
+                    )}
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                {results.map(({ fund }) => (
+                  <li key={fund.id} className="flex items-center gap-2">
+                    <span aria-hidden className="h-1 w-5 rounded-full" style={{ background: fund.color }} />
+                    {fund.name}
+                  </li>
+                ))}
+                <li className="flex items-center gap-2 text-muted">
+                  <span aria-hidden className="w-5 border-t-2 border-dashed" style={{ borderColor: chart.muted }} />
+                  Contributed
+                </li>
+              </ul>
+            </Card>
+
+            <Card className="min-w-0">
+              <CardTitle>What fees cost you</CardTitle>
+              <p className="-mt-1 text-sm text-muted">
+                <strong className="text-ink">Fees paid</strong> is what the fund charged.{' '}
+                <strong className="text-ink">Lost growth</strong> is what that money would have earned if it had stayed invested.
+              </p>
+              <ul className="mt-4 flex flex-col gap-4">
+                {costs.map((c) => (
+                  <li key={c.fund.id}>
+                    <div className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="flex min-w-0 items-center gap-2 font-semibold">
+                        <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: c.fund.color }} />
+                        <span className="wrap-anywhere">{c.fund.name}</span>
+                      </span>
+                      <span className="tabular shrink-0 font-semibold text-bad">{money(c.total, region)}</span>
+                    </div>
+                    <div
+                      aria-hidden
+                      className="mt-1.5 flex h-5 overflow-hidden rounded"
+                      style={{ width: `${Math.max(2, (c.total / maxCost) * 100)}%` }}
+                    >
+                      <div style={{ width: `${(c.fees / Math.max(1, c.total)) * 100}%`, background: chart.series.feePaid }} />
+                      <div className="flex-1" style={{ background: chart.series.feeLost }} />
+                    </div>
+                    <p className="tabular mt-1.5 text-xs text-muted">
+                      {money(c.fees, region)} fees paid · {money(c.lost, region)} lost growth
+                    </p>
+                    <p className="tabular text-xs text-muted">
+                      {pct(c.share, 1)} <span className="normal-nums">of the no-fee balance</span> · ends at {money(c.final, region)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex gap-4 text-xs text-muted">
+                <span className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: chart.series.feePaid }} />Fees paid</span>
+                <span className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: chart.series.feeLost }} />Lost growth</span>
+              </div>
+            </Card>
+          </div>
+
+          <Details summary="Year-by-year table">
+            <Table
+              headers={['Year', 'Contributed', ...results.flatMap(({ fund }) => [`${fund.name}`, 'Fees to date'])]}
+              rows={lineData.map((row, y) => [
+                y,
+                money(row.contributed, region),
+                ...results.flatMap(({ fund, r }) => [
+                  money(row[fund.id], region),
+                  money(deflate(r.points[y].feesPaid, y), region),
+                ]),
+              ])}
+            />
+          </Details>
+        </div>
+      )}
     </>
   );
 }

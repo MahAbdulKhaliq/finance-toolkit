@@ -37,6 +37,10 @@ const SERIES = {
     maintenance: '#7c3aed',
     homeInsurance: '#0284c7',
     closing: '#64748b',
+    gain: '#15803d', // the fee gap, money you keep
+    // Fee cost breakdown in neutrals, so it never reads as one of the funds' own colours.
+    feePaid: '#334155',
+    feeLost: '#64748b',
   },
   dark: {
     primary: '#2dd4bf',
@@ -48,6 +52,9 @@ const SERIES = {
     maintenance: '#a78bfa',
     homeInsurance: '#38bdf8',
     closing: '#94a3b8',
+    gain: '#4ade80',
+    feePaid: '#e2e8f0',
+    feeLost: '#94a3b8',
   },
 };
 
