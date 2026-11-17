@@ -57,6 +57,11 @@ export default function Methodology() {
             Real CAGR uses the Fisher equation: <F>(1 + r) / (1 + inflation) − 1</F>.
           </p>
           <p>
+            When you compare investments, each one gets its own CAGR from its own values and time span. The chart
+            then applies each rate to the same $10,000 over that investment's own span, so lines of different
+            lengths can be read side by side.
+          </p>
+          <p>
             <strong>Saving a CAGR as a fund:</strong> historical fund returns are usually already net of
             fees. If so, either leave the fee at 0% or add the fee back to the return, so it isn't
             counted twice.

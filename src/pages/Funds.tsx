@@ -127,8 +127,8 @@ export default function FundsPage() {
         })}
       </div>
       <p className="mt-6 text-sm text-muted">
-        Tip: funds are stored only on this device. Use <strong>Share scenario</strong> on any
-        calculator to send a link that includes the funds it uses.
+        Tip: funds are stored only on this device. Each calculator keeps its values in the page link,
+        so copying the link from the address bar shares the funds it uses too.
       </p>
       <FundEditor open={editing !== null} initial={editing ?? undefined} onClose={() => setEditing(null)} />
     </>

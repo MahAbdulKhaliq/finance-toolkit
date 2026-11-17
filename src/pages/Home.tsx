@@ -237,7 +237,7 @@ export default function Home() {
             create one from a historical CAGR.
           </HowStop>
           <HowStop title="Compare the fees">
-            Pick any number of them in Growth &amp; Fees to see how fees change the outcome.
+            Put two side by side in Growth &amp; Fees to see how the fee changes the outcome.
           </HowStop>
           <HowStop title="Put them to work">
             Choose the fund a renter would invest in, or the funds you'd save for retirement in, and

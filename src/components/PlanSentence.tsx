@@ -88,20 +88,87 @@ export function InlineSelect<T extends string>({
   onChange: (v: T) => void;
   options: { value: T; label: string }[];
 }) {
+  const current = options.find((o) => o.value === value)?.label ?? '';
   return (
     <span className={box}>
-      <select
+      {/* An invisible copy of the chosen label sets the width, so the box hugs the word you see
+          instead of the longest option. The chevron is drawn so its room is the same in every browser. */}
+      <span className="relative inline-grid">
+        <span aria-hidden className="invisible col-start-1 row-start-1 whitespace-pre pr-[1.1em]">
+          {current}
+        </span>
+        <select
+          aria-label={label}
+          className="col-start-1 row-start-1 w-0 min-w-full cursor-pointer appearance-none bg-transparent pr-[1.1em] outline-none"
+          value={value}
+          onChange={(e) => onChange(e.target.value as T)}
+        >
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <svg
+          aria-hidden
+          viewBox="0 0 12 12"
+          className="pointer-events-none absolute right-0 top-1/2 h-[0.55em] w-[0.55em] -translate-y-1/2 text-muted"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M2.5 4.5 6 8l3.5-3.5" />
+        </svg>
+      </span>
+    </span>
+  );
+}
+
+/** Free text inside a sentence (a name), sized to its content. */
+export function InlineText({
+  label,
+  value,
+  onChange,
+  maxLength,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  maxLength?: number;
+}) {
+  return (
+    <span className={`${box} max-w-full`}>
+      {/* An invisible copy of the text sets the width, as in InlineNumber. */}
+      <span className="inline-grid max-w-full">
+        <span aria-hidden className="invisible col-start-1 row-start-1 overflow-hidden whitespace-pre pr-px">
+          {value || ' '}
+        </span>
+        <input
+          type="text"
+          aria-label={label}
+          maxLength={maxLength}
+          className="col-start-1 row-start-1 w-0 min-w-full bg-transparent outline-none"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </span>
+    </span>
+  );
+}
+
+/** A date inside a sentence, as a native date input. */
+export function InlineDate({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <span className={box}>
+      <input
+        type="date"
         aria-label={label}
-        className="cursor-pointer bg-transparent outline-none"
+        className="cursor-pointer bg-transparent outline-none [&::-webkit-datetime-edit]:font-semibold [&::-webkit-datetime-edit-fields-wrapper]:p-0"
         value={value}
-        onChange={(e) => onChange(e.target.value as T)}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        onChange={(e) => onChange(e.target.value)}
+      />
     </span>
   );
 }
