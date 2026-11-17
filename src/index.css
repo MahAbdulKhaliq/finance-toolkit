@@ -68,13 +68,35 @@ body {
   color: var(--text);
 }
 
+/* Page scrolling. With a mouse or trackpad the window doesn't scroll: the region under the
+   header (.app-scroller in AppShell) does, so the scrollbar starts below the header instead of
+   running beside it. Touch screens keep window scrolling (overlay scrollbars, collapsing URL bar)
+   with the sticky translucent header. */
+@media (pointer: fine) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+  .app-shell {
+    height: 100dvh;
+  }
+  .app-scroller {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+}
+@media not (pointer: fine) {
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
 /* Scrollbars: a slim rounded thumb on the page background, darkening on hover. The gutter is
    reserved so short and long pages (and the side nav's scroll lock) don't shift the layout.
    Chromium and Safari take the ::-webkit-scrollbar rules (they ignore them once scrollbar-color
    is set, so the standard properties are scoped to browsers without the pseudo-elements). */
-html {
-  scrollbar-gutter: stable;
-}
 @supports not selector(::-webkit-scrollbar) {
   * {
     scrollbar-width: thin;

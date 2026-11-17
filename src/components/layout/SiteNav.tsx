@@ -162,19 +162,22 @@ export function MobileNav() {
     setShown(true);
   };
 
-  const close = () => {
+  /** toPage: the close follows a navigation, so focus goes to the new page's <main> rather than
+   *  back to the menu button (the dialog's default), letting the keyboard scroll the page. */
+  const close = (toPage = false) => {
     const d = dialog.current;
     if (!d || !d.open) return;
     setShown(false);
     window.setTimeout(() => {
       d.close();
       document.documentElement.style.overflow = '';
+      if (toPage) document.querySelector('main')?.focus({ preventScroll: true });
     }, reducedMotion() ? FADE_MS : SLIDE_MS);
   };
 
   // Navigating from the side nav closes it.
   useEffect(() => {
-    close();
+    close(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -208,7 +211,7 @@ export function MobileNav() {
       >
         <div
           aria-hidden
-          onClick={close}
+          onClick={() => close()}
           className={`absolute inset-0 bg-black/40 transition-opacity duration-[280ms] motion-reduce:duration-150 ${shown ? 'opacity-100' : 'opacity-0'}`}
         />
         {/* Slides in from the left, under the menu button. With reduced motion it fades instead. */}
@@ -222,7 +225,7 @@ export function MobileNav() {
             <span className="font-bold">Menu</span>
             <button
               type="button"
-              onClick={close}
+              onClick={() => close()}
               aria-label="Close menu"
               className="rounded-lg border border-line px-2.5 py-1.5 hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
