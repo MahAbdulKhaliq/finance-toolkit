@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { useInflation, useRegion, useSettings } from '../state/settingsStore';
-import { Button, Segmented } from './ui';
+import { Segmented } from './ui';
 
 /** Nominal / today's-dollars switch with an editable inflation rate (shared across pages). */
 export function DollarsToggle() {
@@ -41,26 +40,6 @@ export function DollarsToggle() {
         </label>
       )}
     </div>
-  );
-}
-
-export function ShareButton() {
-  const [copied, setCopied] = useState(false);
-  return (
-    <Button
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(window.location.href);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1800);
-        } catch {
-          window.prompt('Copy this link:', window.location.href);
-        }
-      }}
-      title="Copy a link to this exact scenario"
-    >
-      {copied ? '✓ Link copied' : '🔗 Share scenario'}
-    </Button>
   );
 }
 

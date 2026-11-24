@@ -331,7 +331,7 @@ The Fund Line's diagram geometry is the one exception to "no decorative geometry
 Calm and tactile: compact, quietly bordered, and responsive to the pointer.
 - **Shape:** gently rounded (8px), 6px × 12px padding, body size at weight 500, optional 6px icon gap.
 - **Primary:** Ledger Teal fill with teal-ink text; hover drops to 90% opacity. Use for the one commit action in a context (save a fund, import shared funds).
-- **Secondary (default):** surface fill with a hairline border; hover shifts to Surface Mist. Use for Share scenario, Reset and similar.
+- **Secondary (default):** surface fill with a hairline border; hover shifts to Surface Mist. Use for Save as fund in the CAGR ranking, Reset and similar.
 - **Ghost:** no fill, muted text; hover fills mist and darkens text to ink.
 - **Danger:** Cost Rose text, no fill; hover fills mist. Destructive actions confirm in-page, never with `window.confirm`.
 - **Focus:** 2px Ledger Teal outline offset by 2px. **Disabled:** 50% opacity.

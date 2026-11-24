@@ -354,8 +354,8 @@
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Default button: Share scenario, Reset and other non-committing actions.",
-      "html": "<button class=\"ds-btn-secondary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71\"/><path d=\"M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71\"/></svg>Share scenario</button>",
+      "description": "Default button: Save as fund in the CAGR ranking, Reset and other non-committing actions.",
+      "html": "<button class=\"ds-btn-secondary\">Save as fund</button>",
       "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 6px; background: var(--surface, #fff); color: var(--text, #14171c); border: 1px solid var(--border, #e3e6eb); border-radius: 8px; padding: 6px 12px; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary:hover { background: var(--surface-2, #f1f3f6); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; }"
     },
     {
